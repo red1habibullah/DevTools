@@ -27,7 +27,7 @@ def customizeMets(process,coll,**kwargs):
                                tauColl=tSrc,
                                pfCandColl=pfSrc,
                                isData=not isMC,
-                               jetFlav="AK4PFchs",
+                               #jetFlav="AK4PFchs",
                                postfix=postfix)
 
     # correct things to make it work
