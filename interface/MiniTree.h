@@ -1,8 +1,6 @@
 #ifndef MiniTree_h
 #define MiniTree_h
 
-#include <regex>
-
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/one/EDAnalyzer.h"
 
@@ -19,21 +17,13 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 
-#include "CommonTools/Utils/interface/StringObjectFunction.h"
-#include "CommonTools/Utils/interface/StringCutObjectSelector.h"
-
-#include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
-#include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
-#include "FWCore/Common/interface/TriggerNames.h"
-#include "DataFormats/Common/interface/TriggerResults.h"
-#include "DataFormats/PatCandidates/interface/TriggerObjectStandAlone.h"
-#include "DataFormats/PatCandidates/interface/PackedTriggerPrescales.h"
-#include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
-
-#include "DataFormats/Math/interface/deltaR.h"
-
 #include "DevTools/Ntuplizer/interface/CandidateCollectionBranches.h"
 #include "DevTools/Ntuplizer/interface/VertexCollectionBranches.h"
+#include "DevTools/Ntuplizer/interface/LumiSummaryBranches.h"
+#include "DevTools/Ntuplizer/interface/EventBranches.h"
+#include "DevTools/Ntuplizer/interface/MonteCarloBranches.h"
+#include "DevTools/Ntuplizer/interface/RhoBranches.h"
+#include "DevTools/Ntuplizer/interface/TriggerBranches.h"
 
 class MiniTree : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one::WatchLuminosityBlocks> {
   public:
@@ -49,62 +39,33 @@ class MiniTree : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one:
     virtual void endLuminosityBlock(edm::LuminosityBlock const& iEvent, edm::EventSetup const&) override;
     virtual void endJob() override;
 
-    size_t GetTriggerBit(std::string trigName, const edm::TriggerNames& names);
-
-    // tokens
-    edm::EDGetTokenT<LHEEventProduct> lheEventProductToken_;
-    edm::EDGetTokenT<GenEventInfoProduct> genEventInfoToken_;
-    edm::EDGetTokenT<double> rhoToken_;
-    edm::EDGetTokenT<std::vector<PileupSummaryInfo> > pileupSummaryInfoToken_;
-    edm::EDGetTokenT<edm::TriggerResults> triggerBitsToken_;
-    edm::EDGetTokenT<edm::TriggerResults> filterBitsToken_;
-    edm::EDGetTokenT<pat::TriggerObjectStandAloneCollection> triggerObjectsToken_;
-    edm::EDGetTokenT<pat::PackedTriggerPrescales> triggerPrescalesToken_;
-
-    // handles
-    edm::Handle<edm::TriggerResults> triggerBits_;
-    edm::Handle<edm::TriggerResults> filterBits_;
-    edm::Handle<pat::TriggerObjectStandAloneCollection> triggerObjects_;
-    edm::Handle<pat::PackedTriggerPrescales> triggerPrescales_;
-
-    // branch parameters
-    edm::ParameterSet triggerBranches_;
-    edm::ParameterSet filterBranches_;
-
     edm::ParameterSet collections_;
     edm::ParameterSet vertexCollections_;
 
     // other configurations
     bool isData_;
 
-    // tree
+    // trees
     TTree *tree_;
     TTree *lumitree_;
 
-    // lumitree branches
-    Int_t   runBranch_;
-    Int_t   lumiBranch_;
-    Int_t   neventsBranch_;
-    Float_t summedWeightsBranch_;
+    // lumi summary
+    std::unique_ptr<LumiSummaryBranches> lumiSummary_;
 
     // one off tree branches
     Int_t                 isDataBranch_;
-    Float_t               genWeightBranch_;
-    Int_t                 numWeightsBranch_;
-    std::vector<Float_t>  genWeightsBranch_;
-    ULong64_t             eventBranch_;
-    Float_t               rhoBranch_;
-    Float_t               nTrueVerticesBranch_;
-    Int_t                 nupBranch_;
-    Int_t                 numGenJetsBranch_;
-    Float_t               genHTBranch_;
+
+    // event
+    std::unique_ptr<EventBranches> event_;
+
+    // monte carlo info
+    std::unique_ptr<MonteCarloBranches> mcBranches_;
+
+    // rho
+    std::unique_ptr<RhoBranches> rho_;
 
     // trigger
-    std::vector<std::string>                 triggerNames_;
-    std::vector<std::string>                 filterNames_;
-    std::vector<std::string>                 triggerBranchStrings_;
-    std::map<std::string, std::string>       triggerNamingMap_;
-    std::map<std::string, Int_t>             triggerIntMap_;
+    std::unique_ptr<TriggerBranches> trigger_;
 
     // collections
     std::vector<std::unique_ptr<CandidateCollectionBranches> > collectionBranches_;
