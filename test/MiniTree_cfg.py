@@ -6,9 +6,9 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 
 options.outputFile = 'miniTree.root'
-options.inputFiles= '/store/mc/RunIISpring16MiniAODv1/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/00000/08F114C5-7A01-E611-B29D-0002C94D54FA.root'
-#options.inputFiles = '/store/user/dntaylor/HPlusPlusHMinusMinusHTo4L_M-500_13TeV-pythia8/RunIIFall15MiniAODv2_v2/160313_082348/0000/dblh_step1_1.root'
-#options.inputFiles = '/store/data/Run2015D/MuonEG/MINIAOD/16Dec2015-v1/60000/00D00022-37AD-E511-8380-0CC47A78A3EE.root'
+#options.inputFiles= '/store/mc/RunIISpring16MiniAODv2/ZZTo4L_13TeV_powheg_pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/00000/024C8A3E-7D1A-E611-A094-002590494C82.root'
+#options.inputFiles = '/store/user/dntaylor/HPlusPlusHMinusMinusHTo4L_M-500_13TeV-pythia8/RunIISpring16MiniAODv2_MINIAODSIM_v1/160513_105853/0000/dblh_mini_step1_1.root'
+options.inputFiles = '/store/data/Run2016B/MuonEG/MINIAOD/PromptReco-v2/000/273/158/00000/26281378-291A-E611-AE69-02163E011E9B.root'
 options.maxEvents = -1
 options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
 options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
@@ -46,31 +46,31 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
-##################
-### JEC source ###
-##################
-# this is if we need to override the jec in global tag
-#sqfile = os.environ['CMSSW_BASE'] + '/src/' + 'DevTools/Ntuplizer/data/Fall15_25nsV2_{0}.db'.format('MC' if options.isMC else 'DATA')
-sqfile = 'DevTools/Ntuplizer/data/Fall15_25nsV2_{0}.db'.format('MC' if options.isMC else 'DATA')
-#sqfile = 'src/DevTools/Ntuplizer/data/Fall15_25nsV2_{0}.db'.format('MC' if options.isMC else 'DATA')
-tag = 'JetCorrectorParametersCollection_Fall15_25nsV2_{0}_AK4PFchs'.format('MC' if options.isMC else 'DATA')
-process.load("CondCore.DBCommon.CondDBCommon_cfi")
-from CondCore.DBCommon.CondDBSetup_cfi import *
-process.jec = cms.ESSource("PoolDBESSource",
-    DBParameters = cms.PSet(
-        messageLevel = cms.untracked.int32(0)
-    ),
-    timetype = cms.string('runnumber'),
-    toGet = cms.VPSet(
-        cms.PSet(
-            record = cms.string('JetCorrectionsRecord'),
-            tag    = cms.string(tag),
-            label  = cms.untracked.string('AK4PFchs')
-        ),
-    ), 
-    connect = cms.string('sqlite:{0}'.format(sqfile)),
-)
-process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
+###################
+#### JEC source ###
+###################
+## this is if we need to override the jec in global tag
+##sqfile = os.environ['CMSSW_BASE'] + '/src/' + 'DevTools/Ntuplizer/data/Fall15_25nsV2_{0}.db'.format('MC' if options.isMC else 'DATA')
+#sqfile = 'DevTools/Ntuplizer/data/Fall15_25nsV2_{0}.db'.format('MC' if options.isMC else 'DATA')
+##sqfile = 'src/DevTools/Ntuplizer/data/Fall15_25nsV2_{0}.db'.format('MC' if options.isMC else 'DATA')
+#tag = 'JetCorrectorParametersCollection_Fall15_25nsV2_{0}_AK4PFchs'.format('MC' if options.isMC else 'DATA')
+#process.load("CondCore.DBCommon.CondDBCommon_cfi")
+#from CondCore.DBCommon.CondDBSetup_cfi import *
+#process.jec = cms.ESSource("PoolDBESSource",
+#    DBParameters = cms.PSet(
+#        messageLevel = cms.untracked.int32(0)
+#    ),
+#    timetype = cms.string('runnumber'),
+#    toGet = cms.VPSet(
+#        cms.PSet(
+#            record = cms.string('JetCorrectionsRecord'),
+#            tag    = cms.string(tag),
+#            label  = cms.untracked.string('AK4PFchs')
+#        ),
+#    ), 
+#    connect = cms.string('sqlite:{0}'.format(sqfile)),
+#)
+#process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
 #############################
 ### Setup rest of running ###
