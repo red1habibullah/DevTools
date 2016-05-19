@@ -608,6 +608,7 @@ jetBranches = commonJetCandidates.clone(
     isTight                                      = cms.vstring('userInt("idTight")','I'),
     isTightLepVeto                               = cms.vstring('userInt("idTightLepVeto")','I'),
     puID                                         = cms.vstring('userInt("puID")','I'),
+    pileupJetIdDiscriminant                      = cms.vstring('userFloat("pileupJetId:fullDiscriminant")','F'),
     # energy shifts
     #pt_jetEnUp                                   = cms.vstring('userCand("JetEnUp").pt()','F'),
     #eta_jetEnUp                                  = cms.vstring('userCand("JetEnUp").eta()','F'),
