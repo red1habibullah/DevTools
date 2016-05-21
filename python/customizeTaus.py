@@ -48,25 +48,27 @@ def customizeTaus(process,coll,**kwargs):
         deltaR = cms.double(0.5),
         labels = cms.vstring(
             # double tau
+            'matches_DoubleMediumIsoPFTau32_Trk1_eta2p1_Reg',
             'matches_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg',
             'matches_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg',
             # muon tau
-            'matches_IsoMu17_eta2p1_LooseIsoPFTau20',
-            'matches_IsoMu20_eta2p1_LooseIsoPFTau20',
+            'matches_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1',
+            'matches_IsoMu20_eta2p1_LooseIsoPFTau20_SingleL1',
             # electron tau
-            'matches_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20',
-            'matches_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20',
+            'matches_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1',
+            'matches_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1',
         ),
         paths = cms.vstring(
             # double tau
+            'HLT_DoubleMediumIsoPFTau32_Trk1_eta2p1_Reg_v\\[0-9]+',
             'HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\[0-9]+',
             'HLT_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v\\[0-9]+',
             # muon tau
-            'HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v\\[0-9]+',
-            'HLT_IsoMu20_eta2p1_LooseIsoPFTau20_v\\[0-9]+',
+            'HLT_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1_v\\[0-9]+',
+            'HLT_IsoMu20_eta2p1_LooseIsoPFTau20_SingleL1_v\\[0-9]+',
             # electron tau
-            'HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v\\[0-9]+',
-            'HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v\\[0-9]+',
+            'HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\[0-9]+',
+            'HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\[0-9]+',
         ),
     )
     tSrc = 'tTrig'

@@ -12,32 +12,14 @@ def customizeJets(process,coll,**kwargs):
     ######################
     ### recorrect jets ###
     ######################
-    from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
+    #from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
 
-    updateJetCollection(
-        process,
-        jetSource = cms.InputTag(jSrc),
-        jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None')  # Do not forget 'L2L3Residual' on data!
-    )
-    jSrc = 'updatedPatJets'
-    #from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import patJetCorrFactorsUpdated
-    #process.patJetCorrFactorsReapplyJEC = patJetCorrFactorsUpdated.clone(
-    #    src = cms.InputTag(jSrc),
-    #    levels = ['L1FastJet', 
-    #              'L2Relative', 
-    #              'L3Absolute'],
-    #    payload = 'AK4PFchs' 
-    #)
-
-    #from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import patJetsUpdated
-    #process.patJetsReapplyJEC = patJetsUpdated.clone(
+    #updateJetCollection(
+    #    process,
     #    jetSource = cms.InputTag(jSrc),
-    #    jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactorsReapplyJEC"))
+    #    jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None')  # Do not forget 'L2L3Residual' on data!
     #)
-
-    #process.jetCustomization *= process.patJetCorrFactorsReapplyJEC
-    #process.jetCustomization *= process.patJetsReapplyJEC
-    #jSrc = "patJetsReapplyJEC"
+    #jSrc = 'updatedPatJets'
 
     #################
     ### embed ids ###

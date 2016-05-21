@@ -7,8 +7,8 @@ options = VarParsing('analysis')
 
 options.outputFile = 'miniTree.root'
 #options.inputFiles= '/store/mc/RunIISpring16MiniAODv2/ZZTo4L_13TeV_powheg_pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/00000/024C8A3E-7D1A-E611-A094-002590494C82.root'
-options.inputFiles = '/store/user/dntaylor/HPlusPlusHMinusMinusHTo4L_M-500_13TeV-pythia8/RunIISpring16MiniAODv2_MINIAODSIM_v1/160513_105853/0000/dblh_mini_step1_1.root'
-#options.inputFiles = '/store/data/Run2016B/MuonEG/MINIAOD/PromptReco-v2/000/273/158/00000/26281378-291A-E611-AE69-02163E011E9B.root'
+#options.inputFiles = '/store/user/dntaylor/HPlusPlusHMinusMinusHTo4L_M-500_13TeV-pythia8/RunIISpring16MiniAODv2_MINIAODSIM_v1/160513_105853/0000/dblh_mini_step1_1.root'
+options.inputFiles = '/store/data/Run2016B/MuonEG/MINIAOD/PromptReco-v2/000/273/158/00000/26281378-291A-E611-AE69-02163E011E9B.root'
 options.maxEvents = -1
 options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
 options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
@@ -30,13 +30,13 @@ process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True),
 )
 
-process.RandomNumberGeneratorService = cms.Service(
-    "RandomNumberGeneratorService",
-    calibratedPatElectrons = cms.PSet(
-        initialSeed = cms.untracked.uint32(1),
-        engineName = cms.untracked.string('TRandom3')
-    ),
-)
+#process.RandomNumberGeneratorService = cms.Service(
+#    "RandomNumberGeneratorService",
+#    calibratedPatElectrons = cms.PSet(
+#        initialSeed = cms.untracked.uint32(1),
+#        engineName = cms.untracked.string('TRandom3')
+#    ),
+#)
 
 #################
 ### GlobalTag ###
@@ -150,21 +150,22 @@ selections = {
 }
 
 # selection for cleaning (objects should match final selection)
+# just do at analysis level
 cleaning = {
-    'jets' : {
-        'electrons' : {
-            'cut' : 'pt>10 && abs(eta)<2.5 && userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-medium")>0.5 && userInt("WWLoose")>0.5',
-            'dr'  : 0.3,
-        },
-        'muons' : {
-            'cut' : 'pt>10 && abs(eta)<2.4 && isMediumMuon>0.5 && trackIso/pt<0.4 && userFloat("dxy")<0.02 && userFloat("dz")<0.1 && (pfIsolationR04().sumChargedHadronPt+max(0.,pfIsolationR04().sumNeutralHadronEt+pfIsolationR04().sumPhotonEt-0.5*pfIsolationR04().sumPUPt))/pt<0.15',
-            'dr'  : 0.3,
-        },
-        'taus' : {
-            'cut' : 'pt>20 && abs(eta)<2.3 && tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits")>0.5 && tauID("decayModeFinding")>0.5',
-            'dr'  : 0.3,
-        },
-    },
+    #'jets' : {
+    #    'electrons' : {
+    #        'cut' : 'pt>10 && abs(eta)<2.5 && userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-medium")>0.5 && userInt("WWLoose")>0.5',
+    #        'dr'  : 0.3,
+    #    },
+    #    'muons' : {
+    #        'cut' : 'pt>10 && abs(eta)<2.4 && isMediumMuon>0.5 && trackIso/pt<0.4 && userFloat("dxy")<0.02 && userFloat("dz")<0.1 && (pfIsolationR04().sumChargedHadronPt+max(0.,pfIsolationR04().sumNeutralHadronEt+pfIsolationR04().sumPhotonEt-0.5*pfIsolationR04().sumPUPt))/pt<0.15',
+    #        'dr'  : 0.3,
+    #    },
+    #    'taus' : {
+    #        'cut' : 'pt>20 && abs(eta)<2.3 && tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits")>0.5 && tauID("decayModeFinding")>0.5',
+    #        'dr'  : 0.3,
+    #    },
+    #},
 }
 
 # filters
@@ -230,8 +231,9 @@ collections = customizeMets(
 from DevTools.Ntuplizer.objectTools import objectSelector, objectCleaner
 for coll in selections:
     collections[coll] = objectSelector(process,coll,collections[coll],selections[coll])
-for coll in cleaning:
-    collections[coll] = objectCleaner(process,coll,collections[coll],collections,cleaning[coll])
+# TODO: memory problem
+#for coll in cleaning:
+#    collections[coll] = objectCleaner(process,coll,collections[coll],collections,cleaning[coll])
 
 # add the analyzer
 process.load("DevTools.Ntuplizer.MiniTree_cfi")

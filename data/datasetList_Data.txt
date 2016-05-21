@@ -1,12 +1,6 @@
-/DoubleEG/Run2016B-PromptReco-v1/MINIAOD
 /DoubleEG/Run2016B-PromptReco-v2/MINIAOD
-/DoubleMuon/Run2016B-PromptReco-v1/MINIAOD
 /DoubleMuon/Run2016B-PromptReco-v2/MINIAOD
-/MuonEG/Run2016B-PromptReco-v1/MINIAOD
 /MuonEG/Run2016B-PromptReco-v2/MINIAOD
-/SingleElectron/Run2016B-PromptReco-v1/MINIAOD
 /SingleElectron/Run2016B-PromptReco-v2/MINIAOD
-/SingleMuon/Run2016B-PromptReco-v1/MINIAOD
 /SingleMuon/Run2016B-PromptReco-v2/MINIAOD
-/Tau/Run2016B-PromptReco-v1/MINIAOD
 /Tau/Run2016B-PromptReco-v2/MINIAOD

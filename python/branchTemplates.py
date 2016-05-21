@@ -186,20 +186,20 @@ triggerBranches = cms.PSet(
     DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg               = cms.PSet(
                                                              path  = cms.string('HLT_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v\\[0-9]+'),
                                                          ),
-    # muon tau
-    IsoMu17_eta2p1_LooseIsoPFTau20                       = cms.PSet(
-                                                             path  = cms.string('HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v\\[0-9]+'),
-                                                         ),
-    IsoMu20_eta2p1_LooseIsoPFTau20                       = cms.PSet(
-                                                             path  = cms.string('HLT_IsoMu20_eta2p1_LooseIsoPFTau20_v\\[0-9]+'),
-                                                         ),
-    # electron tau
-    Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1    = cms.PSet(
-                                                             path  = cms.string('HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\[0-9]+'),
-                                                         ),
-    Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1    = cms.PSet(
-                                                             path  = cms.string('HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\[0-9]+'),
-                                                         ),
+    ## muon tau
+    #IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1              = cms.PSet(
+    #                                                         path  = cms.string('HLT_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1_v\\[0-9]+'),
+    #                                                     ),
+    #IsoMu20_eta2p1_LooseIsoPFTau20_SingleL1              = cms.PSet(
+    #                                                         path  = cms.string('HLT_IsoMu20_eta2p1_LooseIsoPFTau20_SingleL1_v\\[0-9]+'),
+    #                                                     ),
+    ## electron tau
+    #Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1    = cms.PSet(
+    #                                                         path  = cms.string('HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\[0-9]+'),
+    #                                                     ),
+    #Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1    = cms.PSet(
+    #                                                         path  = cms.string('HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\[0-9]+'),
+    #                                                     ),
     # triple lepton
     Ele16_Ele12_Ele8_CaloIdL_TrackIdL                    = cms.PSet(
                                                              path  = cms.string('HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v\\[0-9]+'),
@@ -333,13 +333,14 @@ electronBranches = commonPatCandidates.clone(
     matches_Ele23_WPLoose_Gsf                           = cms.vstring('userInt("matches_Ele23_WPLoose_Gsf")','I'),
     matches_Ele27_WPLoose_Gsf                           = cms.vstring('userInt("matches_Ele27_WPLoose_Gsf")','I'),
     # double electron
-    matches_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ       = cms.vstring('userInt("matches_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ")','I'),
+    matches_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL          = cms.vstring('userInt("matches_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL")','I'),
+    matches_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL          = cms.vstring('userInt("matches_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL")','I'),
     # muon electron
     matches_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL  = cms.vstring('userInt("matches_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL")','I'),
     matches_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL")','I'),
-    # electron tau
-    matches_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20    = cms.vstring('userInt("matches_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20")','I'),
-    matches_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20    = cms.vstring('userInt("matches_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20")','I'),
+    ## electron tau
+    #matches_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1    = cms.vstring('userInt("matches_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1")','I'),
+    #matches_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1    = cms.vstring('userInt("matches_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1")','I'),
     # multi lepton
     matches_Ele16_Ele12_Ele8_CaloIdL_TrackIdL           = cms.vstring('userInt("matches_Ele16_Ele12_Ele8_CaloIdL_TrackIdL")','I'),
     matches_Mu8_DiEle12_CaloIdL_TrackIdL                = cms.vstring('userInt("matches_Mu8_DiEle12_CaloIdL_TrackIdL")','I'),
@@ -448,14 +449,14 @@ muonBranches = commonPatCandidates.clone(
     matches_Mu45_eta2p1                                 = cms.vstring('userInt("matches_Mu45_eta2p1")','I'),
     matches_Mu50                                        = cms.vstring('userInt("matches_Mu50")','I'),
     # double muon
-    matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ             = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ")','I'),
-    matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ           = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ")','I'),
+    matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL                = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL")','I'),
+    matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL              = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL")','I'),
     # muon electron
     matches_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL  = cms.vstring('userInt("matches_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL")','I'),
     matches_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL")','I'),
     # muon tau
-    matches_IsoMu17_eta2p1_LooseIsoPFTau20              = cms.vstring('userInt("matches_IsoMu17_eta2p1_LooseIsoPFTau20")','I'),
-    matches_IsoMu20_eta2p1_LooseIsoPFTau20              = cms.vstring('userInt("matches_IsoMu20_eta2p1_LooseIsoPFTau20")','I'),
+    #matches_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1              = cms.vstring('userInt("matches_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1")','I'),
+    #matches_IsoMu20_eta2p1_LooseIsoPFTau20_SingleL1              = cms.vstring('userInt("matches_IsoMu20_eta2p1_LooseIsoPFTau20_SingleL1")','I'),
     # multi lepton
     matches_Mu8_DiEle12_CaloIdL_TrackIdL                = cms.vstring('userInt("matches_Mu8_DiEle12_CaloIdL_TrackIdL")','I'),
     matches_DiMu9_Ele9_CaloIdL_TrackIdL                 = cms.vstring('userInt("matches_DiMu9_Ele9_CaloIdL_TrackIdL")','I'),
@@ -560,14 +561,15 @@ tauBranches = commonJetCandidates.clone(
     dxy_zero                                         = cms.vstring('userFloat("dxy_zero")','F'),
     # trigger matching
     # double tau
+    matches_DoubleMediumIsoPFTau32_Trk1_eta2p1_Reg   = cms.vstring('userInt("matches_DoubleMediumIsoPFTau32_Trk1_eta2p1_Reg")','I'),
     matches_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg   = cms.vstring('userInt("matches_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg")','I'),
     matches_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg   = cms.vstring('userInt("matches_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg")','I'),
     # muon tau
-    matches_IsoMu17_eta2p1_LooseIsoPFTau20           = cms.vstring('userInt("matches_IsoMu17_eta2p1_LooseIsoPFTau20")','I'),
-    matches_IsoMu20_eta2p1_LooseIsoPFTau20           = cms.vstring('userInt("matches_IsoMu20_eta2p1_LooseIsoPFTau20")','I'),
+    matches_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1           = cms.vstring('userInt("matches_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1")','I'),
+    matches_IsoMu20_eta2p1_LooseIsoPFTau20_SingleL1           = cms.vstring('userInt("matches_IsoMu20_eta2p1_LooseIsoPFTau20_SingleL1")','I'),
     # electron tau
-    matches_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20 = cms.vstring('userInt("matches_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20")','I'),
-    matches_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20 = cms.vstring('userInt("matches_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20")','I'),
+    matches_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1 = cms.vstring('userInt("matches_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1")','I'),
+    matches_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1 = cms.vstring('userInt("matches_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1")','I'),
     # energy shifts
     pt_tauEnUp                                       = cms.vstring('userCand("TauEnUp").pt()','F'),
     eta_tauEnUp                                      = cms.vstring('userCand("TauEnUp").eta()','F'),
