@@ -100,6 +100,9 @@ void EffectiveAreaEmbedder<T>::fillDescriptions(edm::ConfigurationDescriptions& 
 
 //define this as a plug-in
 #include "DataFormats/PatCandidates/interface/Electron.h"
+#include "DataFormats/PatCandidates/interface/Photon.h"
 typedef EffectiveAreaEmbedder<pat::Electron> ElectronEffectiveAreaEmbedder;
+typedef EffectiveAreaEmbedder<pat::Photon> PhotonEffectiveAreaEmbedder;
 
 DEFINE_FWK_MODULE(ElectronEffectiveAreaEmbedder);
+DEFINE_FWK_MODULE(PhotonEffectiveAreaEmbedder);

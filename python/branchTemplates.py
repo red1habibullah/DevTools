@@ -106,135 +106,59 @@ commonVertex = cms.PSet(
 # trigger
 triggerBranches = cms.PSet(
     # single muon
-    Mu8_TrkIsoVVL                                        = cms.PSet(
-                                                             path  = cms.string('HLT_Mu8_TrkIsoVVL_v\\[0-9]+'),
-                                                         ),
-    Mu17_TrkIsoVVL                                       = cms.PSet(
-                                                             path  = cms.string('HLT_Mu17_TrkIsoVVL_v\\[0-9]+'),
-                                                         ),
-    Mu24_TrkIsoVVL                                       = cms.PSet(
-                                                             path  = cms.string('HLT_Mu24_TrkIsoVVL_v\\[0-9]+'),
-                                                         ),
-    Mu34_TrkIsoVVL                                       = cms.PSet(
-                                                             path  = cms.string('HLT_Mu34_TrkIsoVVL_v\\[0-9]+'),
-                                                         ),
-    IsoMu20                                              = cms.PSet(
-                                                             path  = cms.string('HLT_IsoMu20_v\\[0-9]+'),
-                                                         ),
-    IsoTkMu20                                            = cms.PSet(
-                                                             path  = cms.string('HLT_IsoTkMu20_v\\[0-9]+'),
-                                                         ),
-    IsoMu27                                              = cms.PSet(
-                                                             path  = cms.string('HLT_IsoMu27_v\\[0-9]+'),
-                                                         ),
-    IsoTkMu27                                            = cms.PSet(
-                                                             path  = cms.string('HLT_IsoTkMu27_v\\[0-9]+'),
-                                                         ),
-    Mu45_eta2p1                                          = cms.PSet(
-                                                             path  = cms.string('HLT_Mu45_eta2p1_v\\[0-9]+'),
-                                                         ),
-    Mu50                                                 = cms.PSet(
-                                                             path  = cms.string('HLT_Mu50_v\\[0-9]+'),
-                                                         ),
+    Mu8_TrkIsoVVL                                        = cms.PSet( path  = cms.string('HLT_Mu8_TrkIsoVVL_v\\[0-9]+') ),
+    Mu17_TrkIsoVVL                                       = cms.PSet( path  = cms.string('HLT_Mu17_TrkIsoVVL_v\\[0-9]+') ),
+    Mu24_TrkIsoVVL                                       = cms.PSet( path  = cms.string('HLT_Mu24_TrkIsoVVL_v\\[0-9]+') ),
+    Mu34_TrkIsoVVL                                       = cms.PSet( path  = cms.string('HLT_Mu34_TrkIsoVVL_v\\[0-9]+') ),
+    IsoMu20                                              = cms.PSet( path  = cms.string('HLT_IsoMu20_v\\[0-9]+') ),
+    IsoTkMu20                                            = cms.PSet( path  = cms.string('HLT_IsoTkMu20_v\\[0-9]+') ),
+    IsoMu27                                              = cms.PSet( path  = cms.string('HLT_IsoMu27_v\\[0-9]+') ),
+    IsoTkMu27                                            = cms.PSet( path  = cms.string('HLT_IsoTkMu27_v\\[0-9]+') ),
+    Mu45_eta2p1                                          = cms.PSet( path  = cms.string('HLT_Mu45_eta2p1_v\\[0-9]+') ),
+    Mu50                                                 = cms.PSet( path  = cms.string('HLT_Mu50_v\\[0-9]+') ),
     # single electron
-    Ele12_CaloIdL_TrackIdL_IsoVL                         = cms.PSet(
-                                                             path  = cms.string('HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+'),
-                                                         ),
-    Ele17_CaloIdL_TrackIdL_IsoVL                         = cms.PSet(
-                                                             path  = cms.string('HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+'),
-                                                         ),
-    Ele23_CaloIdL_TrackIdL_IsoVL                         = cms.PSet(
-                                                             path  = cms.string('HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+'),
-                                                         ),
-    Ele22_eta2p1_WPLoose_Gsf                             = cms.PSet(
-                                                             path  = cms.string('HLT_Ele22_eta2p1_WPLoose_Gsf_v\\[0-9]+'),
-                                                         ),
-    Ele23_WPLoose_Gsf                                    = cms.PSet(
-                                                             path  = cms.string('HLT_Ele23_WPLoose_Gsf_v\\[0-9]+'),
-                                                         ),
-    Ele27_WPLoose_Gsf                                    = cms.PSet(
-                                                             path  = cms.string('HLT_Ele27_WPLoose_Gsf_v\\[0-9]+'),
-                                                         ),
+    Ele12_CaloIdL_TrackIdL_IsoVL                         = cms.PSet( path  = cms.string('HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+') ),
+    Ele17_CaloIdL_TrackIdL_IsoVL                         = cms.PSet( path  = cms.string('HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+') ),
+    Ele23_CaloIdL_TrackIdL_IsoVL                         = cms.PSet( path  = cms.string('HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+') ),
+    Ele22_eta2p1_WPLoose_Gsf                             = cms.PSet( path  = cms.string('HLT_Ele22_eta2p1_WPLoose_Gsf_v\\[0-9]+') ),
+    Ele23_WPLoose_Gsf                                    = cms.PSet( path  = cms.string('HLT_Ele23_WPLoose_Gsf_v\\[0-9]+') ),
+    Ele27_WPLoose_Gsf                                    = cms.PSet( path  = cms.string('HLT_Ele27_WPLoose_Gsf_v\\[0-9]+') ),
     # double muon
-    Mu17_TrkIsoVVL_Mu8_TrkIsoVVL                         = cms.PSet(
-                                                             path  = cms.string('HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v\\[0-9]+'),
-                                                         ),
-    Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL                       = cms.PSet(
-                                                             path  = cms.string('HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v\\[0-9]+'),
-                                                         ),
+    Mu17_TrkIsoVVL_Mu8_TrkIsoVVL                         = cms.PSet( path  = cms.string('HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v\\[0-9]+') ),
+    Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL                       = cms.PSet( path  = cms.string('HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v\\[0-9]+') ),
     # double electron
-    Ele17_Ele12_CaloIdL_TrackIdL_IsoVL                   = cms.PSet(
-                                                             path  = cms.string('HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+'),
-                                                         ),
-    Ele23_Ele12_CaloIdL_TrackIdL_IsoVL                   = cms.PSet(
-                                                             path  = cms.string('HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+'),
-                                                         ),
+    Ele17_Ele12_CaloIdL_TrackIdL_IsoVL                   = cms.PSet( path  = cms.string('HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+') ),
+    Ele23_Ele12_CaloIdL_TrackIdL_IsoVL                   = cms.PSet( path  = cms.string('HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+') ),
     # electron muon
-    Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL           = cms.PSet(
-                                                             path  = cms.string('HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+'),
-                                                         ),
-    Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL          = cms.PSet(
-                                                             path  = cms.string('HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+'),
-                                                         ),
+    Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL           = cms.PSet( path  = cms.string('HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+') ),
+    Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL          = cms.PSet( path  = cms.string('HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+') ),
     # double tau
-    DoubleMediumIsoPFTau32_Trk1_eta2p1_Reg               = cms.PSet(
-                                                             path  = cms.string('HLT_DoubleMediumIsoPFTau32_Trk1_eta2p1_Reg_v\\[0-9]+'),
-                                                         ),
-    DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg               = cms.PSet(
-                                                             path  = cms.string('HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\[0-9]+'),
-                                                         ),
-    DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg               = cms.PSet(
-                                                             path  = cms.string('HLT_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v\\[0-9]+'),
-                                                         ),
+    DoubleMediumIsoPFTau32_Trk1_eta2p1_Reg               = cms.PSet( path  = cms.string('HLT_DoubleMediumIsoPFTau32_Trk1_eta2p1_Reg_v\\[0-9]+') ),
+    DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg               = cms.PSet( path  = cms.string('HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\[0-9]+') ),
+    DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg               = cms.PSet( path  = cms.string('HLT_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v\\[0-9]+') ),
+    # double photon
+    DoublePhoton60                                       = cms.PSet( path  = cms.string('HLT_DoublePhoton60_v\\[0-9]+') ),
     ## muon tau
-    #IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1              = cms.PSet(
-    #                                                         path  = cms.string('HLT_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1_v\\[0-9]+'),
-    #                                                     ),
-    #IsoMu20_eta2p1_LooseIsoPFTau20_SingleL1              = cms.PSet(
-    #                                                         path  = cms.string('HLT_IsoMu20_eta2p1_LooseIsoPFTau20_SingleL1_v\\[0-9]+'),
-    #                                                     ),
+    #IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1              = cms.PSet( path  = cms.string('HLT_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1_v\\[0-9]+') ),
+    #IsoMu20_eta2p1_LooseIsoPFTau20_SingleL1              = cms.PSet( path  = cms.string('HLT_IsoMu20_eta2p1_LooseIsoPFTau20_SingleL1_v\\[0-9]+') ),
     ## electron tau
-    #Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1    = cms.PSet(
-    #                                                         path  = cms.string('HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\[0-9]+'),
-    #                                                     ),
-    #Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1    = cms.PSet(
-    #                                                         path  = cms.string('HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\[0-9]+'),
-    #                                                     ),
+    #Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1    = cms.PSet( path  = cms.string('HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\[0-9]+') ),
+    #Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1    = cms.PSet( path  = cms.string('HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\[0-9]+') ),
     # triple lepton
-    Ele16_Ele12_Ele8_CaloIdL_TrackIdL                    = cms.PSet(
-                                                             path  = cms.string('HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v\\[0-9]+'),
-                                                         ),
-    Mu8_DiEle12_CaloIdL_TrackIdL                         = cms.PSet(
-                                                             path  = cms.string('HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\[0-9]+'),
-                                                         ),
-    DiMu9_Ele9_CaloIdL_TrackIdL                          = cms.PSet(
-                                                             path  = cms.string('HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\[0-9]+'),
-                                                         ),
-    TripleMu_12_10_5                                     = cms.PSet(
-                                                             path  = cms.string('HLT_TripleMu_12_10_5_v\\[0-9]+'),
-                                                         ),
+    Ele16_Ele12_Ele8_CaloIdL_TrackIdL                    = cms.PSet( path  = cms.string('HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v\\[0-9]+') ),
+    Mu8_DiEle12_CaloIdL_TrackIdL                         = cms.PSet( path  = cms.string('HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\[0-9]+') ),
+    DiMu9_Ele9_CaloIdL_TrackIdL                          = cms.PSet( path  = cms.string('HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\[0-9]+') ),
+    TripleMu_12_10_5                                     = cms.PSet( path  = cms.string('HLT_TripleMu_12_10_5_v\\[0-9]+') ),
 )
 
 # filters
 filterBranches = cms.PSet(
-    HBHENoiseFilter                    = cms.PSet(
-                                           path  = cms.string('Flag_HBHENoiseFilter'),
-                                       ),
-    HBHENoiseIsoFilter                 = cms.PSet(
-                                           path  = cms.string('Flag_HBHENoiseIsoFilter'),
-                                       ),
-    CSCTightHalo2015Filter             = cms.PSet(
-                                           path  = cms.string('Flag_CSCTightHalo2015Filter'),
-                                       ),
-    EcalDeadCellTriggerPrimitiveFilter = cms.PSet(
-                                           path  = cms.string('Flag_EcalDeadCellTriggerPrimitiveFilter'),
-                                       ),
-    goodVertices                       = cms.PSet(
-                                           path  = cms.string('Flag_goodVertices'),
-                                       ),
-    eeBadScFilter                      = cms.PSet(
-                                           path  = cms.string('Flag_eeBadScFilter'),
-                                       ),
+    HBHENoiseFilter                    = cms.PSet( path  = cms.string('Flag_HBHENoiseFilter') ),
+    HBHENoiseIsoFilter                 = cms.PSet( path  = cms.string('Flag_HBHENoiseIsoFilter') ),
+    CSCTightHalo2015Filter             = cms.PSet( path  = cms.string('Flag_CSCTightHalo2015Filter') ),
+    EcalDeadCellTriggerPrimitiveFilter = cms.PSet( path  = cms.string('Flag_EcalDeadCellTriggerPrimitiveFilter') ),
+    goodVertices                       = cms.PSet( path  = cms.string('Flag_goodVertices') ),
+    eeBadScFilter                      = cms.PSet( path  = cms.string('Flag_eeBadScFilter') ),
 )
 
 # vertices
@@ -583,7 +507,59 @@ tauBranches = commonJetCandidates.clone(
 
 # photons
 photonBranches = commonPatCandidates.clone(
-
+    # supercluster
+    superClusterEta                = cms.vstring('superCluster().eta','F'),
+    superClusterPhi                = cms.vstring('superCluster().phi','F'),
+    superClusterEnergy             = cms.vstring('superCluster().energy','F'),
+    superClusterRawEnergy          = cms.vstring('superCluster().rawEnergy','F'),
+    superClusterPreshowerEnergy    = cms.vstring('superCluster().preshowerEnergy','F'),
+    superClusterPhiWidth           = cms.vstring('superCluster().phiWidth','F'),
+    superClusterEtaWidth           = cms.vstring('superCluster().etaWidth','F'),
+    # isolation
+    full5x5SigmaIEtaIEta           = cms.vstring('userFloat("phoFull5x5SigmaIEtaIEta")','F'),
+    chargedIsolation               = cms.vstring('userFloat("phoChargedIsolation")','F'),
+    neutralHadronIsolation         = cms.vstring('userFloat("phoNeutralHadronIsolation")','F'),
+    photonIsolation                = cms.vstring('userFloat("phoPhotonIsolation")','F'),
+    effectiveAreaChargedHadrons    = cms.vstring('userFloat("EffectiveAreaChargedHadrons")','F'),
+    effectiveAreaNeutralHadrons    = cms.vstring('userFloat("EffectiveAreaNeutralHadrons")','F'),
+    effectiveAreaPhotons           = cms.vstring('userFloat("EffectiveAreaPhotons")','F'),
+    # type
+    passElectronVeto               = cms.vstring('passElectronVeto','I'),
+    hasPixelSeed                   = cms.vstring('hasPixelSeed','I'),
+    isPFlowPhoton                  = cms.vstring('isPFlowPhoton','I'),
+    isStandardPhoton               = cms.vstring('isStandardPhoton','I'),
+    # ID
+    cutBasedLoose                  = cms.vstring('userInt("cutBasedPhotonID-Spring15-25ns-V1-standalone-loose")','I'),
+    cutBasedMedium                 = cms.vstring('userInt("cutBasedPhotonID-Spring15-25ns-V1-standalone-medium")','I'),
+    cutBasedTight                  = cms.vstring('userInt("cutBasedPhotonID-Spring15-25ns-V1-standalone-tight")','I'),
+    mvaNonTrigWP90                 = cms.vstring('userInt("mvaPhoID-Spring15-25ns-nonTrig-V2-wp90")','I'),
+    mvaNonTrigValues               = cms.vstring('userFloat("PhotonMVAEstimatorRun2Spring15NonTrig25nsV2Values")','F'),
+    mvaNonTrigCategories           = cms.vstring('userInt("PhotonMVAEstimatorRun2Spring15NonTrig25nsV2Categories")','I'),
+    # ID variables
+    hadronicOverEM                 = cms.vstring('hadronicOverEm','F'),
+    hadronicDepth1OverEm           = cms.vstring('hadronicDepth1OverEm','F'),
+    hadronicDepth2OverEm           = cms.vstring('hadronicDepth2OverEm','F'),
+    sigmaIEtaIEta                  = cms.vstring('sigmaIetaIeta','F'),
+    e1x5                           = cms.vstring('e1x5','F'),
+    e2x5                           = cms.vstring('e2x5','F'),
+    e3x3                           = cms.vstring('e3x3','F'),
+    e5x5                           = cms.vstring('e5x5','F'),
+    maxEnergyXtal                  = cms.vstring('maxEnergyXtal','F'),
+    r1x5                           = cms.vstring('r1x5','F'),
+    r2x5                           = cms.vstring('r2x5','F'),
+    r9                             = cms.vstring('r9','F'),
+    # location
+    isEB                           = cms.vstring('isEB','I'),
+    isEE                           = cms.vstring('isEE','I'),
+    isEBGap                        = cms.vstring('isEBGap','I'),
+    isEBEtaGap                     = cms.vstring('isEBEtaGap','I'),
+    isEBPhiGap                     = cms.vstring('isEBPhiGap','I'),
+    isEEGap                        = cms.vstring('isEEGap','I'),
+    isEERingGap                    = cms.vstring('isEERingGap','I'),
+    isEEDeeGap                     = cms.vstring('isEEDeeGap','I'),
+    isEBEEGap                      = cms.vstring('isEBEEGap','I'),
+    # trigger matching
+    matches_DoublePhoton60         = cms.vstring('userInt("matches_DoublePhoton60")','I'),
 )
 
 # jets
