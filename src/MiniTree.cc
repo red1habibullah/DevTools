@@ -96,7 +96,7 @@ void MiniTree::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup) 
     //}
 
     // keep everything 
-    bool keep = true
+    bool keep = true;
 
     if (keep)
         tree_->Fill();
