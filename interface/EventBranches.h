@@ -16,5 +16,6 @@ class EventBranches {
     Int_t     runBranch_;
     Int_t     lumiBranch_;
     ULong64_t eventBranch_;
+    std::vector<std::string> provenanceBranch_;
 
 };
