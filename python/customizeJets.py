@@ -12,14 +12,17 @@ def customizeJets(process,coll,**kwargs):
     ######################
     ### recorrect jets ###
     ######################
-    #from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
+    from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
 
-    #updateJetCollection(
-    #    process,
-    #    jetSource = cms.InputTag(jSrc),
-    #    jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None')  # Do not forget 'L2L3Residual' on data!
-    #)
-    #jSrc = 'updatedPatJets'
+    jetCorr = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None')
+    if isMC:
+        jetCorr = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None')
+    updateJetCollection(
+        process,
+        jetSource = cms.InputTag(jSrc),
+        jetCorrections = jetCorr
+    )
+    jSrc = 'updatedPatJets'
 
     #################
     ### embed ids ###
