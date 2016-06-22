@@ -180,56 +180,21 @@ def customizeElectrons(process,coll,**kwargs):
     ##############################
     ### embed trigger matching ###
     ##############################
+    labels = []
+    paths = []
+    from triggers import triggerMap
+    for trigger in triggerMap:
+        if 'electron' in triggerMap[trigger]['objects']:
+            labels += ['matches_{0}'.format(trigger)]
+            paths += [triggerMap[trigger]['path']]
     process.eTrig = cms.EDProducer(
         "ElectronHLTMatchEmbedder",
         src = cms.InputTag(eSrc),
         triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
         triggerObjects = cms.InputTag("selectedPatTrigger"),
         deltaR = cms.double(0.5),
-        labels = cms.vstring(
-            # single electron
-            'matches_Ele12_CaloIdL_TrackIdL_IsoVL',
-            'matches_Ele17_CaloIdL_TrackIdL_IsoVL',
-            'matches_Ele23_CaloIdL_TrackIdL_IsoVL',
-            'matches_Ele22_eta2p1_WPLoose_Gsf',
-            'matches_Ele23_WPLoose_Gsf',
-            'matches_Ele27_WPLoose_Gsf',
-            # double electron
-            'matches_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL',
-            'matches_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL',
-            # muon electron
-            'matches_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL',
-            'matches_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL',
-            # electron tau
-            #'matches_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1',
-            #'matches_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1',
-            # multi lepton
-            'matches_Ele16_Ele12_Ele8_CaloIdL_TrackIdL',
-            'matches_Mu8_DiEle12_CaloIdL_TrackIdL',
-            'matches_DiMu9_Ele9_CaloIdL_TrackIdL',
-        ),
-        paths = cms.vstring(
-            # single electron
-            'HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',
-            'HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',
-            'HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',
-            'HLT_Ele22_eta2p1_WPLoose_Gsf_v\\[0-9]+',
-            'HLT_Ele23_WPLoose_Gsf_v\\[0-9]+',
-            'HLT_Ele27_WPLoose_Gsf_v\\[0-9]+',
-            # double electron
-            'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',
-            'HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',
-            # muon electron
-            'HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',
-            'HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',
-            # electron tau
-            #'HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\[0-9]+',
-            #'HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\[0-9]+',
-            # multi lepton
-            'HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v\\[0-9]+',
-            'HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\[0-9]+',
-            'HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\[0-9]+',
-        ),
+        labels = cms.vstring(*labels),
+        paths = cms.vstring(*paths),
     )
     eSrc = 'eTrig'
 

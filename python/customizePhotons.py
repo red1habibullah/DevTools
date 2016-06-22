@@ -146,20 +146,21 @@ def customizePhotons(process,coll,**kwargs):
     ##############################
     ### embed trigger matching ###
     ##############################
+    labels = []
+    paths = []
+    from triggers import triggerMap
+    for trigger in triggerMap:
+        if 'photon' in triggerMap[trigger]['objects']:
+            labels += ['matches_{0}'.format(trigger)]
+            paths += [triggerMap[trigger]['path']]
     process.pTrig = cms.EDProducer(
         "PhotonHLTMatchEmbedder",
         src = cms.InputTag(pSrc),
         triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
         triggerObjects = cms.InputTag("selectedPatTrigger"),
         deltaR = cms.double(0.5),
-        labels = cms.vstring(
-            # double photon
-            'matches_DoublePhoton60',
-        ),
-        paths = cms.vstring(
-            # double photon
-            'HLT_DoublePhoton60_v\\[0-9]+',
-        ),
+        labels = cms.vstring(*labels),
+        paths = cms.vstring(*paths),
     )
     pSrc = 'pTrig'
 
