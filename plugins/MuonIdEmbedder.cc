@@ -26,6 +26,9 @@ private:
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
   void endJob() {}
 
+  bool isMediumMuonICHEP(const reco::Muon& recoMu);
+  bool isSoftMuonICHEP(const reco::Muon& recoMu, const reco::Vertex& pv);
+
   // Data
   edm::EDGetTokenT<edm::View<pat::Muon> > collectionToken_; // input collection
   edm::EDGetTokenT<reco::VertexCollection> vertexToken_;  // vertices
@@ -57,7 +60,9 @@ void MuonIdEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     pat::Muon newObj = obj;
 
     newObj.addUserInt("isTightMuon", obj.isTightMuon(pv));
+    newObj.addUserInt("isMediumMuonICHEP", isMediumMuonICHEP(obj));
     newObj.addUserInt("isSoftMuon", obj.isSoftMuon(pv));
+    newObj.addUserInt("isSoftMuonICHEP", isSoftMuonICHEP(obj,pv));
     newObj.addUserInt("isHighPtMuon", obj.isHighPtMuon(pv));
     newObj.addUserFloat("segmentCompatibility", muon::segmentCompatibility(obj));
     newObj.addUserInt("isGoodMuon", muon::isGoodMuon(obj, muon::TMOneStationTight));
@@ -72,6 +77,31 @@ void MuonIdEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
   iEvent.put(out);
 }
+
+// ICHEP short term IDs
+// https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2#Short_Term_Instructions_for_ICHE
+bool MuonIdEmbedder::isMediumMuonICHEP(const reco::Muon & recoMu) 
+  {
+    bool goodGlob = recoMu.isGlobalMuon() && 
+                    recoMu.globalTrack()->normalizedChi2() < 3 && 
+                    recoMu.combinedQuality().chi2LocalPosition < 12 && 
+                    recoMu.combinedQuality().trkKink < 20; 
+    bool isMedium = muon::isLooseMuon(recoMu) && 
+                    recoMu.innerTrack()->validFraction() > 0.49 && 
+                    muon::segmentCompatibility(recoMu) > (goodGlob ? 0.303 : 0.451); 
+    return isMedium; 
+  }
+
+
+bool MuonIdEmbedder::isSoftMuonICHEP(const reco::Muon & recoMu, const reco::Vertex& pv) 
+  {
+    bool soft = muon::isGoodMuon(recoMu, muon::TMOneStationTight) &&
+                recoMu.innerTrack()->hitPattern().trackerLayersWithMeasurement() > 5 &&
+                recoMu.innerTrack()->hitPattern().pixelLayersWithMeasurement() > 0 &&
+                fabs(recoMu.innerTrack()->dxy(pv.position())) < 0.3 &&
+                fabs(recoMu.innerTrack()->dz(pv.position())) < 20.;
+    return soft;
+  }
 
 void MuonIdEmbedder::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   //The following says we do not know what parameters are allowed so do no validation

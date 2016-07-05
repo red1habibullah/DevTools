@@ -115,7 +115,7 @@ for trigger in triggerMap:
 filterBranches = cms.PSet(
     HBHENoiseFilter                    = cms.PSet( path  = cms.string('Flag_HBHENoiseFilter') ),
     HBHENoiseIsoFilter                 = cms.PSet( path  = cms.string('Flag_HBHENoiseIsoFilter') ),
-    CSCTightHalo2015Filter             = cms.PSet( path  = cms.string('Flag_CSCTightHalo2015Filter') ),
+    globalTightHalo2016Filter          = cms.PSet( path  = cms.string('Flag_globalTightHalo2016Filter') ),
     EcalDeadCellTriggerPrimitiveFilter = cms.PSet( path  = cms.string('Flag_EcalDeadCellTriggerPrimitiveFilter') ),
     goodVertices                       = cms.PSet( path  = cms.string('Flag_goodVertices') ),
     eeBadScFilter                      = cms.PSet( path  = cms.string('Flag_eeBadScFilter') ),
@@ -267,7 +267,9 @@ muonBranches = commonPatCandidates.clone(
     isTightMuon           = cms.vstring('userInt("isTightMuon")','I'),
     isHighPtMuon          = cms.vstring('userInt("isHighPtMuon")','I'),
     isSoftMuon            = cms.vstring('userInt("isSoftMuon")','I'),
+    isSoftMuonICHEP       = cms.vstring('userInt("isSoftMuonICHEP")','I'),
     isMediumMuon          = cms.vstring('isMediumMuon','I'),
+    isMediumMuonICHEP     = cms.vstring('userInt("isMediumMuonICHEP")','I'),
     isLooseMuon           = cms.vstring('isLooseMuon','I'),
     segmentCompatibility  = cms.vstring('userFloat("segmentCompatibility")','F'),
     isGoodMuon            = cms.vstring('userInt("isGoodMuon")','I'),
