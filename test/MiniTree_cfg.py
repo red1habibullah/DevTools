@@ -51,9 +51,9 @@ process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 ##################
 # this is if we need to override the jec in global tag
 #sqfile = os.environ['CMSSW_BASE'] + '/src/' + 'DevTools/Ntuplizer/data/Fall15_25nsV2_{0}.db'.format('MC' if options.isMC else 'DATA')
-sqfile = 'DevTools/Ntuplizer/data/Spring16_25nsV3_{0}.db'.format('MC' if options.isMC else 'DATA')
-#sqfile = 'src/DevTools/Ntuplizer/data/Spring16_25nsV3_{0}.db'.format('MC' if options.isMC else 'DATA')
-tag = 'JetCorrectorParametersCollection_Spring16_25nsV3_{0}_AK4PFchs'.format('MC' if options.isMC else 'DATA')
+sqfile = 'DevTools/Ntuplizer/data/Spring16_25nsV6_{0}.db'.format('MC' if options.isMC else 'DATA')
+#sqfile = 'src/DevTools/Ntuplizer/data/Spring16_25nsV6_{0}.db'.format('MC' if options.isMC else 'DATA')
+tag = 'JetCorrectorParametersCollection_Spring16_25nsV6_{0}_AK4PFchs'.format('MC' if options.isMC else 'DATA')
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
 from CondCore.DBCommon.CondDBSetup_cfi import *
 process.jec = cms.ESSource("PoolDBESSource",
