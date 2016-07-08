@@ -43,34 +43,36 @@ process.options = cms.untracked.PSet(
 #################
 envvar = 'mcgt' if options.isMC else 'datagt'
 from Configuration.AlCa.GlobalTag import GlobalTag
-GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
+#GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
+# https://twiki.cern.ch/twiki/bin/view/CMS/JECDataMC
+GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': '80X_dataRun2_Prompt_ICHEP16JEC_v0'}
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 ##################
 ### JEC source ###
 ##################
-# this is if we need to override the jec in global tag
-#sqfile = os.environ['CMSSW_BASE'] + '/src/' + 'DevTools/Ntuplizer/data/Fall15_25nsV2_{0}.db'.format('MC' if options.isMC else 'DATA')
-sqfile = 'DevTools/Ntuplizer/data/Spring16_25nsV6_{0}.db'.format('MC' if options.isMC else 'DATA')
-#sqfile = 'src/DevTools/Ntuplizer/data/Spring16_25nsV6_{0}.db'.format('MC' if options.isMC else 'DATA')
-tag = 'JetCorrectorParametersCollection_Spring16_25nsV6_{0}_AK4PFchs'.format('MC' if options.isMC else 'DATA')
-process.load("CondCore.DBCommon.CondDBCommon_cfi")
-from CondCore.DBCommon.CondDBSetup_cfi import *
-process.jec = cms.ESSource("PoolDBESSource",
-    DBParameters = cms.PSet(
-        messageLevel = cms.untracked.int32(0)
-    ),
-    timetype = cms.string('runnumber'),
-    toGet = cms.VPSet(
-        cms.PSet(
-            record = cms.string('JetCorrectionsRecord'),
-            tag    = cms.string(tag),
-            label  = cms.untracked.string('AK4PFchs')
-        ),
-    ), 
-    connect = cms.string('sqlite:{0}'.format(sqfile)),
-)
-process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
+## this is if we need to override the jec in global tag
+##sqfile = os.environ['CMSSW_BASE'] + '/src/' + 'DevTools/Ntuplizer/data/Fall15_25nsV2_{0}.db'.format('MC' if options.isMC else 'DATA')
+#sqfile = 'DevTools/Ntuplizer/data/Spring16_25nsV6_{0}.db'.format('MC' if options.isMC else 'DATA')
+##sqfile = 'src/DevTools/Ntuplizer/data/Spring16_25nsV6_{0}.db'.format('MC' if options.isMC else 'DATA')
+#tag = 'JetCorrectorParametersCollection_Spring16_25nsV6_{0}_AK4PFchs'.format('MC' if options.isMC else 'DATA')
+#process.load("CondCore.DBCommon.CondDBCommon_cfi")
+#from CondCore.DBCommon.CondDBSetup_cfi import *
+#process.jec = cms.ESSource("PoolDBESSource",
+#    DBParameters = cms.PSet(
+#        messageLevel = cms.untracked.int32(0)
+#    ),
+#    timetype = cms.string('runnumber'),
+#    toGet = cms.VPSet(
+#        cms.PSet(
+#            record = cms.string('JetCorrectionsRecord'),
+#            tag    = cms.string(tag),
+#            label  = cms.untracked.string('AK4PFchs')
+#        ),
+#    ), 
+#    connect = cms.string('sqlite:{0}'.format(sqfile)),
+#)
+#process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
 #############################
 ### Setup rest of running ###
