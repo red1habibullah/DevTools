@@ -2,6 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 def customizePhotons(process,coll,**kwargs):
     '''Customize photons'''
+    reHLT = kwargs.pop('reHLT',False)
     isMC = kwargs.pop('isMC',False)
     pSrc = coll['photons']
     rhoSrc = coll['rho']
@@ -156,7 +157,8 @@ def customizePhotons(process,coll,**kwargs):
     process.pTrig = cms.EDProducer(
         "PhotonHLTMatchEmbedder",
         src = cms.InputTag(pSrc),
-        triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
+        #triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
+        triggerResults = cms.InputTag('TriggerResults', '', 'HLT2') if reHLT else cms.InputTag('TriggerResults', '', 'HLT'),
         triggerObjects = cms.InputTag("selectedPatTrigger"),
         deltaR = cms.double(0.5),
         labels = cms.vstring(*labels),

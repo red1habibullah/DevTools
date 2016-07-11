@@ -2,6 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 def customizeElectrons(process,coll,**kwargs):
     '''Customize electrons'''
+    reHLT = kwargs.pop('reHLT',False)
     isMC = kwargs.pop('isMC',False)
     eSrc = coll['electrons']
     rhoSrc = coll['rho']
@@ -190,7 +191,8 @@ def customizeElectrons(process,coll,**kwargs):
     process.eTrig = cms.EDProducer(
         "ElectronHLTMatchEmbedder",
         src = cms.InputTag(eSrc),
-        triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
+        #triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
+        triggerResults = cms.InputTag('TriggerResults', '', 'HLT2') if reHLT else cms.InputTag('TriggerResults', '', 'HLT'),
         triggerObjects = cms.InputTag("selectedPatTrigger"),
         deltaR = cms.double(0.5),
         labels = cms.vstring(*labels),

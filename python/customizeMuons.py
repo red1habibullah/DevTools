@@ -2,6 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 def customizeMuons(process,coll,**kwargs):
     '''Customize muons'''
+    reHLT = kwargs.pop('reHLT',False)
     isMC = kwargs.pop('isMC',False)
     mSrc = coll['muons']
     rhoSrc = coll['rho']
@@ -73,7 +74,8 @@ def customizeMuons(process,coll,**kwargs):
     process.mTrig = cms.EDProducer(
         "MuonHLTMatchEmbedder",
         src = cms.InputTag(mSrc),
-        triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
+        #triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
+        triggerResults = cms.InputTag('TriggerResults', '', 'HLT2') if reHLT else cms.InputTag('TriggerResults', '', 'HLT'),
         triggerObjects = cms.InputTag("selectedPatTrigger"),
         deltaR = cms.double(0.5),
         labels = cms.vstring(*labels),

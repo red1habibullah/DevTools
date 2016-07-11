@@ -2,6 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 def customizeTaus(process,coll,**kwargs):
     '''Customize taus'''
+    reHLT = kwargs.pop('reHLT',False)
     isMC = kwargs.pop('isMC',False)
     tSrc = coll['taus']
     rhoSrc = coll['rho']
@@ -50,7 +51,8 @@ def customizeTaus(process,coll,**kwargs):
     process.tTrig = cms.EDProducer(
         "TauHLTMatchEmbedder",
         src = cms.InputTag(tSrc),
-        triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
+        #triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
+        triggerResults = cms.InputTag('TriggerResults', '', 'HLT2') if reHLT else cms.InputTag('TriggerResults', '', 'HLT'),
         triggerObjects = cms.InputTag("selectedPatTrigger"),
         deltaR = cms.double(0.5),
         labels = cms.vstring(*labels),

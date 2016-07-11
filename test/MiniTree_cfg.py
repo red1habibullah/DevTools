@@ -6,8 +6,9 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 
 options.outputFile = 'miniTree.root'
-options.inputFiles= '/store/mc/RunIISpring16MiniAODv2/ZZTo4L_13TeV_powheg_pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/00000/024C8A3E-7D1A-E611-A094-002590494C82.root'
+#options.inputFiles= '/store/mc/RunIISpring16MiniAODv2/ZZTo4L_13TeV_powheg_pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/00000/024C8A3E-7D1A-E611-A094-002590494C82.root'
 #options.inputFiles = '/store/user/dntaylor/HPlusPlusHMinusMinusHTo4L_M-500_13TeV-pythia8/RunIISpring16MiniAODv2_MINIAODSIM_v1/160513_105853/0000/dblh_mini_step1_1.root'
+options.inputFiles = '/store/user/dntaylor/HPlusPlusHMinusHTo3L_M-1000_TuneCUETP8M1_13TeV_calchep-pythia8/RunIISpring16MiniAODv2_reHLT_MINIAODSIM-real_v1/160711_075328/0000/dblh_1_17.root'
 #options.inputFiles = '/store/data/Run2016B/MuonEG/MINIAOD/PromptReco-v2/000/273/158/00000/26281378-291A-E611-AE69-02163E011E9B.root'
 options.maxEvents = -1
 options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
@@ -90,6 +91,8 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService", 
     fileName = cms.string(options.outputFile),
 )
+
+reHLT = 'reHLT' in process.source.fileNames[0] if len(process.source.fileNames) else False
 
 process.schedule = cms.Schedule()
 
@@ -199,6 +202,7 @@ collections = customizeElectrons(
     process,
     collections,
     isMC=bool(options.isMC),
+    reHLT=reHLT,
 )
 
 from DevTools.Ntuplizer.customizeMuons import customizeMuons
@@ -206,6 +210,7 @@ collections = customizeMuons(
     process,
     collections,
     isMC=bool(options.isMC),
+    reHLT=reHLT,
 )
 
 from DevTools.Ntuplizer.customizeTaus import customizeTaus
@@ -213,6 +218,7 @@ collections = customizeTaus(
     process,
     collections,
     isMC=bool(options.isMC),
+    reHLT=reHLT,
 )
 
 from DevTools.Ntuplizer.customizePhotons import customizePhotons
@@ -220,6 +226,7 @@ collections = customizePhotons(
     process,
     collections,
     isMC=bool(options.isMC),
+    reHLT=reHLT,
 )
 
 from DevTools.Ntuplizer.customizeJets import customizeJets
@@ -227,6 +234,7 @@ collections = customizeJets(
     process,
     collections,
     isMC=bool(options.isMC),
+    reHLT=reHLT,
 )
 
 from DevTools.Ntuplizer.customizeMets import customizeMets
@@ -234,6 +242,7 @@ collections = customizeMets(
     process,
     collections,
     isMC=bool(options.isMC),
+    reHLT=reHLT,
 )
 
 # select desired objects
@@ -249,6 +258,8 @@ process.load("DevTools.Ntuplizer.MiniTree_cfi")
 
 process.miniTree.isData = not options.isMC
 process.miniTree.filterResults = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
+if reHLT:
+    process.miniTree.triggerResults = cms.InputTag('TriggerResults', '', 'HLT2')
 process.miniTree.vertexCollections.vertices.collection = collections['vertices']
 if options.isMC:
     from DevTools.Ntuplizer.branchTemplates import genParticleBranches 
