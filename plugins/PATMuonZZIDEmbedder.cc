@@ -166,7 +166,8 @@ bool PATMuonZZIDEmbedder::passTrackerHighPtID(const edm::Ptr<pat::Muon>& mu) con
           mu->dB() < 0.2 &&
           fabs(mu->muonBestTrack()->dz(vertices->at(0).position())) < 0.5 &&
           mu->innerTrack()->hitPattern().numberOfValidPixelHits() > 0 &&
-          mu->innerTrack()->hitPattern().trackerLayersWithMeasurement() > 5);
+          mu->innerTrack()->hitPattern().trackerLayersWithMeasurement() > 5 &&
+          mu->muonBestTrack()->ptError() / mu->muonBestTrack()->pt() < 0.3);
 }
 
 
