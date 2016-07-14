@@ -85,6 +85,20 @@ def customizeMuons(process,coll,**kwargs):
 
     process.muonCustomization *= process.mTrig
 
+    #####################
+    ### embed HZZ IDs ###
+    #####################
+    # https://github.com/nwoods/UWVV/blob/ichep/AnalysisTools/python/templates/ZZID.py
+    # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016
+    process.mHZZEmbedder = cms.EDProducer(
+        "PATMuonZZIDEmbedder",
+        src = cms.InputTag(mSrc),
+        vtxSrc = cms.InputTag(pvSrc),
+        ptCut = cms.double(5.),
+    )
+    mSrc = 'mHZZEmbedder'
+    process.muonCustomization *= process.mHZZEmbedder
+
     # add to schedule
     process.schedule.append(process.muonCustomization)
 

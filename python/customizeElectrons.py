@@ -202,6 +202,29 @@ def customizeElectrons(process,coll,**kwargs):
 
     process.electronCustomization *= process.eTrig
 
+    #####################
+    ### embed HZZ IDs ###
+    #####################
+    # https://github.com/nwoods/UWVV/blob/ichep/AnalysisTools/python/templates/ZZID.py
+    # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016
+    process.eHZZEmbedder = cms.EDProducer(
+        "PATElectronZZIDEmbedder",
+        src = cms.InputTag(eSrc),
+        vtxSrc = cms.InputTag(pvSrc),
+        bdtLabel = cms.string('ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values'),
+        idCutLowPtLowEta = cms.double(-.211),
+        idCutLowPtMedEta = cms.double(-.396),
+        idCutLowPtHighEta = cms.double(-.215),
+        idCutHighPtLowEta = cms.double(-.870),
+        idCutHighPtMedEta = cms.double(-.838),
+        idCutHighPtHighEta = cms.double(-.763),
+        missingHitsCut = cms.int32(999),
+        ptCut = cms.double(7.), 
+    )
+    eSrc = 'eHZZEmbedder'
+    process.electronCustomization *= process.eHZZEmbedder
+
+
     # add to schedule
     process.schedule.append(process.electronCustomization)
 
