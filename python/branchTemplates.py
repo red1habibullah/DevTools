@@ -198,7 +198,8 @@ electronBranches = commonPatCandidates.clone(
     mvaNonTrigCategories           = cms.vstring('userInt("ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Categories")','I'),
     mvaTrigCategories              = cms.vstring('userInt("ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories")','I'),
     wwLoose                        = cms.vstring('userInt("WWLoose")','I'),
-    hzzID                          = cms.vstring('userInt("HZZ4lIDPass")','I'),
+    hzzLoose                       = cms.vstring('userInt("HZZ4lIDPass")','I'),
+    hzzTight                       = cms.vstring('userInt("HZZ4lIDPassTight")','I'),
     # pv
     dz                             = cms.vstring('userFloat("dz")','F'),
     dxy                            = cms.vstring('userFloat("dxy")','F'),
@@ -286,7 +287,8 @@ muonBranches = commonPatCandidates.clone(
     bestTrackPt           = cms.vstring('? muonBestTrack.isNonnull ? muonBestTrack().pt : -1','F'),
     trackerStandaloneMatch= cms.vstring('combinedQuality().chi2LocalPosition','F'),
     trackKink             = cms.vstring('combinedQuality().trkKink','F'),
-    hzzID                 = cms.vstring('userInt("HZZ4lIDPass")','I'),
+    hzzLoose              = cms.vstring('userInt("HZZ4lIDPass")','I'),
+    hzzTight              = cms.vstring('userInt("HZZ4lIDPassTight")','I'),
     # pv
     dz                    = cms.vstring('userFloat("dz")','F'),
     dxy                   = cms.vstring('userFloat("dxy")','F'),
