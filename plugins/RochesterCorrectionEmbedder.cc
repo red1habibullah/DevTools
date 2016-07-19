@@ -9,7 +9,7 @@
 
 #include "DataFormats/PatCandidates/interface/Muon.h"
 
-#include "DevTools/Ntuplizer/plugins/rochcor2015.h"
+#include "DevTools/Ntuplizer/plugins/rochcor2016.h"
 //#include "DevTools/Ntuplizer/plugins/RoccoR.h"
 
 class RochesterCorrectionEmbedder : public edm::stream::EDProducer<>
@@ -30,7 +30,7 @@ private:
   edm::EDGetTokenT<edm::View<pat::Muon> > collectionToken_; // input collection
   bool isData_;
   std::auto_ptr<std::vector<pat::Muon> > out;             // Collection we'll output at the end
-  std::auto_ptr<rochcor2015> rmcor;
+  std::auto_ptr<rochcor2016> rmcor;
 };
 
 // Constructors and destructors
@@ -38,7 +38,7 @@ RochesterCorrectionEmbedder::RochesterCorrectionEmbedder(const edm::ParameterSet
   collectionToken_(consumes<edm::View<pat::Muon> >(iConfig.getParameter<edm::InputTag>("src"))),
   isData_(iConfig.getParameter<bool>("isData"))
 {
-  rmcor = std::auto_ptr<rochcor2015>(new rochcor2015());
+  rmcor = std::auto_ptr<rochcor2016>(new rochcor2016());
   produces<std::vector<pat::Muon> >();
 }
 

@@ -1,6 +1,7 @@
 #include "TRandom3.h"
 #include "TMath.h"
 #include "RoccoR.h"
+//#include "__utils__/RoccoR.h"
 
 
 int RocRes::getBin(double x, const int NN, const double *b){
@@ -40,30 +41,30 @@ int RocRes::getNBinMC(double v, int H){
 }
 
 void RocRes::dumpParams(){
-    //cout << NMIN << endl;
-    //cout << NTRK << endl;
-    //cout << NETA << endl;
-    //for(int H=0; H<NETA+1; ++H) cout << BETA[H] << " ";
-    //cout << endl;
-    //for(int H=0; H<NETA; ++H){
-    //    for(int F=0; F<NTRK; ++F){
-    //        cout << Form("%8.4f %8.4f %8.4f | ", width[H][F], alpha[H][F], power[H][F]);
-    //    }
-    //    cout << endl;
-    //}
-    //for(int H=0; H<NETA; ++H){
-    //    for(int F=0; F<NTRK+1; ++F){
-    //        cout << Form("%8.4f %8.4f| ", ntrk[H][F], dtrk[H][F]);
-    //    }
-    //    cout << endl;
-    //}
-    //for(int H=0; H<NETA; ++H){
-    //    for(int F=0; F<NTRK; ++F){
-    //        cb[H][F].init(0.0, width[H][F], alpha[H][F], power[H][F]);
-    //        cout << Form("%8.4f %8.4f %8.4f | ", rmsA[H][F], rmsB[H][F], rmsC[H][F]);
-    //    }
-    //    cout << endl;
-    //}
+    cout << NMIN << endl;
+    cout << NTRK << endl;
+    cout << NETA << endl;
+    for(int H=0; H<NETA+1; ++H) cout << BETA[H] << " ";
+    cout << endl;
+    for(int H=0; H<NETA; ++H){
+	for(int F=0; F<NTRK; ++F){
+	    cout << Form("%8.4f %8.4f %8.4f | ", width[H][F], alpha[H][F], power[H][F]);
+	}
+	cout << endl;
+    }
+    for(int H=0; H<NETA; ++H){
+	for(int F=0; F<NTRK+1; ++F){
+	    cout << Form("%8.4f %8.4f| ", ntrk[H][F], dtrk[H][F]);
+	}
+	cout << endl;
+    }
+    for(int H=0; H<NETA; ++H){
+	for(int F=0; F<NTRK; ++F){
+	    cb[H][F].init(0.0, width[H][F], alpha[H][F], power[H][F]);
+	    cout << Form("%8.4f %8.4f %8.4f | ", rmsA[H][F], rmsB[H][F], rmsC[H][F]);
+	}
+	cout << endl;
+    }
 }
 
 
