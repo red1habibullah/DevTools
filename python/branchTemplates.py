@@ -468,6 +468,11 @@ photonBranches = commonPatCandidates.clone(
     isEERingGap                    = cms.vstring('isEERingGap','I'),
     isEEDeeGap                     = cms.vstring('isEEDeeGap','I'),
     isEBEEGap                      = cms.vstring('isEBEEGap','I'),
+    # uncorrected objects
+    pt_uncorrected                 = cms.vstring('userCand("uncorrected").pt()','F'),
+    eta_uncorrected                = cms.vstring('userCand("uncorrected").eta()','F'),
+    phi_uncorrected                = cms.vstring('userCand("uncorrected").phi()','F'),
+    energy_uncorrected             = cms.vstring('userCand("uncorrected").energy()','F'),
 )
 
 # jets
@@ -502,14 +507,14 @@ jetBranches = commonJetCandidates.clone(
     puID                                         = cms.vstring('userInt("puID")','I'),
     pileupJetIdDiscriminant                      = cms.vstring('userFloat("pileupJetId:fullDiscriminant")','F'),
     # energy shifts
-    #pt_jetEnUp                                   = cms.vstring('userCand("JetEnUp").pt()','F'),
-    #eta_jetEnUp                                  = cms.vstring('userCand("JetEnUp").eta()','F'),
-    #phi_jetEnUp                                  = cms.vstring('userCand("JetEnUp").phi()','F'),
-    #energy_jetEnUp                               = cms.vstring('userCand("JetEnUp").energy()','F'),
-    #pt_jetEnDown                                 = cms.vstring('userCand("JetEnDown").pt()','F'),
-    #eta_jetEnDown                                = cms.vstring('userCand("JetEnDown").eta()','F'),
-    #phi_jetEnDown                                = cms.vstring('userCand("JetEnDown").phi()','F'),
-    #energy_jetEnDown                             = cms.vstring('userCand("JetEnDown").energy()','F'),
+    pt_jetEnUp                                   = cms.vstring('userCand("JetEnUp").pt()','F'),
+    eta_jetEnUp                                  = cms.vstring('userCand("JetEnUp").eta()','F'),
+    phi_jetEnUp                                  = cms.vstring('userCand("JetEnUp").phi()','F'),
+    energy_jetEnUp                               = cms.vstring('userCand("JetEnUp").energy()','F'),
+    pt_jetEnDown                                 = cms.vstring('userCand("JetEnDown").pt()','F'),
+    eta_jetEnDown                                = cms.vstring('userCand("JetEnDown").eta()','F'),
+    phi_jetEnDown                                = cms.vstring('userCand("JetEnDown").phi()','F'),
+    energy_jetEnDown                             = cms.vstring('userCand("JetEnDown").energy()','F'),
 )
 
 # mets

@@ -13,11 +13,20 @@ def customizePhotons(process,coll,**kwargs):
     ###################################
     ### scale and smear corrections ###
     ###################################
-    #process.load('EgammaAnalysis.ElectronTools.calibratedPhotonsRun2_cfi')
-    #process.calibratedPatPhotons.photons = pSrc
-    #process.calibratedPatPhotons.isMC = isMC
-    #process.photonCustomization *= process.calibratedPatPhotons
-    #pSrc = 'calibratedPatPhotons'
+    # embed the uncorrected stuff
+    process.uncorPhoton = cms.EDProducer(
+        "PhotonSelfEmbedder",
+        src=cms.InputTag(pSrc),
+        label=cms.string('uncorrected'),
+    )
+    pSrc = "uncorPhoton"
+    process.photonCustomization *= process.uncorPhoton
+
+    process.load('EgammaAnalysis.ElectronTools.calibratedPhotonsRun2_cfi')
+    process.calibratedPatPhotons.photons = pSrc
+    process.calibratedPatPhotons.isMC = isMC
+    process.photonCustomization *= process.calibratedPatPhotons
+    pSrc = 'calibratedPatPhotons'
 
     #######################
     ### embed Isolation ###

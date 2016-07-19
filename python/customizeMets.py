@@ -10,6 +10,7 @@ def customizeMets(process,coll,**kwargs):
     mSrc = coll['muons']
     tSrc = coll['taus']
     pfSrc = coll['packed']
+    pvSrc = coll['vertices']
 
     process.metCustomization = cms.Path()
 
@@ -32,20 +33,22 @@ def customizeMets(process,coll,**kwargs):
 
     # this works now, but leave in case they break it again
     # correct things to make it work
-    #getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).vertexCollection = cms.InputTag('offlineSlimmedPrimaryVertices')
-    #del getattr(process,'slimmedMETs{0}'.format(postfix)).caloMET
+    del getattr(process,'slimmedMETs{0}'.format(postfix)).caloMET
+    getattr(process,'shiftedPatJetEnUp{0}'.format(postfix)).src = cms.InputTag("cleanedPatJets{0}".format(postfix))
+    getattr(process,'shiftedPatJetEnDown{0}'.format(postfix)).src = cms.InputTag("cleanedPatJets{0}".format(postfix))
+    getattr(process,'shiftedPatMETCorrJetEnUp{0}'.format(postfix)).srcOriginal = cms.InputTag("cleanedPatJets{0}".format(postfix))
+    getattr(process,'shiftedPatMETCorrJetEnDown{0}'.format(postfix)).srcOriginal = cms.InputTag("cleanedPatJets{0}".format(postfix))
+    getattr(process,'shiftedPatMETCorrJetResUp{0}'.format(postfix)).srcOriginal = cms.InputTag("cleanedPatJets{0}".format(postfix))
+    getattr(process,'shiftedPatMETCorrJetResDown{0}'.format(postfix)).srcOriginal = cms.InputTag("cleanedPatJets{0}".format(postfix))
+    getattr(process,'pfCandsNoJets{0}'.format(postfix)).veto = cms.InputTag("cleanedPatJets{0}".format(postfix))
+    getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).srcPFlow = cms.InputTag(pfSrc)
+    getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).vertexCollection = cms.InputTag(pvSrc)
+
+    # switch to uncleaned jets
+    getattr(process,'shiftedPatJetEnUp{0}'.format(postfix)).src = cms.InputTag(jSrc)
+    getattr(process,'shiftedPatJetEnDown{0}'.format(postfix)).src = cms.InputTag(jSrc)
 
     metSrc = "slimmedMETs{0}".format(postfix)
-
-    # and once again fix
-    #getattr(process,'shiftedPatJetEnUp{0}'.format(postfix)).src = cms.InputTag("cleanedPatJets{0}".format(postfix))
-    #getattr(process,'shiftedPatJetEnDown{0}'.format(postfix)).src = cms.InputTag("cleanedPatJets{0}".format(postfix))
-    #getattr(process,'shiftedPatMETCorrJetEnUp{0}'.format(postfix)).srcOriginal = cms.InputTag("cleanedPatJets{0}".format(postfix))
-    #getattr(process,'shiftedPatMETCorrJetEnDown{0}'.format(postfix)).srcOriginal = cms.InputTag("cleanedPatJets{0}".format(postfix))
-    #getattr(process,'shiftedPatMETCorrJetResUp{0}'.format(postfix)).srcOriginal = cms.InputTag("cleanedPatJets{0}".format(postfix))
-    #getattr(process,'shiftedPatMETCorrJetResDown{0}'.format(postfix)).srcOriginal = cms.InputTag("cleanedPatJets{0}".format(postfix))
-    #getattr(process,'pfCandsNoJets{0}'.format(postfix)).veto = cms.InputTag("cleanedPatJets{0}".format(postfix))
-    #getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).srcPFlow = cms.InputTag(pfSrc)
     
     ####################
     ### embed shifts ###

@@ -31,13 +31,17 @@ process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True),
 )
 
-#process.RandomNumberGeneratorService = cms.Service(
-#    "RandomNumberGeneratorService",
-#    calibratedPatElectrons = cms.PSet(
-#        initialSeed = cms.untracked.uint32(1),
-#        engineName = cms.untracked.string('TRandom3')
-#    ),
-#)
+process.RandomNumberGeneratorService = cms.Service(
+    "RandomNumberGeneratorService",
+    calibratedPatElectrons = cms.PSet(
+        initialSeed = cms.untracked.uint32(1),
+        engineName = cms.untracked.string('TRandom3')
+    ),
+    calibratedPatPhotons = cms.PSet(
+        initialSeed = cms.untracked.uint32(2),
+        engineName = cms.untracked.string('TRandom3')
+    ),
+)
 
 #################
 ### GlobalTag ###
