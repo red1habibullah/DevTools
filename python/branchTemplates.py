@@ -213,7 +213,7 @@ electronBranches = commonPatCandidates.clone(
     edB3D                          = cms.vstring('userFloat("edB3D")','F'),
     # energy shifts
     pt_electronEnUp                                     = cms.vstring('userCand("ElectronEnUp").pt()','F'),
-    eta_electornEnUp                                    = cms.vstring('userCand("ElectronEnUp").eta()','F'),
+    eta_electronEnUp                                    = cms.vstring('userCand("ElectronEnUp").eta()','F'),
     phi_electronEnUp                                    = cms.vstring('userCand("ElectronEnUp").phi()','F'),
     energy_electronEnUp                                 = cms.vstring('userCand("ElectronEnUp").energy()','F'),
     pt_electronEnDown                                   = cms.vstring('userCand("ElectronEnDown").pt()','F'),
