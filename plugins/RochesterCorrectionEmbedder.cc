@@ -54,17 +54,29 @@ void RochesterCorrectionEmbedder::produce(edm::Event& iEvent, const edm::EventSe
     const auto obj = collection->at(c);
     pat::Muon newObj = obj;
 
+    //std::cout << "muon " << c << " " << obj.pt() << " " << obj.eta() << " " << obj.phi() << " " << obj.mass() << std::endl;
+    
+    if (!obj.mass()) { // something breaks when mass = 0, just dont run
+      newObj.addUserFloat("rochesterPt", obj.pt());
+      newObj.addUserFloat("rochesterEta", obj.eta());
+      newObj.addUserFloat("rochesterPhi", obj.phi());
+      newObj.addUserFloat("rochesterEnergy", obj.energy());
+      newObj.addUserFloat("rochesterError", 1.);
+      out->push_back(newObj);
+      continue;
+    }
+
     TLorentzVector p4;
     p4.SetPtEtaPhiM(obj.pt(),obj.eta(),obj.phi(),obj.mass());
     int charge = obj.charge();
     float qter = 1.0; 
-    int runopt = 0;
-    int ntrk = 0;
 
     if (isData_) {
+      int runopt = 0;
       rmcor->momcor_data(p4, charge, runopt, qter);
     }
     else {
+      int ntrk = 0;
       rmcor->momcor_mc(p4, charge, ntrk, qter);
     }
 

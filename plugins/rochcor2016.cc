@@ -273,6 +273,8 @@ void rochcor2016::momcor_mc( TLorentzVector& mu, float charge, int ntrk, float& 
   double muphi = mu.Phi();
   double mueta = mu.Eta(); // same with mu.Eta() in Root
 
+  //std::cout << "before " << mupt << " " << mueta << " " << muphi << std::endl;
+
   //double px = mu.Px();
   //double py = mu.Py();
   //double pz = mu.Pz();
@@ -311,6 +313,7 @@ void rochcor2016::momcor_mc( TLorentzVector& mu, float charge, int ntrk, float& 
     
   }
   
+  //std::cout << mupt << " " << mueta << " " << muphi << " " << mu_mass << std::endl;
   if (mupt==mupt && mupt>0) { // prevent NaN and negative
       mu.SetPtEtaPhiM(mupt,mueta,muphi,mu_mass);
   }
@@ -325,6 +328,8 @@ void rochcor2016::momcor_data( TLorentzVector& mu, float charge, int runopt, flo
   double muphi = mu.Phi();
   double mueta = mu.Eta(); // same with mu.Eta() in Root
   
+  //std::cout << "before " << mupt << " " << mueta << " " << muphi << std::endl;
+
   //double px = mu.Px();
   //double py = mu.Py();
   //double pz = mu.Pz();
@@ -358,6 +363,7 @@ void rochcor2016::momcor_data( TLorentzVector& mu, float charge, int runopt, flo
     
   }
   
+  //std::cout << mupt << " " << mueta << " " << muphi << " " << mu_mass << std::endl;
   if (mupt==mupt && mupt>0) { // prevent NaN and negative
     mu.SetPtEtaPhiM(mupt,mueta,muphi,mu_mass);
   }
