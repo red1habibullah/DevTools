@@ -7,14 +7,17 @@ pushd $CMSSW_BASE/src
 # EGMSmearer
 git remote add -f -t ecal_smear_fix_80X emanueledimarco https://github.com/emanueledimarco/cmssw.git
 git cms-addpkg EgammaAnalysis/ElectronTools
-git checkout -b from-277de3c 277de3c
+#git checkout -b from-277de3c 277de3c # old 
+git checkout -b from-52f192a 52f192a # updated full 12.9
 
 # download the txt files with the corrections
 pushd EgammaAnalysis/ElectronTools/data
 # corrections calculated with the first 4/fb of 2016 data
 #git clone -b ICHEP2016_approval_4fb https://github.com/ECALELFS/ScalesSmearings.git
 # or, alternatively, corrections calculated with first 7.65/fb of 2016 data
-git clone -b ICHEP2016_approval_7p65fb https://github.com/emanueledimarco/ScalesSmearings.git
+#git clone -b ICHEP2016_approval_7p65fb https://github.com/emanueledimarco/ScalesSmearings.git
+# corrections calculated with 12.9 fb-1 of 2016 data (ICHEP 16 dataset).
+git clone -b ICHEP2016_v2 https://github.com/ECALELFS/ScalesSmearings.git
 popd
 
 # MET
