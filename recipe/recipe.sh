@@ -3,6 +3,9 @@
 # CMSSW packages
 pushd $CMSSW_BASE/src
 
+# IDs
+git cms-merge-topic ikrav:egm_id_80X_v1
+
 
 # EGMSmearer
 git remote add -f -t ecal_smear_fix_80X emanueledimarco https://github.com/emanueledimarco/cmssw.git
