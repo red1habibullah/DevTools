@@ -83,20 +83,20 @@ void MiniTree::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup) 
 
     // decide if we store it
     // for now, require at least 1 lepton
-    //bool keep = false;
-    //for ( auto& coll : collectionBranches_ ) {
-    //    std::string name = coll->getName();
-    //    int count = coll->getCount();
-    //    if (name=="electrons" && count>0)
-    //        keep = true;
-    //    if (name=="muons" && count>0)
-    //        keep = true;
-    //    if (name=="taus" && count>0)
-    //        keep = true;
-    //}
+    bool keep = false;
+    for ( auto& coll : collectionBranches_ ) {
+        std::string name = coll->getName();
+        int count = coll->getCount();
+        if (name=="electrons" && count>0)
+            keep = true;
+        if (name=="muons" && count>0)
+            keep = true;
+        if (name=="taus" && count>0)
+            keep = true;
+    }
 
     // keep everything 
-    bool keep = true;
+    //bool keep = true;
 
     if (keep)
         tree_->Fill();
