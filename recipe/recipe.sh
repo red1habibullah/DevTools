@@ -7,10 +7,13 @@ pushd $CMSSW_BASE/src
 git cms-merge-topic ikrav:egm_id_80X_v1
 
 # EGMSmearer
-git remote add -f -t ecal_smear_fix_80X emanueledimarco https://github.com/emanueledimarco/cmssw.git
-git cms-addpkg EgammaAnalysis/ElectronTools
-#git checkout -b from-277de3c 277de3c # old 
-git checkout -b from-52f192a 52f192a # updated full 12.9
+## broken recipe
+#git remote add -f -t ecal_smear_fix_80X emanueledimarco https://github.com/emanueledimarco/cmssw.git
+#git cms-addpkg EgammaAnalysis/ElectronTools
+##git checkout -b from-277de3c 277de3c # old 
+#git checkout -b from-52f192a 52f192a # updated full 12.9
+# fixed recipe
+git cms-merge-topic emanueledimarco:ecal_smear_fix_80X
 
 # download the txt files with the corrections
 pushd EgammaAnalysis/ElectronTools/data
