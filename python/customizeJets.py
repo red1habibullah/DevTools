@@ -21,7 +21,6 @@ def customizeJets(process,coll,**kwargs):
         vertexes=cms.InputTag(pvSrc),
     )
     process.jetCustomization *= process.pileupJetIdUpdated
-    jSrc = 'pileupJetIdUpdated'
 
     ######################
     ### recorrect jets ###
@@ -36,6 +35,7 @@ def customizeJets(process,coll,**kwargs):
         jetSource = cms.InputTag(jSrc),
         jetCorrections = jetCorr,
     )
+    process.updatedPatJets.userData.userFloats.src += ['pileupJetIdUpdated:fullDiscriminant']
     jSrc = 'updatedPatJets'
 
     #################
