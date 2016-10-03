@@ -13,9 +13,11 @@ class JetIdEmbedder : public edm::stream::EDProducer<> {
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
     edm::EDGetTokenT<edm::View<pat::Jet> > srcToken_;
+    std::string puDisc_;
 };
 
 JetIdEmbedder::JetIdEmbedder(const edm::ParameterSet& pset):
+  puDisc_(iConfig.exists("discriminator") ? iConfig.getParameter<double>("discriminator") : "pileupJetId:fullDiscriminant"),
   srcToken_(consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("src")))
 {
   produces<pat::JetCollection>();
@@ -34,7 +36,7 @@ void JetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
     bool loose = true;
     bool tight = true;
     bool tightLepVeto = true;
-    if (std::abs(jet.eta()) <= 3.0) {
+    if (std::abs(jet.eta()) <= 2.7) {
       if (jet.neutralHadronEnergyFraction() >= 0.99) {
         loose = false;
       }
@@ -63,12 +65,12 @@ void JetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
         }
 
       if (std::abs(jet.eta()) < 2.4) {
-        if (jet.chargedHadronEnergyFraction() == 0) {
+        if (jet.chargedHadronEnergyFraction() <= 0) {
           loose = false;
           tight = false;
           tightLepVeto = false;
         }
-        if (jet.chargedHadronMultiplicity() == 0) {
+        if (jet.chargedHadronMultiplicity() <= 0) {
           loose = false;
           tight = false;
           tightLepVeto = false;
@@ -80,6 +82,16 @@ void JetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
         if (jet.chargedEmEnergyFraction() >= 0.90) {
           tightLepVeto = false;
         }
+      }
+    }
+    if (std::abs(jet.eta()) > 2.7 && std::abs(jet.eta()) <= 3.0) {
+      if (jet.neutralEmEnergyFraction() >= 0.90) {
+        loose = false;
+        tight = false;
+      }
+      if (jet.neutralMultiplicity()<=2) {
+        loose = false;
+        tight = false;
       }
     }
     if (std::abs(jet.eta()) > 3.0) {
@@ -98,7 +110,7 @@ void JetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
 
     // Pileup discriminant
     bool passPU = true;
-    float jpumva = jet.userFloat("pileupJetId:fullDiscriminant");
+    float jpumva = jet.userFloat(puDisc_);
     if(jet.pt() > 20)
       {
         if(fabs(jet.eta()) > 3.)

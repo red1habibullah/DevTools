@@ -5,9 +5,23 @@ def customizeJets(process,coll,**kwargs):
     isMC = kwargs.pop('isMC',False)
     jSrc = coll['jets']
     rhoSrc = coll['rho']
+    pvSrc = coll['vertices']
 
     # customization path
     process.jetCustomization = cms.Path()
+
+    #################################
+    ### add updated pileup jet id ###
+    #################################
+    process.load("RecoJets.JetProducers.PileupJetID_cfi")
+    process.pileupJetIdUpdated = process.pileupJetId.clone(
+        jets=cms.InputTag(jSrc),
+        inputIsCorrected=True,
+        applyJec=True,
+        vertexes=cms.InputTag(pvSrc),
+    )
+    process.jetCustomization *= process.pileupJetIdUpdated
+    jSrc = 'pileupJetIdUpdated'
 
     ######################
     ### recorrect jets ###
@@ -30,6 +44,7 @@ def customizeJets(process,coll,**kwargs):
     process.jID = cms.EDProducer(
         "JetIdEmbedder",
         src = cms.InputTag(jSrc),
+        discriminator = 'pileupJetIdUpdated:fullDiscriminant',
     )
     process.jetCustomization *= process.jID
     jSrc = "jID"
