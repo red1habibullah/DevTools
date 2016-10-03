@@ -17,6 +17,7 @@ def customizeMets(process,coll,**kwargs):
     #################################
     ### recompute met uncertainty ###
     #################################
+    print '... Preparing MET uncertainties'
     postfix = "New"
     from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
     runMetCorAndUncFromMiniAOD(process,
@@ -53,6 +54,7 @@ def customizeMets(process,coll,**kwargs):
     ####################
     ### embed shifts ###
     ####################
+    print '... Embedding shifts'
     for shift in ['JetRes','JetEn','MuonEn','ElectronEn','TauEn','UnclusteredEn','PhotonEn']:
         for sign in ['Up','Down']:
             mod = cms.EDProducer(

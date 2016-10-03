@@ -184,6 +184,7 @@ filters = []
 
 # met filters
 if options.runMetFilter:
+    print 'Preparing MET filters'
     from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
     hltFilter = hltHighLevel.clone()
     # PAT if miniaod by itself (MC) and RECO if at the same time as reco (data)
@@ -203,6 +204,7 @@ if options.runMetFilter:
 
 
 # now do any customization/cleaning
+print 'Customizing electrons'
 from DevTools.Ntuplizer.customizeElectrons import customizeElectrons
 collections = customizeElectrons(
     process,
@@ -211,6 +213,7 @@ collections = customizeElectrons(
     reHLT=bool(options.reHLT),
 )
 
+print 'Customizing muons'
 from DevTools.Ntuplizer.customizeMuons import customizeMuons
 collections = customizeMuons(
     process,
@@ -219,6 +222,7 @@ collections = customizeMuons(
     reHLT=bool(options.reHLT),
 )
 
+print 'Customizing taus'
 from DevTools.Ntuplizer.customizeTaus import customizeTaus
 collections = customizeTaus(
     process,
@@ -227,6 +231,7 @@ collections = customizeTaus(
     reHLT=bool(options.reHLT),
 )
 
+print 'Customizing photons'
 from DevTools.Ntuplizer.customizePhotons import customizePhotons
 collections = customizePhotons(
     process,
@@ -235,6 +240,7 @@ collections = customizePhotons(
     reHLT=bool(options.reHLT),
 )
 
+print 'Customizing jets'
 from DevTools.Ntuplizer.customizeJets import customizeJets
 collections = customizeJets(
     process,
@@ -243,6 +249,7 @@ collections = customizeJets(
     reHLT=bool(options.reHLT),
 )
 
+print 'Customizing METs'
 from DevTools.Ntuplizer.customizeMets import customizeMets
 collections = customizeMets(
     process,
@@ -252,6 +259,7 @@ collections = customizeMets(
 )
 
 # select desired objects
+print 'Selecting objects'
 from DevTools.Ntuplizer.objectTools import objectSelector, objectCleaner
 for coll in selections:
     collections[coll] = objectSelector(process,coll,collections[coll],selections[coll])

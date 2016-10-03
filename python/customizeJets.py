@@ -34,7 +34,7 @@ def customizeJets(process,coll,**kwargs):
     updateJetCollection(
         process,
         jetSource = cms.InputTag(jSrc),
-        jetCorrections = jetCorr
+        jetCorrections = jetCorr,
     )
     jSrc = 'updatedPatJets'
 
@@ -44,7 +44,7 @@ def customizeJets(process,coll,**kwargs):
     process.jID = cms.EDProducer(
         "JetIdEmbedder",
         src = cms.InputTag(jSrc),
-        discriminator = 'pileupJetIdUpdated:fullDiscriminant',
+        discriminator = cms.string('pileupJetIdUpdated:fullDiscriminant'),
     )
     process.jetCustomization *= process.jID
     jSrc = "jID"
