@@ -34,10 +34,10 @@ miniTree = cms.EDAnalyzer("MiniTree",
             collection = cms.InputTag("slimmedTaus"),
             branches = tauBranches,
         ),
-        photons = cms.PSet(
-            collection = cms.InputTag("slimmedPhotons"),
-            branches = photonBranches,
-        ),
+        #photons = cms.PSet(
+        #    collection = cms.InputTag("slimmedPhotons"),
+        #    branches = photonBranches,
+        #),
         jets = cms.PSet(
             collection = cms.InputTag("slimmedJets"),
             branches = jetBranches,
