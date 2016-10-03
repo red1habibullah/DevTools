@@ -12,12 +12,12 @@ class JetIdEmbedder : public edm::stream::EDProducer<> {
     virtual ~JetIdEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::EDGetTokenT<edm::View<pat::Jet> > srcToken_;
     std::string puDisc_;
+    edm::EDGetTokenT<edm::View<pat::Jet> > srcToken_;
 };
 
 JetIdEmbedder::JetIdEmbedder(const edm::ParameterSet& pset):
-  puDisc_(iConfig.exists("discriminator") ? iConfig.getParameter<double>("discriminator") : "pileupJetId:fullDiscriminant"),
+  puDisc_(pset.exists("discriminator") ? pset.getParameter<std::string>("discriminator") : "pileupJetId:fullDiscriminant"),
   srcToken_(consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("src")))
 {
   produces<pat::JetCollection>();
