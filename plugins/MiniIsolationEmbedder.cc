@@ -27,7 +27,10 @@ private:
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
   void endJob() {}
 
-  double getMiniIsolation(edm::Handle<pat::PackedCandidateCollection> pfcands, const reco::Candidate& cand, double r_iso_min, double r_iso_max, double kt_scale, bool charged_only);
+  std::tuple<double,double,double,double,double> getMiniIsolation(
+    edm::Handle<pat::PackedCandidateCollection> pfcands, 
+    const reco::Candidate& cand, 
+    double r_iso_min, double r_iso_max, double kt_scale);
 
   // Data
   edm::EDGetTokenT<edm::View<T> > collectionToken_;               // input collection
@@ -59,10 +62,17 @@ void MiniIsolationEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup
     const auto obj = collection->at(c);
     T newObj = obj;
 
-    double miniiso = getMiniIsolation(pfcands,obj,0.05,0.2,10.,false);
-    double chminiiso = getMiniIsolation(pfcands,obj,0.05,0.2,10.,true);
-    newObj.addUserFloat("MiniIsolation", (float)(miniiso));
-    newObj.addUserFloat("ChargedMiniIsolation", (float)(chminiiso));
+    double iso;
+    double iso_ch;
+    double iso_nh;
+    double iso_ph;
+    double iso_pu;
+    std::tie(iso,iso_ch,iso_nh,iso_ph,iso_pu) = getMiniIsolation(pfcands,obj,0.05,0.2,10.);
+    newObj.addUserFloat("MiniIsolation", (float)(iso));
+    newObj.addUserFloat("MiniIsolationCharged", (float)(iso_ch));
+    newObj.addUserFloat("MiniIsolationNeutral", (float)(iso_nh));
+    newObj.addUserFloat("MiniIsolationPhoton", (float)(iso_ph));
+    newObj.addUserFloat("MiniIsolationPileup", (float)(iso_pu));
     
     out->push_back(newObj);
   }
@@ -73,10 +83,9 @@ void MiniIsolationEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup
 // Isolation
 // https://twiki.cern.ch/twiki/bin/view/CMS/SUSLeptonSF
 template<typename T>
-double MiniIsolationEmbedder<T>::getMiniIsolation(edm::Handle<pat::PackedCandidateCollection> pfcands,
+std::tuple<double,double,double,double,double> MiniIsolationEmbedder<T>::getMiniIsolation(edm::Handle<pat::PackedCandidateCollection> pfcands,
   const reco::Candidate& cand,  
-  double r_iso_min, double r_iso_max, double kt_scale,
-  bool charged_only)
+  double r_iso_min, double r_iso_max, double kt_scale)
 {
  
   //if (cand.pt()<5.) return 99999.;
@@ -129,17 +138,13 @@ double MiniIsolationEmbedder<T>::getMiniIsolation(edm::Handle<pat::PackedCandida
     }
   }
   double iso(0.);
-  if (charged_only){
-    iso = iso_ch;
-  } else {
-    iso = iso_ph + iso_nh;
-    iso -= 0.5*iso_pu;
-    if (iso>0) iso += iso_ch;
-    else iso = iso_ch;
-  }
-  iso = iso/cand.pt();
+  iso = iso_ph + iso_nh;
+  iso -= 0.5*iso_pu;
+  if (iso>0) iso += iso_ch;
+  else iso = iso_ch;
+  if (cand.pt()) iso = iso/cand.pt();
   
-  return iso;
+  return std::make_tuple(iso,iso_ch,iso_nh,iso_ph,iso_pu);
 }
 
 template<typename T>

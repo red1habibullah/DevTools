@@ -28,8 +28,9 @@ private:
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
   void endJob() {}
 
-  bool isPreselection(const pat::Muon& mu, const reco::Vertex& pv);
+  bool isPreselection(const pat::Muon& mu, const reco::Vertex& pv, float miniiso);
   float getEA(const pat::Muon& mu);
+  float getMiniIsolation(const pat::Muon& mu, double rho);
 
   // Data
   edm::EDGetTokenT<edm::View<pat::Muon> > collectionToken_;       // input collection
@@ -68,7 +69,9 @@ void MuonSUSYMVAEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSe
 
     newObj.addUserFloat("SUSYEA", getEA(obj));
     newObj.addUserFloat("SUSYRho", (float)(*rho));
-    newObj.addUserInt("isSUSYMVAPreselection", isPreselection(obj,pv));
+    float miniiso = getMiniIsolation(obj,*rho);
+    newObj.addUserFloat("SUSYMiniIsolationEA", miniiso);
+    newObj.addUserInt("isSUSYMVAPreselection", isPreselection(obj,pv,miniiso));
     
     out->push_back(newObj);
   }
@@ -78,10 +81,10 @@ void MuonSUSYMVAEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSe
 
 // Preselection
 // https://twiki.cern.ch/twiki/bin/view/CMS/LeptonMVA
-bool MuonSUSYMVAEmbedder::isPreselection(const pat::Muon & mu, const reco::Vertex& pv) 
+bool MuonSUSYMVAEmbedder::isPreselection(const pat::Muon & mu, const reco::Vertex& pv, float miniiso) 
   {
     bool pre = muon::isLooseMuon(mu) &&
-               mu.userFloat("MiniIsolation") < 0.4 &&
+               miniiso < 0.4 &&
                fabs(mu.dB(pat::Muon::PV3D))/mu.edB(pat::Muon::PV3D) < 8. &&
                fabs(mu.innerTrack()->dxy(pv.position())) < 0.05 &&
                fabs(mu.innerTrack()->dz(pv.position())) < 0.1;
@@ -106,6 +109,15 @@ float MuonSUSYMVAEmbedder::getEA(const pat::Muon & mu)
     return ea;
   }
 
+float MuonSUSYMVAEmbedder::getMiniIsolation(const pat::Muon & mu, double rho)
+  {
+    float ea = getEA(mu);
+    float chHad = mu.userFloat("MiniIsolationCharged");
+    float nHad = mu.userFloat("MiniIsolationNeutral");
+    float isoEA = (chHad + std::max(0.0, nHad - rho * ea * std::pow((10.0/std::min(std::max(mu.pt(), 50.),200.))/0.3,2)));
+    isoEA = (isoEA/mu.pt() ? mu.pt() : isoEA);
+    return isoEA;
+  }
 
 void MuonSUSYMVAEmbedder::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   //The following says we do not know what parameters are allowed so do no validation

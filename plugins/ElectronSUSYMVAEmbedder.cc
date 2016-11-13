@@ -28,12 +28,13 @@ private:
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
   void endJob() {}
 
-  bool isPreselection(const pat::Electron& el, const reco::Vertex& pv, bool passID);
+  bool isPreselection(const pat::Electron& el, const reco::Vertex& pv, bool passID, float miniiso);
   bool isTight(const pat::Electron & el, std::string nonTrigLabel);
   bool isVLoose(const pat::Electron & el, std::string nonTrigLabel);
   bool isVLooseFOIDEmu(const pat::Electron & el, std::string nonTrigLabel);
   bool isVLooseFOIDISOEmu(const pat::Electron & el, std::string nonTrigLabel);
   float getEA(const pat::Electron& el);
+  float getMiniIsolation(const pat::Electron& el, double rho);
 
   // Data
   edm::EDGetTokenT<edm::View<pat::Electron> > collectionToken_;  // input collection
@@ -74,6 +75,8 @@ void ElectronSUSYMVAEmbedder::produce(edm::Event& iEvent, const edm::EventSetup&
 
     newObj.addUserFloat("SUSYEA", getEA(obj));
     newObj.addUserFloat("SUSYRho", (float)(*rho));
+    float miniiso = getMiniIsolation(obj,*rho);
+    newObj.addUserFloat("SUSYMiniIsolationEA", miniiso);
     bool isTightVal = isTight(obj,nonTrigLabel_);
     bool isVLooseVal = isVLoose(obj,nonTrigLabel_);
     bool isVLooseFOIDEmuVal = isVLooseFOIDEmu(obj,nonTrigLabel_);
@@ -82,7 +85,7 @@ void ElectronSUSYMVAEmbedder::produce(edm::Event& iEvent, const edm::EventSetup&
     newObj.addUserInt("isSUSYVLoose",isVLooseVal);
     newObj.addUserInt("isSUSYVLooseFOIDEmu",isVLooseFOIDEmuVal);
     newObj.addUserInt("isSUSYVLooseFOIDISOEmu",isVLooseFOIDISOEmuVal);
-    newObj.addUserInt("isSUSYMVAPreselection", isPreselection(obj,pv,isVLooseFOIDEmuVal));
+    newObj.addUserInt("isSUSYMVAPreselection", isPreselection(obj,pv,isVLooseFOIDEmuVal,miniiso));
     
     out->push_back(newObj);
   }
@@ -92,10 +95,10 @@ void ElectronSUSYMVAEmbedder::produce(edm::Event& iEvent, const edm::EventSetup&
 
 // Preselection
 // https://twiki.cern.ch/twiki/bin/view/CMS/LeptonMVA
-bool ElectronSUSYMVAEmbedder::isPreselection(const pat::Electron & el, const reco::Vertex& pv, bool passID)
+bool ElectronSUSYMVAEmbedder::isPreselection(const pat::Electron & el, const reco::Vertex& pv, bool passID, float miniiso)
   {
     bool pre = passID &&
-               el.userFloat("MiniIsolation") < 0.4 &&
+               miniiso < 0.4 &&
                fabs(el.dB(pat::Electron::PV3D))/el.edB(pat::Electron::PV3D) < 8. &&
                fabs(el.gsfTrack()->dxy(pv.position())) < 0.05 &&
                fabs(el.gsfTrack()->dz(pv.position())) < 0.1;
@@ -195,6 +198,16 @@ float ElectronSUSYMVAEmbedder::getEA(const pat::Electron & el)
     if (std::abs(el.eta()) >= 2.4 && std::abs(el.eta()) <= 2.5)
       ea = 0.2687;
     return ea;
+  }
+
+float ElectronSUSYMVAEmbedder::getMiniIsolation(const pat::Electron & el, double rho)
+  {
+    float ea = getEA(el);
+    float chHad = el.userFloat("MiniIsolationCharged");
+    float nHad = el.userFloat("MiniIsolationNeutral");
+    float isoEA = (chHad + std::max(0.0, nHad - rho * ea * std::pow((10.0/std::min(std::max(el.pt(), 50.),200.))/0.3,2)));
+    isoEA = (isoEA/el.pt() ? el.pt() : isoEA);
+    return isoEA;
   }
 
 
