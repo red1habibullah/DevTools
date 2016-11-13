@@ -7,6 +7,7 @@ def customizeMuons(process,coll,**kwargs):
     mSrc = coll['muons']
     rhoSrc = coll['rho']
     pvSrc = coll['vertices']
+    pfSrc = coll['packed']
 
     # customization path
     process.muonCustomization = cms.Path()
@@ -98,6 +99,27 @@ def customizeMuons(process,coll,**kwargs):
     )
     mSrc = 'mHZZEmbedder'
     process.muonCustomization *= process.mHZZEmbedder
+
+    ######################
+    ### embed SUSY IDs ###
+    ######################
+    # https://twiki.cern.ch/twiki/bin/view/CMS/LeptonMVA
+    process.mMiniIsoEmbedder = cms.EDProducer(
+        "MuonMiniIsolationEmbedder",
+        src = cms.InputTag(mSrc),
+        packedSrc = cms.InputTag(pfSrc),
+    )
+    mSrc = 'mMiniIsoEmbedder'
+    process.muonCustomization *= process.mMiniIsoEmbedder
+
+    process.mSUSYEmbedder = cms.EDProducer(
+        "MuonSUSYMVAEmbedder",
+        src = cms.InputTag(mSrc),
+        vertexSrc = cms.InputTag(pvSrc),
+        rhoSrc = cms.InputTag('fixedGridRhoFastjetCentralNeutral'),
+    )
+    mSrc = 'mSUSYEmbedder'
+    process.muonCustomization *= process.mSUSYEmbedder
 
     # add to schedule
     process.schedule.append(process.muonCustomization)

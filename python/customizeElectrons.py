@@ -7,6 +7,7 @@ def customizeElectrons(process,coll,**kwargs):
     eSrc = coll['electrons']
     rhoSrc = coll['rho']
     pvSrc = coll['vertices']
+    pfSrc = coll['packed']
 
     # customization path
     process.electronCustomization = cms.Path()
@@ -86,6 +87,24 @@ def customizeElectrons(process,coll,**kwargs):
         cms.InputTag('egmGsfElectronIDs:mvaEleID-Spring15-25ns-Trig-V1-wp90'),
         cms.InputTag('egmGsfElectronIDs:mvaEleID-Spring15-25ns-Trig-V1-wp80'),
     ]
+    fullIDDecisionLabels = [
+        'cutBasedElectronID-Summer16-80X-V1-veto',
+        'cutBasedElectronID-Summer16-80X-V1-loose',
+        'cutBasedElectronID-Summer16-80X-V1-medium',
+        'cutBasedElectronID-Summer16-80X-V1-tight',
+    ]
+    fullIDDecisionTags = [
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-veto'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-loose'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-medium'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-tight'),
+    ]
+    nMinusOneIDNames = [
+        'GsfEleEffAreaPFIsoCut_0',
+    ]
+    nMinusOneIDLabels = [
+        'NoIso',
+    ]
     mvaValueLabels = [
         #"ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values",
         #"ElectronMVAEstimatorRun2Spring15Trig25nsV1Values",
@@ -106,12 +125,16 @@ def customizeElectrons(process,coll,**kwargs):
     process.eidEmbedder = cms.EDProducer(
         "ElectronVIDEmbedder",
         src=cms.InputTag(eSrc),
-        idLabels = cms.vstring(*idDecisionLabels),        # labels for bool maps
-        ids = cms.VInputTag(*idDecisionTags),             # bool maps
-        valueLabels = cms.vstring(*mvaValueLabels),       # labels for float maps
-        values = cms.VInputTag(*mvaValueTags),            # float maps
-        categoryLabels = cms.vstring(*mvaCategoryLabels), # labels for int maps
-        categories = cms.VInputTag(*mvaCategoryTags),     # int maps
+        idLabels = cms.vstring(*idDecisionLabels),          # labels for bool maps
+        ids = cms.VInputTag(*idDecisionTags),               # bool maps
+        fullIDLabels = cms.vstring(*fullIDDecisionLabels),  # labels for bool maps for n-1
+        fullIDs = cms.VInputTag(*fullIDDecisionTags),       # bool maps for n-1
+        nMinusOneIDNames = cms.vstring(*nMinusOneIDNames),  # n-1 cut names
+        nMinusOneIDLabels = cms.vstring(*nMinusOneIDLabels),# n-1 cut labels
+        valueLabels = cms.vstring(*mvaValueLabels),         # labels for float maps
+        values = cms.VInputTag(*mvaValueTags),              # float maps
+        categoryLabels = cms.vstring(*mvaCategoryLabels),   # labels for int maps
+        categories = cms.VInputTag(*mvaCategoryTags),       # int maps
     )
     eSrc = 'eidEmbedder'
 
@@ -227,6 +250,27 @@ def customizeElectrons(process,coll,**kwargs):
     eSrc = 'eHZZEmbedder'
     process.electronCustomization *= process.eHZZEmbedder
 
+    ######################
+    ### embed SUSY IDs ###
+    ######################
+    # https://twiki.cern.ch/twiki/bin/view/CMS/LeptonMVA
+    process.eMiniIsoEmbedder = cms.EDProducer(
+        "ElectronMiniIsolationEmbedder",
+        src = cms.InputTag(eSrc),
+        packedSrc = cms.InputTag(pfSrc),
+    )
+    eSrc = 'eMiniIsoEmbedder'
+    process.electronCustomization *= process.eMiniIsoEmbedder
+
+    process.eSUSYEmbedder = cms.EDProducer(
+        "ElectronSUSYMVAEmbedder",
+        src = cms.InputTag(eSrc),
+        vertexSrc = cms.InputTag(pvSrc),
+        rhoSrc = cms.InputTag('fixedGridRhoFastjetCentralNeutral'),
+        mva = cms.string('ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values'),
+    )
+    eSrc = 'eSUSYEmbedder'
+    process.electronCustomization *= process.eSUSYEmbedder
 
     # add to schedule
     process.schedule.append(process.electronCustomization)

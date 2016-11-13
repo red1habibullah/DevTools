@@ -69,6 +69,14 @@ def customizePhotons(process,coll,**kwargs):
         cms.InputTag('egmPhotonIDs:cutBasedPhotonID-Spring15-25ns-V1-standalone-tight'),
         cms.InputTag('egmPhotonIDs:mvaPhoID-Spring15-25ns-nonTrig-V2-wp90'),
     ]
+    fullIDDecisionLabels = [
+    ]
+    fullIDDecisionTags = [
+    ]
+    nMinusOneIDNames = [
+    ]
+    nMinusOneIDLabels = [
+    ]
     mvaValueLabels = [
         'PhotonMVAEstimatorRun2Spring15NonTrig25nsV2Values',
         'phoFull5x5SigmaIEtaIEta',
@@ -93,12 +101,16 @@ def customizePhotons(process,coll,**kwargs):
     process.pidEmbedder = cms.EDProducer(
         "PhotonVIDEmbedder",
         src=cms.InputTag(pSrc),
-        idLabels = cms.vstring(*idDecisionLabels),        # labels for bool maps
-        ids = cms.VInputTag(*idDecisionTags),             # bool maps
-        valueLabels = cms.vstring(*mvaValueLabels),       # labels for float maps
-        values = cms.VInputTag(*mvaValueTags),            # float maps
-        categoryLabels = cms.vstring(*mvaCategoryLabels), # labels for int maps
-        categories = cms.VInputTag(*mvaCategoryTags),     # int maps
+        idLabels = cms.vstring(*idDecisionLabels),          # labels for bool maps
+        ids = cms.VInputTag(*idDecisionTags),               # bool maps
+        fullIDLabels = cms.vstring(*fullIDDecisionLabels),  # labels for bool maps for n-1
+        fullIDs = cms.VInputTag(*fullIDDecisionTags),       # bool maps for n-1
+        nMinusOneIDNames = cms.vstring(*nMinusOneIDNames),  # n-1 cut names
+        nMinusOneIDLabels = cms.vstring(*nMinusOneIDLabels),# n-1 cut labels
+        valueLabels = cms.vstring(*mvaValueLabels),         # labels for float maps
+        values = cms.VInputTag(*mvaValueTags),              # float maps
+        categoryLabels = cms.vstring(*mvaCategoryLabels),   # labels for int maps
+        categories = cms.VInputTag(*mvaCategoryTags),       # int maps
     )
     pSrc = 'pidEmbedder'
 
