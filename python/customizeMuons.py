@@ -5,12 +5,25 @@ def customizeMuons(process,coll,**kwargs):
     reHLT = kwargs.pop('reHLT',False)
     isMC = kwargs.pop('isMC',False)
     mSrc = coll['muons']
+    jSrc = coll['jets']
     rhoSrc = coll['rho']
     pvSrc = coll['vertices']
     pfSrc = coll['packed']
 
     # customization path
     process.muonCustomization = cms.Path()
+
+    #########################
+    ### embed nearest jet ###
+    #########################
+    process.mJet = cms.EDProducer(
+        "MuonJetEmbedder",
+        src = cms.InputTag(mSrc),
+        jetSrc = cms.InputTag(jSrc),
+    )
+    mSrc = 'mJet'
+
+    process.muonCustomization *= process.mJet
 
     ###################################
     ### embed rochester corrections ###
@@ -117,6 +130,7 @@ def customizeMuons(process,coll,**kwargs):
         src = cms.InputTag(mSrc),
         vertexSrc = cms.InputTag(pvSrc),
         rhoSrc = cms.InputTag('fixedGridRhoFastjetCentralNeutral'),
+        weights = cms.FileInPath('DevTools/Ntuplizer/data/forMoriond16_mu_sigTTZ_bkgTT_BDTG.weights.xml'),
     )
     mSrc = 'mSUSYEmbedder'
     process.muonCustomization *= process.mSUSYEmbedder

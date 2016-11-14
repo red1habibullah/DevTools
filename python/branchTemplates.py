@@ -218,6 +218,7 @@ electronBranches = commonPatCandidates.clone(
     isSUSYVLooseFOIDEmu            = cms.vstring('userInt("isSUSYVLooseFOIDEmu")','I'),
     isSUSYVLooseFOIDISOEmu         = cms.vstring('userInt("isSUSYVLooseFOIDISOEmu")','I'),
     isSUSYMVAPreselection          = cms.vstring('userInt("isSUSYMVAPreselection")','I'),
+    susyMVA                        = cms.vstring('userFloat("SUSYMVA")','F'),
     # pv
     dz                             = cms.vstring('userFloat("dz")','F'),
     dxy                            = cms.vstring('userFloat("dxy")','F'),
@@ -316,6 +317,7 @@ muonBranches = commonPatCandidates.clone(
     susyRho               = cms.vstring('userFloat("SUSYRho")','F'),
     susyMiniIsolationEA   = cms.vstring('userFloat("SUSYMiniIsolationEA")','F'),
     isSUSYMVAPreselection = cms.vstring('userInt("isSUSYMVAPreselection")','I'),
+    susyMVA               = cms.vstring('userFloat("SUSYMVA")','F'),
     # pv
     dz                    = cms.vstring('userFloat("dz")','F'),
     dxy                   = cms.vstring('userFloat("dxy")','F'),

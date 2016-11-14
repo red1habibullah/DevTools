@@ -14,6 +14,11 @@
 
 #include "DataFormats/Math/interface/deltaR.h"
 
+#include "TMVA/Factory.h"
+#include "TMVA/Tools.h"
+#include "TMVA/Reader.h"
+#include "TLorentzVector.h"
+
 class ElectronSUSYMVAEmbedder : public edm::stream::EDProducer<>
 {
 public:
@@ -35,6 +40,8 @@ private:
   bool isVLooseFOIDISOEmu(const pat::Electron & el, std::string nonTrigLabel);
   float getEA(const pat::Electron& el);
   float getMiniIsolation(const pat::Electron& el, double rho);
+  void initialize();
+  float getMVAValue(const pat::Electron & el, const reco::Vertex& pv, std::string nonTrigLabel);
 
   // Data
   edm::EDGetTokenT<edm::View<pat::Electron> > collectionToken_;  // input collection
@@ -42,6 +49,23 @@ private:
   edm::EDGetTokenT<double> rhoToken_;                            // rho
   std::string nonTrigLabel_;                                     // embedded mva
   std::auto_ptr<std::vector<pat::Electron> > out;                // Collection we'll output at the end
+  edm::FileInPath weightsfile_;                                  // MVA weights file
+  TMVA::Reader* tmvaReader;                                      // TMVA reader
+
+  /// MVA VAriables:
+  Float_t LepGood_pt;
+  Float_t LepGood_eta;
+  Float_t LepGood_JetNDauCharged;
+  Float_t LepGood_miniRelIsoCharged;
+  Float_t LepGood_miniRelIsoNeutral;
+  Float_t LepGood_JetPtRel;
+  Float_t LepGood_JetPtRatio;
+  Float_t LepGood_JetBTagCSV;
+  Float_t LepGood_SIP;
+  Float_t LepGood_dxyBS;
+  Float_t LepGood_dzPV;
+  Float_t LepGood_nontrigMVA;
+
 };
 
 // Constructors and destructors
@@ -49,8 +73,11 @@ ElectronSUSYMVAEmbedder::ElectronSUSYMVAEmbedder(const edm::ParameterSet& iConfi
   collectionToken_(consumes<edm::View<pat::Electron> >(iConfig.getParameter<edm::InputTag>("src"))),
   vertexToken_(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexSrc"))),
   rhoToken_(consumes<double>(iConfig.getParameter<edm::InputTag>("rhoSrc"))),
-  nonTrigLabel_(iConfig.getParameter<std::string>("mva"))
+  nonTrigLabel_(iConfig.getParameter<std::string>("mva")),
+  weightsfile_(iConfig.getParameter<edm::FileInPath>("weights"))
 {
+  tmvaReader = new TMVA::Reader("!Color:!Silent:Error");
+  initialize();
   produces<std::vector<pat::Electron> >();
 }
 
@@ -86,6 +113,7 @@ void ElectronSUSYMVAEmbedder::produce(edm::Event& iEvent, const edm::EventSetup&
     newObj.addUserInt("isSUSYVLooseFOIDEmu",isVLooseFOIDEmuVal);
     newObj.addUserInt("isSUSYVLooseFOIDISOEmu",isVLooseFOIDISOEmuVal);
     newObj.addUserInt("isSUSYMVAPreselection", isPreselection(obj,pv,isVLooseFOIDEmuVal,miniiso));
+    newObj.addUserFloat("SUSYMVA", getMVAValue(obj,pv,nonTrigLabel_));
     
     out->push_back(newObj);
   }
@@ -209,6 +237,50 @@ float ElectronSUSYMVAEmbedder::getMiniIsolation(const pat::Electron & el, double
     isoEA = (isoEA/el.pt() ? el.pt() : isoEA);
     return isoEA;
   }
+
+// MVA reader
+void ElectronSUSYMVAEmbedder::initialize()
+  {
+    tmvaReader->AddVariable("LepGood_pt",                   &LepGood_pt                  );
+    tmvaReader->AddVariable("LepGood_eta",                  &LepGood_eta                 );
+    tmvaReader->AddVariable("LepGood_jetNDauChargedMVASel", &LepGood_JetNDauCharged      );
+    tmvaReader->AddVariable("LepGood_miniRelIsoCharged",    &LepGood_miniRelIsoCharged   );
+    tmvaReader->AddVariable("LepGood_miniRelIsoNeutral",    &LepGood_miniRelIsoNeutral   );
+    tmvaReader->AddVariable("LepGood_jetPtRelv2",           &LepGood_JetPtRel            );
+    tmvaReader->AddVariable("min(LepGood_jetPtRatiov2,1.5)",&LepGood_JetPtRatio          );
+    tmvaReader->AddVariable("max(LepGood_jetBTagCSV,0)",    &LepGood_JetBTagCSV          );
+    tmvaReader->AddVariable("LepGood_sip3d",                &LepGood_SIP                 );
+    tmvaReader->AddVariable("log(abs(LepGood_dxy))",        &LepGood_dxyBS               );
+    tmvaReader->AddVariable("log(abs(LepGood_dz))",         &LepGood_dzPV                );
+    tmvaReader->AddVariable("LepGood_mvaIdSpring15",        &LepGood_nontrigMVA          );
+    tmvaReader->BookMVA("BDTG",weightsfile_.fullPath());
+  }
+
+float ElectronSUSYMVAEmbedder::getMVAValue(const pat::Electron & el, const reco::Vertex& pv, std::string nonTrigLabel)
+  {
+    // none of the jet related stuff is correct
+    // https://github.com/cms-analysis/MuonAnalysis-TagAndProbe/blob/80X/plugins/AddLeptonJetRelatedVariables.cc
+    TLorentzVector tmp_el, tmp_jet;
+    tmp_el.SetPxPyPzE(el.px(),el.py(),el.pz(),el.energy());
+    tmp_jet.SetPxPyPzE(el.userCand("jet")->px(),el.userCand("jet")->py(),el.userCand("jet")->pz(),el.userCand("jet")->energy());
+    float ptrel = 0;
+    if ((tmp_jet-tmp_el).Rho()>=0.0001)
+      ptrel = tmp_el.Perp((tmp_jet-tmp_el).Vect());
+    LepGood_pt =                   el.pt();
+    LepGood_eta =                  el.eta();
+    LepGood_JetNDauCharged =       el.userInt("jet_chargedHadronMultiplicity");
+    LepGood_miniRelIsoCharged =    el.userFloat("MiniIsolationCharged")/el.pt();
+    LepGood_miniRelIsoNeutral =    el.userFloat("MiniIsolationNeutral")/el.pt();
+    LepGood_JetPtRel =             ptrel;
+    LepGood_JetPtRatio =           std::min(el.pt()/el.userCand("jet")->pt(),1.5);
+    LepGood_JetBTagCSV =           std::max(el.userFloat("jet_pfCombinedInclusiveSecondaryVertexV2BJetTags"),(float)0.);
+    LepGood_SIP =                  fabs(el.dB(pat::Electron::PV3D))/el.edB(pat::Electron::PV3D);
+    LepGood_dxyBS =                log(fabs(el.userFloat("dxy_beamspot")));
+    LepGood_dzPV =                 log(fabs(el.userFloat("dz")));
+    LepGood_nontrigMVA =           el.userFloat(nonTrigLabel);
+    return tmvaReader->EvaluateMVA("BDTG");
+  }
+   
 
 
 void ElectronSUSYMVAEmbedder::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {

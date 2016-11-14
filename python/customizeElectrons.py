@@ -5,6 +5,7 @@ def customizeElectrons(process,coll,**kwargs):
     reHLT = kwargs.pop('reHLT',False)
     isMC = kwargs.pop('isMC',False)
     eSrc = coll['electrons']
+    jSrc = coll['jets']
     rhoSrc = coll['rho']
     pvSrc = coll['vertices']
     pfSrc = coll['packed']
@@ -141,6 +142,19 @@ def customizeElectrons(process,coll,**kwargs):
     process.electronCustomization *= process.egmGsfElectronIDSequence
     process.electronCustomization *= process.eidEmbedder
 
+
+    #########################
+    ### embed nearest jet ###
+    #########################
+    process.eJet = cms.EDProducer(
+        "ElectronJetEmbedder",
+        src = cms.InputTag(eSrc),
+        jetSrc = cms.InputTag(jSrc),
+    )
+    eSrc = 'eJet'
+
+    process.electronCustomization *= process.eJet
+
     ##########################
     ### embed missing hits ###
     ##########################
@@ -268,6 +282,7 @@ def customizeElectrons(process,coll,**kwargs):
         vertexSrc = cms.InputTag(pvSrc),
         rhoSrc = cms.InputTag('fixedGridRhoFastjetCentralNeutral'),
         mva = cms.string('ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values'),
+        weights = cms.FileInPath('DevTools/Ntuplizer/data/forMoriond16_el_sigTTZ_bkgTT_BDTG.weights.xml'),
     )
     eSrc = 'eSUSYEmbedder'
     process.electronCustomization *= process.eSUSYEmbedder

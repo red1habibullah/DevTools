@@ -204,6 +204,15 @@ if options.runMetFilter:
 
 
 # now do any customization/cleaning
+print 'Customizing jets'
+from DevTools.Ntuplizer.customizeJets import customizeJets
+collections = customizeJets(
+    process,
+    collections,
+    isMC=bool(options.isMC),
+    reHLT=bool(options.reHLT),
+)
+
 print 'Customizing electrons'
 from DevTools.Ntuplizer.customizeElectrons import customizeElectrons
 collections = customizeElectrons(
@@ -234,15 +243,6 @@ collections = customizeTaus(
 print 'Customizing photons'
 from DevTools.Ntuplizer.customizePhotons import customizePhotons
 collections = customizePhotons(
-    process,
-    collections,
-    isMC=bool(options.isMC),
-    reHLT=bool(options.reHLT),
-)
-
-print 'Customizing jets'
-from DevTools.Ntuplizer.customizeJets import customizeJets
-collections = customizeJets(
     process,
     collections,
     isMC=bool(options.isMC),
