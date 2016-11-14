@@ -20,6 +20,9 @@ def customizeMuons(process,coll,**kwargs):
         "MuonJetEmbedder",
         src = cms.InputTag(mSrc),
         jetSrc = cms.InputTag(jSrc),
+        dRmax = cms.double(0.4),
+        L1Corrector = cms.InputTag("ak4PFCHSL1FastjetCorrector"),
+        L1L2L3ResCorrector= cms.InputTag("ak4PFCHSL1FastL2L3Corrector"),
     )
     mSrc = 'mJet'
 

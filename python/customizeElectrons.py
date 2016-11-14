@@ -150,6 +150,9 @@ def customizeElectrons(process,coll,**kwargs):
         "ElectronJetEmbedder",
         src = cms.InputTag(eSrc),
         jetSrc = cms.InputTag(jSrc),
+        dRmax = cms.double(0.4),
+        L1Corrector = cms.InputTag("ak4PFCHSL1FastjetCorrector"),
+        L1L2L3ResCorrector= cms.InputTag("ak4PFCHSL1FastL2L3Corrector"),
     )
     eSrc = 'eJet'
 

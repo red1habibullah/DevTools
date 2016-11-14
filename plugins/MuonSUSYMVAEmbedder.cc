@@ -167,21 +167,13 @@ void MuonSUSYMVAEmbedder::initialize()
 
 float MuonSUSYMVAEmbedder::getMVAValue(const pat::Muon & mu, const reco::Vertex& pv)
   {
-    // none of the jet related stuff is correct
-    // https://github.com/cms-analysis/MuonAnalysis-TagAndProbe/blob/80X/plugins/AddLeptonJetRelatedVariables.cc
-    TLorentzVector tmp_mu, tmp_jet;
-    tmp_mu.SetPxPyPzE(mu.px(),mu.py(),mu.pz(),mu.energy());
-    tmp_jet.SetPxPyPzE(mu.userCand("jet")->px(),mu.userCand("jet")->py(),mu.userCand("jet")->pz(),mu.userCand("jet")->energy());
-    float ptrel = 0;
-    if ((tmp_jet-tmp_mu).Rho()>=0.0001)
-      ptrel = tmp_mu.Perp((tmp_jet-tmp_mu).Vect());
     LepGood_pt =                   mu.pt();
     LepGood_eta =                  mu.eta();
-    LepGood_JetNDauCharged =       mu.userInt("jet_chargedHadronMultiplicity");
+    LepGood_JetNDauCharged =       mu.userInt("jet_numberOfChargedDaughters");
     LepGood_miniRelIsoCharged =    mu.userFloat("MiniIsolationCharged")/mu.pt();
     LepGood_miniRelIsoNeutral =    mu.userFloat("MiniIsolationNeutral")/mu.pt();
-    LepGood_JetPtRel =             ptrel;
-    LepGood_JetPtRatio =           std::min(mu.pt()/mu.userCand("jet")->pt(),1.5);
+    LepGood_JetPtRel =             mu.userFloat("jet_ptRel");
+    LepGood_JetPtRatio =           std::min(mu.userFloat("jet_ptRatio"),(float)1.5);
     LepGood_JetBTagCSV =           std::max(mu.userFloat("jet_pfCombinedInclusiveSecondaryVertexV2BJetTags"),(float)0.);
     LepGood_SIP =                  fabs(mu.dB(pat::Muon::PV3D))/mu.edB(pat::Muon::PV3D);
     LepGood_dxyBS =                log(fabs(mu.userFloat("dxy_beamspot")));

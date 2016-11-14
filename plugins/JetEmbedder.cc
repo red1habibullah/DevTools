@@ -6,8 +6,12 @@
 #include "FWCore/Framework/interface/MakerMacros.h"
 
 #include "DataFormats/PatCandidates/interface/Jet.h"
+#include "JetMETCorrections/JetCorrector/interface/JetCorrector.h"
+#include "DataFormats/PatCandidates/interface/PackedCandidate.h"
 
 #include "DataFormats/Math/interface/deltaR.h"
+
+#include "TLorentzVector.h"
 
 template<class T>
 class JetEmbedder : public edm::stream::EDProducer<>
@@ -27,14 +31,20 @@ class JetEmbedder : public edm::stream::EDProducer<>
 
     edm::EDGetTokenT<edm::View<T> > collectionToken_;
     edm::EDGetTokenT<edm::View<pat::Jet> > jetSrcToken_;
+    edm::EDGetTokenT<reco::JetCorrector> tagL1Corrector_;
+    edm::EDGetTokenT<reco::JetCorrector> tagL1L2L3ResCorrector_;
     std::auto_ptr<std::vector<T> > out;
+    double dRmax_;
 };
 
 // Constructors and destructors
 template<class T>
 JetEmbedder<T>::JetEmbedder(const edm::ParameterSet& iConfig):
   collectionToken_(consumes<edm::View<T> >(iConfig.getParameter<edm::InputTag>("src"))),
-  jetSrcToken_(consumes<edm::View<pat::Jet> >(iConfig.getParameter<edm::InputTag>("jetSrc")))
+  jetSrcToken_(consumes<edm::View<pat::Jet> >(iConfig.getParameter<edm::InputTag>("jetSrc"))),
+  tagL1Corrector_(consumes<reco::JetCorrector>(iConfig.getParameter<edm::InputTag>("L1Corrector"))),
+  tagL1L2L3ResCorrector_(consumes<reco::JetCorrector>(iConfig.getParameter<edm::InputTag>("L1L2L3ResCorrector"))),
+  dRmax_(iConfig.getParameter<double>("dRmax"))
 {
   produces<std::vector<T> >();
 }
@@ -49,6 +59,12 @@ void JetEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
   edm::Handle<edm::View<pat::Jet> > jets;
   iEvent.getByToken(jetSrcToken_, jets);
+
+  edm::Handle<reco::JetCorrector> correctorL1L2L3Res;
+  iEvent.getByToken(tagL1L2L3ResCorrector_, correctorL1L2L3Res);
+
+  edm::Handle<reco::JetCorrector> correctorL1;
+  iEvent.getByToken(tagL1Corrector_, correctorL1);
 
   for (size_t c = 0; c < collection->size(); ++c) {
     const auto obj = collection->at(c);
@@ -66,8 +82,48 @@ void JetEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
       }
     }
 
+    // https://github.com/cms-analysis/MuonAnalysis-TagAndProbe/blob/80X/plugins/AddLeptonJetRelatedVariables.cc
+    int nchdaughters = 0;
+    for (size_t jc = 0; jc < closestJet->numberOfDaughters(); ++jc) {
+      const pat::PackedCandidate* pfcand = dynamic_cast<const pat::PackedCandidate*>(closestJet->daughter(jc));
+      if (pfcand->charge()==0) continue;
+      if (deltaR(obj,*pfcand) > 0.4) continue;	
+      if (!pfcand->trackHighPurity()) continue;
+      if (pfcand->pt()<1.) continue;
+      if (pfcand->numberOfHits()<8) continue;
+      if (pfcand->numberOfPixelHits()<2) continue;
+      if (pfcand->pseudoTrack().normalizedChi2()>=5) continue;
+      if (std::fabs(pfcand->dxy()) > 0.2) continue;
+      if (std::fabs(pfcand->dz()) > 17) continue;
+      nchdaughters++;
+    }
+
+    reco::Candidate::LorentzVector jet, lep;
+    lep = obj.p4();
+    jet = closestJet->correctedP4(0);
+
+    double jecL1L2L3Res = correctorL1L2L3Res->correction(*closestJet);
+    double jecL1 = correctorL1->correction(*closestJet);
+
+    if ((jet-lep).Rho()<0.0001) 
+      jet=lep; 
+    else {
+      jet -= lep/jecL1;
+      jet *= jecL1L2L3Res;
+      jet += lep;
+    }
+    float ptratio = lep.pt()/jet.pt();
+    TLorentzVector tmp_lep, tmp_jet;
+    tmp_lep.SetPxPyPzE(lep.px(),lep.py(),lep.pz(),lep.E());
+    tmp_jet.SetPxPyPzE(jet.px(),jet.py(),jet.pz(),jet.E());
+    float ptrel = 0;
+    if ((tmp_jet-tmp_lep).Rho()>=0.0001) ptrel = tmp_lep.Perp((tmp_jet-tmp_lep).Vect());
+
     newObj.addUserCand("jet", closestJet);
     newObj.addUserInt("jet_chargedHadronMultiplicity", closestJet->chargedHadronMultiplicity());
+    newObj.addUserInt("jet_numberOfChargedDaughters", nchdaughters);
+    newObj.addUserFloat("jet_ptRatio", ptratio);
+    newObj.addUserFloat("jet_ptRel", ptrel);
     newObj.addUserFloat("jet_pfCombinedInclusiveSecondaryVertexV2BJetTags", closestJet->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"));
 
     out->push_back(newObj);
