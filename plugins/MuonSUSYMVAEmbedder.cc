@@ -143,7 +143,7 @@ float MuonSUSYMVAEmbedder::getMiniIsolation(const pat::Muon & mu, double rho)
     float chHad = mu.userFloat("MiniIsolationCharged");
     float nHad = mu.userFloat("MiniIsolationNeutral");
     float isoEA = (chHad + std::max(0.0, nHad - rho * ea * std::pow((10.0/std::min(std::max(mu.pt(), 50.),200.))/0.3,2)));
-    isoEA = (isoEA/mu.pt() ? mu.pt() : isoEA);
+    isoEA = (mu.pt()>0 ? isoEA/mu.pt() : isoEA);
     return isoEA;
   }
 

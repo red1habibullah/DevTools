@@ -154,7 +154,7 @@ collections = {
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
     'electrons' : 'pt>7 && abs(eta)<3.0',
-    'muons'     : 'pt>4 && abs(eta)<2.5',
+    'muons'     : 'pt>5 && abs(eta)<2.5',
     'taus'      : 'pt>17 && abs(eta)<2.3',
     'photons'   : 'pt>10 && abs(eta)<3.0',
     'jets'      : 'pt>15 && abs(eta)<4.7',

@@ -119,12 +119,14 @@ void JetEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     float ptrel = 0;
     if ((tmp_jet-tmp_lep).Rho()>=0.0001) ptrel = tmp_lep.Perp((tmp_jet-tmp_lep).Vect());
 
+    float btagCSV = closestJet->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
+
     newObj.addUserCand("jet", closestJet);
     newObj.addUserInt("jet_chargedHadronMultiplicity", closestJet->chargedHadronMultiplicity());
     newObj.addUserInt("jet_numberOfChargedDaughters", nchdaughters);
     newObj.addUserFloat("jet_ptRatio", ptratio);
     newObj.addUserFloat("jet_ptRel", ptrel);
-    newObj.addUserFloat("jet_pfCombinedInclusiveSecondaryVertexV2BJetTags", closestJet->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"));
+    newObj.addUserFloat("jet_pfCombinedInclusiveSecondaryVertexV2BJetTags", btagCSV);
 
     out->push_back(newObj);
   }

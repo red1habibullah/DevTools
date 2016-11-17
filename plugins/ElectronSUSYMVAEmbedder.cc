@@ -234,7 +234,7 @@ float ElectronSUSYMVAEmbedder::getMiniIsolation(const pat::Electron & el, double
     float chHad = el.userFloat("MiniIsolationCharged");
     float nHad = el.userFloat("MiniIsolationNeutral");
     float isoEA = (chHad + std::max(0.0, nHad - rho * ea * std::pow((10.0/std::min(std::max(el.pt(), 50.),200.))/0.3,2)));
-    isoEA = (isoEA/el.pt() ? el.pt() : isoEA);
+    isoEA = (el.pt()>0 ? isoEA/el.pt() : isoEA);
     return isoEA;
   }
 
