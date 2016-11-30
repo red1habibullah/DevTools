@@ -8,14 +8,14 @@ triggerMap = {
     #'IsoMu22'                                              : {'path' : 'HLT_IsoMu22_v\\[0-9]+',                                           'objects' : ['muon'], }, # prescaled 1.05e34
     'IsoMu24'                                              : {'path' : 'HLT_IsoMu24_v\\[0-9]+',                                           'objects' : ['muon'], },
     'IsoMu27'                                              : {'path' : 'HLT_IsoMu27_v\\[0-9]+',                                           'objects' : ['muon'], },
-    'IsoMu22_eta2p1'                                       : {'path' : 'HLT_IsoMu22_eta2p1_v\\[0-9]+',                                    'objects' : ['muon'], },
-    'IsoMu24_eta2p1'                                       : {'path' : 'HLT_IsoMu24_eta2p1_v\\[0-9]+',                                    'objects' : ['muon'], },
+    #'IsoMu22_eta2p1'                                       : {'path' : 'HLT_IsoMu22_eta2p1_v\\[0-9]+',                                    'objects' : ['muon'], },
+    #'IsoMu24_eta2p1'                                       : {'path' : 'HLT_IsoMu24_eta2p1_v\\[0-9]+',                                    'objects' : ['muon'], },
     #'IsoTkMu18'                                            : {'path' : 'HLT_IsoTkMu18_v\\[0-9]+',                                         'objects' : ['muon'], }, # prescaled
     #'IsoTkMu20'                                            : {'path' : 'HLT_IsoTkMu20_v\\[0-9]+',                                         'objects' : ['muon'], }, # prescaled
     #'IsoTkMu22'                                            : {'path' : 'HLT_IsoTkMu22_v\\[0-9]+',                                         'objects' : ['muon'], }, # prescaled 1.05e34
     'IsoTkMu24'                                            : {'path' : 'HLT_IsoTkMu24_v\\[0-9]+',                                         'objects' : ['muon'], },
     'IsoTkMu27'                                            : {'path' : 'HLT_IsoTkMu27_v\\[0-9]+',                                         'objects' : ['muon'], },
-    'IsoTkMu24_eta2p1'                                     : {'path' : 'HLT_IsoTkMu24_eta2p1_v\\[0-9]+',                                  'objects' : ['muon'], },
+    #'IsoTkMu24_eta2p1'                                     : {'path' : 'HLT_IsoTkMu24_eta2p1_v\\[0-9]+',                                  'objects' : ['muon'], },
     #'Mu45_eta2p1'                                          : {'path' : 'HLT_Mu45_eta2p1_v\\[0-9]+',                                       'objects' : ['muon'], }, # prescaled
     'Mu50'                                                 : {'path' : 'HLT_Mu50_v\\[0-9]+',                                              'objects' : ['muon'], },
     'Mu55'                                                 : {'path' : 'HLT_Mu55_v\\[0-9]+',                                              'objects' : ['muon'], },
@@ -52,14 +52,14 @@ triggerMap = {
     'Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'                : {'path' : 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\[0-9]+',             'objects' : ['electron'], },
     # electron muon
     #'Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL'           : {'path' : 'HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',        'objects' : ['electron','muon'], }, # prescaled 9.5e33
-    'Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL'           : {'path' : 'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',        'objects' : ['electron','muon'], }, # removed
+    'Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL'           : {'path' : 'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',        'objects' : ['electron','muon'], }, # good before run 281639
     #'Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL'          : {'path' : 'HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',       'objects' : ['electron','muon'], }, # prescaled 9.5e33
-    'Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL'           : {'path' : 'HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',        'objects' : ['electron','muon'], },
-    'Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL'          : {'path' : 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',       'objects' : ['electron','muon'], },
-    'Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'        : {'path' : 'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v\\[0-9]+',     'objects' : ['electron','muon'], },
-    'Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'       : {'path' : 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v\\[0-9]+',    'objects' : ['electron','muon'], },
-    'Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ'        : {'path' : 'HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ_v\\[0-9]+',     'objects' : ['electron','muon'], },
-    'Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'       : {'path' : 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\[0-9]+',    'objects' : ['electron','muon'], },
+    'Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL'           : {'path' : 'HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',        'objects' : ['electron','muon'], }, # good before run 281639
+    'Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL'          : {'path' : 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',       'objects' : ['electron','muon'], }, # good before run 281639
+    'Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'        : {'path' : 'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v\\[0-9]+',     'objects' : ['electron','muon'], }, # >=281639
+    'Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'       : {'path' : 'HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v\\[0-9]+',    'objects' : ['electron','muon'], }, # >=281639
+    'Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ'        : {'path' : 'HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ_v\\[0-9]+',     'objects' : ['electron','muon'], }, # >=281639
+    'Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'       : {'path' : 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\[0-9]+',    'objects' : ['electron','muon'], }, # >=281639
     # double tau
     #'DoubleMediumIsoPFTau32_Trk1_eta2p1_Reg'               : {'path' : 'HLT_DoubleMediumIsoPFTau32_Trk1_eta2p1_Reg_v\\[0-9]+',            'objects' : ['tau'], },
     #'DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg'               : {'path' : 'HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\[0-9]+',            'objects' : ['tau'], },
