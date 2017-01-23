@@ -50,7 +50,7 @@ def customizeElectrons(process,coll,**kwargs):
     my_id_modules = [
         'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Summer16_80X_V1_cff',
         'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronHLTPreselecition_Summer16_V1_cff',
-        'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV60_cff',
+        'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV70_cff',
         'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_nonTrig_V1_cff',
         'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_Trig_V1_cff',
     ]
@@ -70,7 +70,7 @@ def customizeElectrons(process,coll,**kwargs):
         'cutBasedElectronID-Summer16-80X-V1-medium',
         'cutBasedElectronID-Summer16-80X-V1-tight',
         'cutBasedElectronHLTPreselection-Summer16-V1',
-        'heepElectronID-HEEPV60',
+        'heepElectronID-HEEPV70',
         'mvaEleID-Spring15-25ns-nonTrig-V1-wp80',
         'mvaEleID-Spring15-25ns-nonTrig-V1-wp90',
         'mvaEleID-Spring15-25ns-Trig-V1-wp90',
@@ -82,7 +82,7 @@ def customizeElectrons(process,coll,**kwargs):
         cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-medium'),
         cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-tight'),
         cms.InputTag('egmGsfElectronIDs:cutBasedElectronHLTPreselection-Summer16-V1'),
-        cms.InputTag('egmGsfElectronIDs:heepElectronID-HEEPV60'),
+        cms.InputTag('egmGsfElectronIDs:heepElectronID-HEEPV70'),
         cms.InputTag('egmGsfElectronIDs:mvaEleID-Spring15-25ns-nonTrig-V1-wp80'),
         cms.InputTag('egmGsfElectronIDs:mvaEleID-Spring15-25ns-nonTrig-V1-wp90'),
         cms.InputTag('egmGsfElectronIDs:mvaEleID-Spring15-25ns-Trig-V1-wp90'),

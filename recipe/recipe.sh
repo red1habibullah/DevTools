@@ -4,6 +4,8 @@
 pushd $CMSSW_BASE/src
 
 # IDs
+# https://twiki.cern.ch/twiki/bin/view/CMS/HEEPElectronIdentificationRun2
+git cms-merge-topic Sam-Harper:HEEPV70VID_8010_ReducedCheckout
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedElectronIdentificationRun2
 git cms-merge-topic ikrav:egm_id_80X_v2
 # https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedPhotonIdentificationRun2

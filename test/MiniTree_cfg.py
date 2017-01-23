@@ -6,11 +6,10 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 
 options.outputFile = 'miniTree.root'
-#options.inputFiles= '/store/mc/RunIISpring16MiniAODv2/ZZTo4L_13TeV_powheg_pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/00000/024C8A3E-7D1A-E611-A094-002590494C82.root'
-#options.inputFiles = '/store/user/dntaylor/HPlusPlusHMinusMinusHTo4L_M-500_13TeV-pythia8/RunIISpring16MiniAODv2_MINIAODSIM_v1/160513_105853/0000/dblh_mini_step1_1.root'
-#options.inputFiles = '/store/user/dntaylor/HPlusPlusHMinusHTo3L_M-1000_TuneCUETP8M1_13TeV_calchep-pythia8/RunIISpring16MiniAODv2_reHLT_MINIAODSIM-real_v1/160711_075328/0000/dblh_1_17.root'
-options.inputFiles = '/store/data/Run2016B/MuonEG/MINIAOD/PromptReco-v2/000/273/158/00000/26281378-291A-E611-AE69-02163E011E9B.root'
-#options.inputFiles = '/store/data/Run2016D/DoubleEG/MINIAOD/PromptReco-v2/000/276/363/00000/108E3BB6-5F46-E611-94C5-02163E01381C.root'
+#options.inputFiles= '/store/mc/RunIISummer16MiniAODv2/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/2E1C211C-05C2-E611-90D3-02163E01306F.root' # WZ
+#options.inputFiles = '/store/mc/RunIISummer16MiniAODv2/HPlusPlusHMinusHTo3L_M-500_13TeV-calchep-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/08ECD723-E4CA-E611-8C93-0CC47A1E0DC2.root' # Hpp3l
+#options.inputFiles = '/store/data/Run2016G/DoubleMuon/MINIAOD/23Sep2016-v1/100000/0A30F7A9-ED8F-E611-91F1-008CFA1C6564.root' # ReReco
+options.inputFiles = '/store/data/Run2016H/DoubleMuon/MINIAOD/PromptReco-v3/000/284/036/00000/64591DD7-A79F-E611-954C-FA163E5A1368.root' # PromptReco
 options.maxEvents = -1
 options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
 options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
@@ -52,35 +51,36 @@ process.RandomNumberGeneratorService = cms.Service(
 envvar = 'mcgt' if options.isMC else 'datagt'
 from Configuration.AlCa.GlobalTag import GlobalTag
 #GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
+# https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMiniAOD
 # https://twiki.cern.ch/twiki/bin/view/CMS/JECDataMC
-GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': '80X_dataRun2_Prompt_ICHEP16JEC_v0'}
+GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v6', 'datagt': '80X_dataRun2_2016SeptRepro_v4'}
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 ##################
 ### JEC source ###
 ##################
-## this is if we need to override the jec in global tag
-##sqfile = os.environ['CMSSW_BASE'] + '/src/' + 'DevTools/Ntuplizer/data/Fall15_25nsV2_{0}.db'.format('MC' if options.isMC else 'DATA')
-#sqfile = 'DevTools/Ntuplizer/data/Spring16_25nsV6_{0}.db'.format('MC' if options.isMC else 'DATA')
-##sqfile = 'src/DevTools/Ntuplizer/data/Spring16_25nsV6_{0}.db'.format('MC' if options.isMC else 'DATA')
-#tag = 'JetCorrectorParametersCollection_Spring16_25nsV6_{0}_AK4PFchs'.format('MC' if options.isMC else 'DATA')
-#process.load("CondCore.DBCommon.CondDBCommon_cfi")
-#from CondCore.DBCommon.CondDBSetup_cfi import *
-#process.jec = cms.ESSource("PoolDBESSource",
-#    DBParameters = cms.PSet(
-#        messageLevel = cms.untracked.int32(0)
-#    ),
-#    timetype = cms.string('runnumber'),
-#    toGet = cms.VPSet(
-#        cms.PSet(
-#            record = cms.string('JetCorrectionsRecord'),
-#            tag    = cms.string(tag),
-#            label  = cms.untracked.string('AK4PFchs')
-#        ),
-#    ), 
-#    connect = cms.string('sqlite:{0}'.format(sqfile)),
-#)
-#process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
+# this is if we need to override the jec in global tag
+sqfile = 'DevTools/Ntuplizer/data/{0}.db'.format('Spring16_23Sep2016V2_MC' if options.isMC else 'Spring16_23Sep2016AllV2_DATA')
+#sqfile = 'src/DevTools/Ntuplizer/data/{0}.db'.format('Spring16_23Sep2016V2_MC' if options.isMC else 'Spring16_23Sep2016AllV2_DATA') # uncomment to submit to crab
+tag = 'JetCorrectorParametersCollection_Spring16_23Sep2016AllV2_DATA_AK4PFchs'
+if options.isMC: tag = 'JetCorrectorParametersCollection_Spring16_23Sep2016V2_MC_AK4PFchs' # MoriondMC
+process.load("CondCore.DBCommon.CondDBCommon_cfi")
+from CondCore.DBCommon.CondDBSetup_cfi import *
+process.jec = cms.ESSource("PoolDBESSource",
+    DBParameters = cms.PSet(
+        messageLevel = cms.untracked.int32(0)
+    ),
+    timetype = cms.string('runnumber'),
+    toGet = cms.VPSet(
+        cms.PSet(
+            record = cms.string('JetCorrectionsRecord'),
+            tag    = cms.string(tag),
+            label  = cms.untracked.string('AK4PFchs')
+        ),
+    ), 
+    connect = cms.string('sqlite:{0}'.format(sqfile)),
+)
+process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
 #############################
 ### Setup rest of running ###

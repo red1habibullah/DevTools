@@ -515,18 +515,14 @@ photonBranches = commonPatCandidates.clone(
 # jets
 jetBranches = commonJetCandidates.clone(
     # btagging
-    pfJetProbabilityBJetTags                     = cms.vstring('bDiscriminator("pfJetProbabilityBJetTags")','F'),
     pfCombinedInclusiveSecondaryVertexV2BJetTags = cms.vstring('bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")','F'),
     pfCombinedMVAV2BJetTags                      = cms.vstring('bDiscriminator("pfCombinedMVAV2BJetTags")','F'),
-    passJPL                                      = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags")>0.245 ? 1 : 0','I'),
-    passJPM                                      = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags")>0.515 ? 1 : 0','I'),
-    passJPT                                      = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags")>0.760 ? 1 : 0','I'),
-    passCSVv2L                                   = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")>0.460 ? 1 : 0','I'),
-    passCSVv2M                                   = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")>0.800 ? 1 : 0','I'),
-    passCSVv2T                                   = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")>0.935 ? 1 : 0','I'),
-    passCMVAv2L                                  = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags")>-0.715 ? 1 : 0','I'),
-    passCMVAv2M                                  = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags")>0.185 ? 1 : 0','I'),
-    passCMVAv2T                                  = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags")>0.875 ? 1 : 0','I'),
+    passCSVv2L                                   = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")>0.5426 ? 1 : 0','I'),
+    passCSVv2M                                   = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")>0.8484 ? 1 : 0','I'),
+    passCSVv2T                                   = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")>0.9535 ? 1 : 0','I'),
+    passCMVAv2L                                  = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags")>-0.5884 ? 1 : 0','I'),
+    passCMVAv2M                                  = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags")>0.4432 ? 1 : 0','I'),
+    passCMVAv2T                                  = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags")>0.9432 ? 1 : 0','I'),
     # flavor
     partonFlavour                                = cms.vstring('partonFlavour','I'),
     # id variables
@@ -543,15 +539,16 @@ jetBranches = commonJetCandidates.clone(
     isTightLepVeto                               = cms.vstring('userInt("idTightLepVeto")','I'),
     puID                                         = cms.vstring('userInt("puID")','I'),
     pileupJetIdDiscriminant                      = cms.vstring('userFloat("pileupJetIdUpdated:fullDiscriminant")','F'),
+    # TODO fix
     # energy shifts
-    pt_jetEnUp                                   = cms.vstring('userCand("JetEnUp").pt()','F'),
-    eta_jetEnUp                                  = cms.vstring('userCand("JetEnUp").eta()','F'),
-    phi_jetEnUp                                  = cms.vstring('userCand("JetEnUp").phi()','F'),
-    energy_jetEnUp                               = cms.vstring('userCand("JetEnUp").energy()','F'),
-    pt_jetEnDown                                 = cms.vstring('userCand("JetEnDown").pt()','F'),
-    eta_jetEnDown                                = cms.vstring('userCand("JetEnDown").eta()','F'),
-    phi_jetEnDown                                = cms.vstring('userCand("JetEnDown").phi()','F'),
-    energy_jetEnDown                             = cms.vstring('userCand("JetEnDown").energy()','F'),
+    #pt_jetEnUp                                   = cms.vstring('userCand("JetEnUp").pt()','F'),
+    #eta_jetEnUp                                  = cms.vstring('userCand("JetEnUp").eta()','F'),
+    #phi_jetEnUp                                  = cms.vstring('userCand("JetEnUp").phi()','F'),
+    #energy_jetEnUp                               = cms.vstring('userCand("JetEnUp").energy()','F'),
+    #pt_jetEnDown                                 = cms.vstring('userCand("JetEnDown").pt()','F'),
+    #eta_jetEnDown                                = cms.vstring('userCand("JetEnDown").eta()','F'),
+    #phi_jetEnDown                                = cms.vstring('userCand("JetEnDown").phi()','F'),
+    #energy_jetEnDown                             = cms.vstring('userCand("JetEnDown").energy()','F'),
 )
 
 # mets
