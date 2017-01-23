@@ -28,9 +28,9 @@ TriggerBranches::TriggerBranches(TTree * tree, const edm::ParameterSet& iConfig,
 
     customFilterNames_ = customFilterBranches_.getParameterNames();
     for (auto trig : customFilterNames_) {
-        edm::ParameterSet trigPSet = filterBranches_.getParameter<edm::ParameterSet>(trig);
-        edm::EDGetTokenT<bool> trigToken = cc.consumes<bool>(trigPSet.getParamter<edm::InputTag>("inputTag"));
-        triggerNamingMap_.insert(std::pair<std::string, std::string>(trig,trigString));
+        edm::ParameterSet trigPSet = customFilterBranches_.getParameter<edm::ParameterSet>(trig);
+        edm::EDGetTokenT<bool> trigToken = cc.consumes<bool>(trigPSet.getParameter<edm::InputTag>("inputTag"));
+        customFilterMap_.insert(std::pair<std::string, edm::EDGetTokenT<bool>>(trig,trigToken));
     }
 
     // add triggers
@@ -46,6 +46,13 @@ TriggerBranches::TriggerBranches(TTree * tree, const edm::ParameterSet& iConfig,
 
     // add filters
     for (auto trigName : filterNames_) {
+        Int_t branchVal;
+        triggerIntMap_.insert(std::pair<std::string, Int_t>(trigName,branchVal));
+        std::string branchLeaf = trigName + "/I";
+        tree->Branch(trigName.c_str(), &triggerIntMap_[trigName], branchLeaf.c_str());
+    }
+
+    for (auto trigName : customFilterNames_) {
         Int_t branchVal;
         triggerIntMap_.insert(std::pair<std::string, Int_t>(trigName,branchVal));
         std::string branchLeaf = trigName + "/I";
@@ -111,6 +118,18 @@ void TriggerBranches::fill(const edm::Event& iEvent)
         }
         else {
             triggerIntMap_[trigName] = filterBits_->accept(trigBit);
+        }
+    }
+
+    for (auto trigName : customFilterNames_) {
+        edm::Handle<bool> trigHandle;
+        iEvent.getByToken(customFilterMap_[trigName],trigHandle);
+        if (trigHandle.isValid()) {
+            bool result = *trigHandle;
+            triggerIntMap_[trigName] = (int)result;
+        }
+        else {
+            triggerIntMap_[trigName] = -1;
         }
     }
 }

@@ -40,8 +40,9 @@ class TriggerBranches {
 
     std::vector<std::string>           triggerNames_;
     std::vector<std::string>           filterNames_;
-    std::vector<std::string>           cutomFilterNames_;
+    std::vector<std::string>           customFilterNames_;
     std::vector<std::string>           triggerBranchStrings_;
     std::map<std::string, std::string> triggerNamingMap_;
     std::map<std::string, Int_t>       triggerIntMap_;
+    std::map<std::string, edm::EDGetTokenT<bool>> customFilterMap_;
 };

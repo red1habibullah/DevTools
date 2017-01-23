@@ -202,24 +202,20 @@ process.load('RecoMET.METFilters.BadChargedCandidateFilter_cfi')
 process.BadChargedCandidateFilter.muons = cms.InputTag("slimmedMuons")
 process.BadChargedCandidateFilter.PFCandidates = cms.InputTag("packedPFCandidates")
 filters += [process.BadChargedCandidateFilter]
-process.Flag_BadChargedCandidateFilter = cms.Path(process.BadChargedCandidateFilter)
-process.schedule.append(process.Flag_BadChargedCandidateFilter)
 # bad muon filters
 process.badGlobalMuonTagger = cms.EDFilter("BadGlobalMuonTagger",
     muons = cms.InputTag(collections['muons']),
     vtx   = cms.InputTag(collections['vertices']),
     muonPtCut = cms.double(20),
     selectClones = cms.bool(False),
-    taggingMode = cms.bool(True),
+    taggingMode = cms.bool(False),
 )
 process.cloneGlobalMuonTagger = process.badGlobalMuonTagger.clone(
     selectClones = True
 )
+
+process.noBadGlobalMuons = cms.Sequence(~process.cloneGlobalMuonTagger + ~process.badGlobalMuonTagger)
 filters += [process.cloneGlobalMuonTagger, process.badGlobalMuonTagger]
-process.Flag_cloneGlobalMuonTagger = cms.Path(process.cloneGlobalMuonTagger)
-process.Flag_badGlobalMuonTagger = cms.Path(process.badGlobalMuonTagger)
-process.schedule.append(process.Flag_cloneGlobalMuonTagger)
-process.schedule.append(process.Flag_badGlobalMuonTagger)
     
 
 # now do any customization/cleaning
