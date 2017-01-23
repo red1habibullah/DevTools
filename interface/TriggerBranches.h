@@ -36,9 +36,11 @@ class TriggerBranches {
     // branch parameters
     edm::ParameterSet triggerBranches_;
     edm::ParameterSet filterBranches_;
+    edm::ParameterSet customFilterBranches_;
 
     std::vector<std::string>           triggerNames_;
     std::vector<std::string>           filterNames_;
+    std::vector<std::string>           cutomFilterNames_;
     std::vector<std::string>           triggerBranchStrings_;
     std::map<std::string, std::string> triggerNamingMap_;
     std::map<std::string, Int_t>       triggerIntMap_;

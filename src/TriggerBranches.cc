@@ -6,7 +6,8 @@ TriggerBranches::TriggerBranches(TTree * tree, const edm::ParameterSet& iConfig,
     triggerObjectsToken_(cc.consumes<pat::TriggerObjectStandAloneCollection>(iConfig.getParameter<edm::InputTag>("triggerObjects"))),
     triggerPrescalesToken_(cc.consumes<pat::PackedTriggerPrescales>(iConfig.getParameter<edm::InputTag>("triggerPrescales"))),
     triggerBranches_(iConfig.getParameter<edm::ParameterSet>("triggerBranches")),
-    filterBranches_(iConfig.getParameter<edm::ParameterSet>("filterBranches"))
+    filterBranches_(iConfig.getParameter<edm::ParameterSet>("filterBranches")),
+    customFilterBranches_(iConfig.getParameter<edm::ParameterSet>("customFilterBranches"))
 {
     // get trigger parameters
     triggerBranchStrings_.push_back("Pass");
@@ -22,6 +23,13 @@ TriggerBranches::TriggerBranches(TTree * tree, const edm::ParameterSet& iConfig,
     for (auto trig : filterNames_) {
         edm::ParameterSet trigPSet = filterBranches_.getParameter<edm::ParameterSet>(trig);
         std::string trigString = trigPSet.getParameter<std::string>("path");
+        triggerNamingMap_.insert(std::pair<std::string, std::string>(trig,trigString));
+    }
+
+    customFilterNames_ = customFilterBranches_.getParameterNames();
+    for (auto trig : customFilterNames_) {
+        edm::ParameterSet trigPSet = filterBranches_.getParameter<edm::ParameterSet>(trig);
+        edm::EDGetTokenT<bool> trigToken = cc.consumes<bool>(trigPSet.getParamter<edm::InputTag>("inputTag"));
         triggerNamingMap_.insert(std::pair<std::string, std::string>(trig,trigString));
     }
 

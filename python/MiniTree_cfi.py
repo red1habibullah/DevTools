@@ -15,6 +15,7 @@ miniTree = cms.EDAnalyzer("MiniTree",
     triggerPrescales = cms.InputTag("patTrigger"),
     triggerBranches = triggerBranches,
     filterBranches = filterBranches,
+    customFilterBranches = customFilterBranches,
     vertexCollections = cms.PSet(
         vertices = cms.PSet(
             collection = cms.InputTag("slimmedOfflinePrimaryVertices"),

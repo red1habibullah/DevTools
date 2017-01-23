@@ -3,6 +3,9 @@
 # CMSSW packages
 pushd $CMSSW_BASE/src
 
+# Bad muon filter
+git cms-merge-topic gpetruc:badMuonFilters_80X_v2
+
 # IDs
 # https://twiki.cern.ch/twiki/bin/view/CMS/HEEPElectronIdentificationRun2
 git cms-merge-topic Sam-Harper:HEEPV70VID_8010_ReducedCheckout

@@ -121,6 +121,12 @@ filterBranches = cms.PSet(
     eeBadScFilter                      = cms.PSet( path  = cms.string('Flag_eeBadScFilter') ),
 )
 
+customFilterBranches = cms.PSet(
+    cloneGlobalMuonTagger              = cms.PSet( inputTag = cms.InputTag('cloneGlobalMuonTagger') ),
+    badGlobalMuonTagger                = cms.PSet( inputTag = cms.InputTag('badGlobalMuonTagger') ),
+    BadChargedCandidateFilter          = cms.PSet( inputTag = cms.InputTag('BadChargedCandidateFilter') ),
+)
+
 # vertices
 vertexBranches = commonVertex.clone()
 

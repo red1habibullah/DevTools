@@ -183,25 +183,44 @@ cleaning = {
 filters = []
 
 # met filters
-if options.runMetFilter:
-    print 'Preparing MET filters'
-    from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
-    hltFilter = hltHighLevel.clone()
-    # PAT if miniaod by itself (MC) and RECO if at the same time as reco (data)
-    hltFilter.TriggerResultsTag = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
-    hltFilter.throw = cms.bool(True)
-    # ICHEP recommendation
-    # https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#MiniAOD_8011_ICHEP_dataset
-    for flag in ['HBHENoiseFilter','HBHENoiseIsoFilter','EcalDeadCellTriggerPrimitiveFilter','goodVertices','eeBadScFilter','globalTightHalo2016Filter']:
-        mod = hltFilter.clone(HLTPaths=cms.vstring('Flag_{0}'.format(flag)))
-        modName = 'filter{0}'.format(flag)
-        setattr(process,modName,mod)
-        filters += [getattr(process,modName)]
-    process.load('RecoMET.METFilters.BadChargedCandidateFilter_cfi')
-    process.BadChargedCandidateFilter.muons = cms.InputTag("slimmedMuons")
-    process.BadChargedCandidateFilter.PFCandidates = cms.InputTag("packedPFCandidates")
-    filters += [process.BadChargedCandidateFilter]
-
+#if options.runMetFilter:
+# run all the time and store result
+print 'Preparing MET filters'
+from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
+hltFilter = hltHighLevel.clone()
+# PAT if miniaod by itself (MC) and RECO if at the same time as reco (data)
+hltFilter.TriggerResultsTag = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
+hltFilter.throw = cms.bool(True)
+# ICHEP recommendation
+# https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#MiniAOD_8011_ICHEP_dataset
+for flag in ['HBHENoiseFilter','HBHENoiseIsoFilter','EcalDeadCellTriggerPrimitiveFilter','goodVertices','eeBadScFilter','globalTightHalo2016Filter']:
+    mod = hltFilter.clone(HLTPaths=cms.vstring('Flag_{0}'.format(flag)))
+    modName = 'filter{0}'.format(flag)
+    setattr(process,modName,mod)
+    filters += [getattr(process,modName)]
+process.load('RecoMET.METFilters.BadChargedCandidateFilter_cfi')
+process.BadChargedCandidateFilter.muons = cms.InputTag("slimmedMuons")
+process.BadChargedCandidateFilter.PFCandidates = cms.InputTag("packedPFCandidates")
+filters += [process.BadChargedCandidateFilter]
+process.Flag_BadChargedCandidateFilter = cms.Path(process.BadChargedCandidateFilter)
+process.schedule.append(process.Flag_BadChargedCandidateFilter)
+# bad muon filters
+process.badGlobalMuonTagger = cms.EDFilter("BadGlobalMuonTagger",
+    muons = cms.InputTag(collections['muons']),
+    vtx   = cms.InputTag(collections['vertices']),
+    muonPtCut = cms.double(20),
+    selectClones = cms.bool(False),
+    taggingMode = cms.bool(True),
+)
+process.cloneGlobalMuonTagger = process.badGlobalMuonTagger.clone(
+    selectClones = True
+)
+filters += [process.cloneGlobalMuonTagger, process.badGlobalMuonTagger]
+process.Flag_cloneGlobalMuonTagger = cms.Path(process.cloneGlobalMuonTagger)
+process.Flag_badGlobalMuonTagger = cms.Path(process.badGlobalMuonTagger)
+process.schedule.append(process.Flag_cloneGlobalMuonTagger)
+process.schedule.append(process.Flag_badGlobalMuonTagger)
+    
 
 # now do any customization/cleaning
 print 'Customizing jets'
@@ -291,6 +310,6 @@ process.miniTree.rho = collections['rho']
 
 process.miniTreePath = cms.Path()
 for f in filters:
-    process.miniTreePath += f
+    process.miniTreePath += cms.ignore(f)
 process.miniTreePath += process.miniTree
 process.schedule.append(process.miniTreePath)
