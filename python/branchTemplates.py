@@ -122,10 +122,10 @@ filterBranches = cms.PSet(
 )
 
 customFilterBranches = cms.PSet(
-    cloneGlobalMuonTagger              = cms.PSet( inputTag = cms.InputTag('cloneGlobalMuonTagger') ),
-    badGlobalMuonTagger                = cms.PSet( inputTag = cms.InputTag('badGlobalMuonTagger') ),
+    # doesnt work! work around: store the bad muons for now
+    #cloneGlobalMuonTagger              = cms.PSet( inputTag = cms.InputTag('cloneGlobalMuonTagger') ),
+    #badGlobalMuonTagger                = cms.PSet( inputTag = cms.InputTag('badGlobalMuonTagger') ),
     BadChargedCandidateFilter          = cms.PSet( inputTag = cms.InputTag('BadChargedCandidateFilter') ),
-    BadPFMuonFilter                    = cms.PSet( inputTag = cms.InputTag('BadPFMuonFilter') ),
 )
 
 # vertices

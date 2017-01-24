@@ -8,8 +8,8 @@ options = VarParsing('analysis')
 options.outputFile = 'miniTree.root'
 #options.inputFiles= '/store/mc/RunIISummer16MiniAODv2/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/2E1C211C-05C2-E611-90D3-02163E01306F.root' # WZ
 #options.inputFiles = '/store/mc/RunIISummer16MiniAODv2/HPlusPlusHMinusHTo3L_M-500_13TeV-calchep-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/08ECD723-E4CA-E611-8C93-0CC47A1E0DC2.root' # Hpp3l
-#options.inputFiles = '/store/data/Run2016G/DoubleMuon/MINIAOD/23Sep2016-v1/100000/0A30F7A9-ED8F-E611-91F1-008CFA1C6564.root' # ReReco
-options.inputFiles = '/store/data/Run2016H/DoubleMuon/MINIAOD/PromptReco-v3/000/284/036/00000/64591DD7-A79F-E611-954C-FA163E5A1368.root' # PromptReco
+options.inputFiles = '/store/data/Run2016G/DoubleMuon/MINIAOD/23Sep2016-v1/100000/0A30F7A9-ED8F-E611-91F1-008CFA1C6564.root' # ReReco
+#options.inputFiles = '/store/data/Run2016H/DoubleMuon/MINIAOD/PromptReco-v3/000/284/036/00000/64591DD7-A79F-E611-954C-FA163E5A1368.root' # PromptReco
 options.maxEvents = -1
 options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
 options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
@@ -209,6 +209,7 @@ process.badGlobalMuonTagger = cms.EDFilter("BadGlobalMuonTagger",
     muonPtCut = cms.double(20),
     selectClones = cms.bool(False),
     taggingMode = cms.bool(False),
+    verbose = cms.untracked.bool(False),
 )
 process.cloneGlobalMuonTagger = process.badGlobalMuonTagger.clone(
     selectClones = True
@@ -303,6 +304,17 @@ process.miniTree.collections.taus.collection = collections['taus']
 process.miniTree.collections.jets.collection = collections['jets']
 process.miniTree.collections.pfmet.collection = collections['pfmet']
 process.miniTree.rho = collections['rho']
+
+# add the bad muons (condensed info)
+from DevTools.Ntuplizer.branchTemplates import *
+process.miniTree.collections.muonsBadGlobal = cms.PSet(
+    collection = cms.InputTag("badGlobalMuonTagger","bad"),
+    branches = commonCandidates.clone(),
+)
+process.miniTree.collections.muonsCloneGlobal = cms.PSet(
+    collection = cms.InputTag("cloneGlobalMuonTagger","bad"),
+    branches = commonCandidates.clone(),
+)
 
 process.miniTreePath = cms.Path()
 for f in filters:
