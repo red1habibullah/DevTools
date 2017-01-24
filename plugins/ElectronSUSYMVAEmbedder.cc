@@ -252,7 +252,9 @@ void ElectronSUSYMVAEmbedder::initialize()
     tmvaReader->AddVariable("LepGood_sip3d",                &LepGood_SIP                 );
     tmvaReader->AddVariable("log(abs(LepGood_dxy))",        &LepGood_dxyBS               );
     tmvaReader->AddVariable("log(abs(LepGood_dz))",         &LepGood_dzPV                );
-    tmvaReader->AddVariable("LepGood_mvaIdSpring15",        &LepGood_nontrigMVA          );
+    if (nonTrigLabel_.find("HZZ") != std::string::npos)                 tmvaReader->AddVariable("LepGood_mvaIdSpring16HZZ",&LepGood_nontrigMVA);
+    else if (nonTrigLabel_.find("GeneralPurpose") != std::string::npos) tmvaReader->AddVariable("LepGood_mvaIdSpring16GP", &LepGood_nontrigMVA);
+    else if (nonTrigLabel_.find("Spring15") != std::string::npos)       tmvaReader->AddVariable("LepGood_mvaIdSpring15",   &LepGood_nontrigMVA);
     tmvaReader->BookMVA("BDTG",weightsfile_.fullPath());
   }
 

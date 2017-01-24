@@ -283,7 +283,7 @@ def customizeElectrons(process,coll,**kwargs):
         vertexSrc = cms.InputTag(pvSrc),
         rhoSrc = cms.InputTag('fixedGridRhoFastjetCentralNeutral'),
         mva = cms.string('ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Values'),
-        weights = cms.FileInPath('DevTools/Ntuplizer/data/forMoriond16_el_sigTTZ_bkgTT_BDTG.weights.xml'),
+        weights = cms.FileInPath('DevTools/Ntuplizer/data/susy_el_BDTG.weights.xml'), # https://github.com/CERN-PH-CMG/cmgtools-lite/blob/80X/TTHAnalysis/data/leptonMVA/tth
     )
     eSrc = 'eSUSYEmbedder'
     process.electronCustomization *= process.eSUSYEmbedder

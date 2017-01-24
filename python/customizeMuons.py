@@ -133,7 +133,7 @@ def customizeMuons(process,coll,**kwargs):
         src = cms.InputTag(mSrc),
         vertexSrc = cms.InputTag(pvSrc),
         rhoSrc = cms.InputTag('fixedGridRhoFastjetCentralNeutral'),
-        weights = cms.FileInPath('DevTools/Ntuplizer/data/forMoriond16_mu_sigTTZ_bkgTT_BDTG.weights.xml'),
+        weights = cms.FileInPath('DevTools/Ntuplizer/data/susy_mu_BDTG.weights.xml'), # https://github.com/CERN-PH-CMG/cmgtools-lite/blob/80X/TTHAnalysis/data/leptonMVA/tth
     )
     mSrc = 'mSUSYEmbedder'
     process.muonCustomization *= process.mSUSYEmbedder

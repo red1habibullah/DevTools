@@ -561,7 +561,7 @@ jetBranches = commonJetCandidates.clone(
 metBranches = commonMet.clone(
     uncorEt               = cms.vstring('uncorPt','F'),
     uncorPhi              = cms.vstring('uncorPhi','F'),
-    # shifts
+    ## shifts
     et_jetResUp           = cms.vstring('userCand("JetResUp").pt()','F'),
     et_jetResDown         = cms.vstring('userCand("JetResDown").pt()','F'),
     et_jetEnUp            = cms.vstring('userCand("JetEnUp").pt()','F'),
@@ -574,8 +574,8 @@ metBranches = commonMet.clone(
     et_tauEnDown          = cms.vstring('userCand("TauEnDown").pt()','F'),
     et_unclusteredEnUp    = cms.vstring('userCand("UnclusteredEnUp").pt()','F'),
     et_unclusteredEnDown  = cms.vstring('userCand("UnclusteredEnDown").pt()','F'),
-    et_photonEnUp         = cms.vstring('userCand("PhotonEnUp").pt()','F'),
-    et_photonEnDown       = cms.vstring('userCand("PhotonEnDown").pt()','F'),
+    #et_photonEnUp         = cms.vstring('userCand("PhotonEnUp").pt()','F'),
+    #et_photonEnDown       = cms.vstring('userCand("PhotonEnDown").pt()','F'),
     phi_jetResUp          = cms.vstring('userCand("JetResUp").phi()','F'),
     phi_jetResDown        = cms.vstring('userCand("JetResDown").phi()','F'),
     phi_jetEnUp           = cms.vstring('userCand("JetEnUp").phi()','F'),
@@ -588,8 +588,8 @@ metBranches = commonMet.clone(
     phi_tauEnDown         = cms.vstring('userCand("TauEnDown").phi()','F'),
     phi_unclusteredEnUp   = cms.vstring('userCand("UnclusteredEnUp").phi()','F'),
     phi_unclusteredEnDown = cms.vstring('userCand("UnclusteredEnDown").phi()','F'),
-    phi_photonEnUp        = cms.vstring('userCand("PhotonEnUp").phi()','F'),
-    phi_photonEnDown      = cms.vstring('userCand("PhotonEnDown").phi()','F'),
+    #phi_photonEnUp        = cms.vstring('userCand("PhotonEnUp").phi()','F'),
+    #phi_photonEnDown      = cms.vstring('userCand("PhotonEnDown").phi()','F'),
 )
 
 for trigger in triggerMap:
