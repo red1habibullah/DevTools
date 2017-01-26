@@ -16,6 +16,7 @@ options.register('reportEvery', 100, VarParsing.multiplicity.singleton, VarParsi
 options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
 options.register('reHLT', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is reHLT")
 options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
+options.register('crab', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Make changes needed for crab")
 
 options.parseArguments()
 
@@ -61,10 +62,10 @@ process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 ### JEC source ###
 ##################
 # this is if we need to override the jec in global tag
-sqfile = 'DevTools/Ntuplizer/data/{0}.db'.format('Spring16_23Sep2016V2_MC' if options.isMC else 'Spring16_23Sep2016AllV2_DATA')
-#sqfile = 'src/DevTools/Ntuplizer/data/{0}.db'.format('Spring16_23Sep2016V2_MC' if options.isMC else 'Spring16_23Sep2016AllV2_DATA') # uncomment to submit to crab
-tag = 'JetCorrectorParametersCollection_Spring16_23Sep2016AllV2_DATA_AK4PFchs'
-if options.isMC: tag = 'JetCorrectorParametersCollection_Spring16_23Sep2016V2_MC_AK4PFchs' # MoriondMC
+sqfile = 'DevTools/Ntuplizer/data/{0}.db'.format('Summer16_23Sep2016V3_MC' if options.isMC else 'Summer16_23Sep2016AllV3_DATA')
+if options.crab: sqfile = 'src/{0}'.format(sqfile) # uncomment to submit to crab
+tag = 'JetCorrectorParametersCollection_Summer16_23Sep2016AllV3_DATA_AK4PFchs'
+if options.isMC: tag = 'JetCorrectorParametersCollection_Summer16_23Sep2016V3_MC_AK4PFchs' # MoriondMC
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
 from CondCore.DBCommon.CondDBSetup_cfi import *
 process.jec = cms.ESSource("PoolDBESSource",
