@@ -5,6 +5,7 @@ def customizeElectrons(process,coll,**kwargs):
     reHLT = kwargs.pop('reHLT',False)
     isMC = kwargs.pop('isMC',False)
     eSrc = coll['electrons']
+    pSrc = coll['photons']
     jSrc = coll['jets']
     rhoSrc = coll['rho']
     pvSrc = coll['vertices']
@@ -13,9 +14,6 @@ def customizeElectrons(process,coll,**kwargs):
     # customization path
     process.electronCustomization = cms.Path()
 
-    ###################################
-    ### scale and smear corrections ###
-    ###################################
     # embed the uncorrected stuff
     process.uncorElec = cms.EDProducer(
         "ElectronSelfEmbedder",
@@ -24,6 +22,24 @@ def customizeElectrons(process,coll,**kwargs):
     )
     eSrc = "uncorElec"
     process.electronCustomization *= process.uncorElec
+
+    #######################
+    ### ECAL Regression ###
+    #######################
+    from EgammaAnalysis.ElectronTools.regressionWeights_cfi import regressionWeights
+    process = regressionWeights(process)
+
+    # note: also brings in photons, customize in customizePhotons.py
+    process.load('EgammaAnalysis.ElectronTools.regressionApplication_cff')
+    process.eRegression = process.slimmedElectrons.clone()
+    process.eRegression.src = cms.InputTag(eSrc)
+    eSrc = "eRegression"
+
+    process.electronCustomization *= process.eRegression
+
+    ###################################
+    ### scale and smear corrections ###
+    ###################################
 
     # first need to add a manual protection for the corrections
     process.selectedElectrons = cms.EDFilter(
