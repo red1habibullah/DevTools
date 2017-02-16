@@ -55,34 +55,34 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 #GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMiniAOD
 # https://twiki.cern.ch/twiki/bin/view/CMS/JECDataMC
-GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v6', 'datagt': '80X_dataRun2_2016SeptRepro_v4'}
+GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7'}
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 ##################
 ### JEC source ###
 ##################
 # this is if we need to override the jec in global tag
-sqfile = 'DevTools/Ntuplizer/data/{0}.db'.format('Summer16_23Sep2016V3_MC' if options.isMC else 'Summer16_23Sep2016AllV3_DATA')
-if options.crab: sqfile = 'src/{0}'.format(sqfile) # uncomment to submit to crab
-tag = 'JetCorrectorParametersCollection_Summer16_23Sep2016AllV3_DATA_AK4PFchs'
-if options.isMC: tag = 'JetCorrectorParametersCollection_Summer16_23Sep2016V3_MC_AK4PFchs' # MoriondMC
-process.load("CondCore.DBCommon.CondDBCommon_cfi")
-from CondCore.DBCommon.CondDBSetup_cfi import *
-process.jec = cms.ESSource("PoolDBESSource",
-    DBParameters = cms.PSet(
-        messageLevel = cms.untracked.int32(0)
-    ),
-    timetype = cms.string('runnumber'),
-    toGet = cms.VPSet(
-        cms.PSet(
-            record = cms.string('JetCorrectionsRecord'),
-            tag    = cms.string(tag),
-            label  = cms.untracked.string('AK4PFchs')
-        ),
-    ), 
-    connect = cms.string('sqlite:{0}'.format(sqfile)),
-)
-process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
+#sqfile = 'DevTools/Ntuplizer/data/{0}.db'.format('Summer16_23Sep2016V3_MC' if options.isMC else 'Summer16_23Sep2016AllV3_DATA')
+#if options.crab: sqfile = 'src/{0}'.format(sqfile) # uncomment to submit to crab
+#tag = 'JetCorrectorParametersCollection_Summer16_23Sep2016AllV3_DATA_AK4PFchs'
+#if options.isMC: tag = 'JetCorrectorParametersCollection_Summer16_23Sep2016V3_MC_AK4PFchs' # MoriondMC
+#process.load("CondCore.DBCommon.CondDBCommon_cfi")
+#from CondCore.DBCommon.CondDBSetup_cfi import *
+#process.jec = cms.ESSource("PoolDBESSource",
+#    DBParameters = cms.PSet(
+#        messageLevel = cms.untracked.int32(0)
+#    ),
+#    timetype = cms.string('runnumber'),
+#    toGet = cms.VPSet(
+#        cms.PSet(
+#            record = cms.string('JetCorrectionsRecord'),
+#            tag    = cms.string(tag),
+#            label  = cms.untracked.string('AK4PFchs')
+#        ),
+#    ), 
+#    connect = cms.string('sqlite:{0}'.format(sqfile)),
+#)
+#process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
 #############################
 ### Setup rest of running ###
