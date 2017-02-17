@@ -41,9 +41,10 @@ git cms-merge-topic ikrav:egm_id_80X_v3_photons
 
 # EGMSmearer
 # https://twiki.cern.ch/twiki/bin/view/CMS/EGMSmearer
-git cms-merge-topic gfasanel:Moriond17_23Jan
+git cms-merge-topic shervin86:Moriond17_23Jan
 pushd EgammaAnalysis/ElectronTools/data
-git clone git@github.com:gfasanel/ScalesSmearings.git
+git clone https://github.com/ECALELFS/ScalesSmearings.git
+git checkout Moriond17_23Jan_v1
 popd
 
 # MET
