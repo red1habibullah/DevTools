@@ -1,17 +1,10 @@
 # Setup parameters to validate ntuplizer
 
 params = {
-    'promptreco': {
+    'data': {
         'type': 'data',
         'kwargs': {
-            'inputFiles': '/store/data/Run2016H/DoubleMuon/MINIAOD/PromptReco-v3/000/284/036/00000/64591DD7-A79F-E611-954C-FA163E5A1368.root',
-            'isMC': 0,
-        },
-    },
-    'rereco': {
-        'type': 'data',
-        'kwargs': {
-            'inputFiles': '/store/data/Run2016G/DoubleMuon/MINIAOD/23Sep2016-v1/100000/0A30F7A9-ED8F-E611-91F1-008CFA1C6564.root',
+            'inputFiles': '/store/data/Run2016G/DoubleMuon/MINIAOD/03Feb2017-v1/100000/00182C13-EEEA-E611-8897-001E675A6C2A.root',
             'isMC': 0,
         },
     },

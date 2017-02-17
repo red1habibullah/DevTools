@@ -119,12 +119,12 @@ filterBranches = cms.PSet(
     EcalDeadCellTriggerPrimitiveFilter = cms.PSet( path  = cms.string('Flag_EcalDeadCellTriggerPrimitiveFilter') ),
     goodVertices                       = cms.PSet( path  = cms.string('Flag_goodVertices') ),
     eeBadScFilter                      = cms.PSet( path  = cms.string('Flag_eeBadScFilter') ),
+    duplicateMuons                     = cms.PSet( path  = cms.string('Flag_duplicateMuons') ),
+    badMuons                           = cms.PSet( path  = cms.string('Flag_badMuons') ),
+    noBadMuons                         = cms.PSet( path  = cms.string('Flag_noBadMuons') ),
 )
 
 customFilterBranches = cms.PSet(
-    # doesnt work! work around: store the bad muons for now
-    #cloneGlobalMuonTagger              = cms.PSet( inputTag = cms.InputTag('cloneGlobalMuonTagger') ),
-    #badGlobalMuonTagger                = cms.PSet( inputTag = cms.InputTag('badGlobalMuonTagger') ),
     BadChargedCandidateFilter          = cms.PSet( inputTag = cms.InputTag('BadChargedCandidateFilter') ),
 )
 

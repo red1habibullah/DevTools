@@ -204,21 +204,6 @@ process.load('RecoMET.METFilters.BadChargedCandidateFilter_cfi')
 process.BadChargedCandidateFilter.muons = cms.InputTag("slimmedMuons")
 process.BadChargedCandidateFilter.PFCandidates = cms.InputTag("packedPFCandidates")
 filters += [process.BadChargedCandidateFilter]
-# bad muon filters
-process.badGlobalMuonTagger = cms.EDFilter("BadGlobalMuonTagger",
-    muons = cms.InputTag(collections['muons']),
-    vtx   = cms.InputTag(collections['vertices']),
-    muonPtCut = cms.double(20),
-    selectClones = cms.bool(False),
-    taggingMode = cms.bool(False),
-    verbose = cms.untracked.bool(False),
-)
-process.cloneGlobalMuonTagger = process.badGlobalMuonTagger.clone(
-    selectClones = True
-)
-
-process.noBadGlobalMuons = cms.Sequence(~process.cloneGlobalMuonTagger + ~process.badGlobalMuonTagger)
-filters += [process.cloneGlobalMuonTagger, process.badGlobalMuonTagger]
     
 
 # now do any customization/cleaning
@@ -289,9 +274,8 @@ for coll in selections:
 process.load("DevTools.Ntuplizer.MiniTree_cfi")
 
 process.miniTree.isData = not options.isMC
-process.miniTree.filterResults = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
-if options.reHLT:
-    process.miniTree.triggerResults = cms.InputTag('TriggerResults', '', 'HLT2')
+#process.miniTree.filterResults = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
+process.miniTree.filterResults = cms.InputTag('TriggerResults', '', 'PAT')
 process.miniTree.vertexCollections.vertices.collection = collections['vertices']
 if options.isMC:
     from DevTools.Ntuplizer.branchTemplates import genParticleBranches 
@@ -306,17 +290,6 @@ process.miniTree.collections.taus.collection = collections['taus']
 process.miniTree.collections.jets.collection = collections['jets']
 process.miniTree.collections.pfmet.collection = collections['pfmet']
 process.miniTree.rho = collections['rho']
-
-# add the bad muons (condensed info)
-from DevTools.Ntuplizer.branchTemplates import *
-process.miniTree.collections.muonsBadGlobal = cms.PSet(
-    collection = cms.InputTag("badGlobalMuonTagger","bad"),
-    branches = commonCandidates.clone(),
-)
-process.miniTree.collections.muonsCloneGlobal = cms.PSet(
-    collection = cms.InputTag("cloneGlobalMuonTagger","bad"),
-    branches = commonCandidates.clone(),
-)
 
 process.miniTreePath = cms.Path()
 for f in filters:
