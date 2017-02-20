@@ -21,5 +21,12 @@ params = {
             'inputFiles': '/store/mc/RunIISummer16MiniAODv2/HPlusPlusHMinusHTo3L_M-500_13TeV-calchep-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/08ECD723-E4CA-E611-8C93-0CC47A1E0DC2.root',
             'isMC': 1,
         },
-    }
+    },
+    'private': {
+        'type': 'mc',
+        'kwargs': {
+            'inputFiles': '/store/user/dntaylor/HPlusPlusHMinusMinusHTo4L_M-500_TuneCUETP8M1_13TeV_pythia8/RunIISummer16MiniAODv2_MINIAODSIM_v1/170217_204448/0000/dblh_1_1.root',
+            'isMC': 1,
+        },
+    },
 }
