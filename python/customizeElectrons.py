@@ -48,7 +48,7 @@ def customizeElectrons(process,coll,**kwargs):
     eSrc = "selectedElectrons"
     process.electronCustomization *= process.selectedElectrons
 
-    process.load('EgammaAnalysis.ElectronTools.calibratedElectronsRun2_cfi')
+    process.load('EgammaAnalysis.ElectronTools.calibratedPatElectronsRun2_cfi')
     process.calibratedPatElectrons.electrons = eSrc
     process.calibratedPatElectrons.isMC = isMC
     process.electronCustomization *= process.calibratedPatElectrons
