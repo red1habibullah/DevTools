@@ -37,14 +37,18 @@ git cms-merge-topic ikrav:egm_id_80X_v3_photons
 # EGMRegressions
 # https://twiki.cern.ch/twiki/bin/view/CMS/EGMRegression
 git cms-merge-topic rafaellopesdesa:EgammaAnalysis80_EGMSmearer_Moriond17_23Jan
+pushd EgammaAnalysis/ElectronTools/data
+git clone https://github.com/ECALELFS/ScalesSmearings.git
+popd
 
 # EGMSmearer
 # https://twiki.cern.ch/twiki/bin/view/CMS/EGMSmearer
-git cms-merge-topic shervin86:Moriond17_23Jan
-pushd EgammaAnalysis/ElectronTools/data
-git clone https://github.com/ECALELFS/ScalesSmearings.git
-git checkout Moriond17_23Jan_v1
-popd
+# included in EGMRegression merge
+#git cms-merge-topic shervin86:Moriond17_23Jan
+#pushd EgammaAnalysis/ElectronTools/data
+#git clone https://github.com/ECALELFS/ScalesSmearings.git
+#git checkout Moriond17_23Jan_v1
+#popd
 
 # MET
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2
