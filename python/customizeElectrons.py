@@ -14,14 +14,6 @@ def customizeElectrons(process,coll,**kwargs):
     # customization path
     process.electronCustomization = cms.Path()
 
-    # embed the uncorrected stuff
-    process.uncorElec = cms.EDProducer(
-        "ElectronSelfEmbedder",
-        src=cms.InputTag(eSrc),
-        label=cms.string('uncorrected'),
-    )
-    eSrc = "uncorElec"
-    process.electronCustomization *= process.uncorElec
 
     #######################
     ### ECAL Regression ###
@@ -31,11 +23,17 @@ def customizeElectrons(process,coll,**kwargs):
 
     # note: also brings in photons, customize in customizePhotons.py
     process.load('EgammaAnalysis.ElectronTools.regressionApplication_cff')
-    process.eRegression = process.slimmedElectrons.clone()
-    process.eRegression.src = cms.InputTag(eSrc)
-    eSrc = "eRegression"
+    process.electronCustomization *= process.regressionApplication
 
-    process.electronCustomization *= process.eRegression
+    # embed the uncorrected stuff
+    process.uncorElec = cms.EDProducer(
+        "ShiftedElectronEmbedder",
+        src=cms.InputTag(eSrc),
+        label=cms.string('uncorrected'),
+        shiftedSrc=cms.InputTag('slimmedElectrons::PAT'),
+    )
+    eSrc = "uncorElec"
+    process.electronCustomization *= process.uncorElec
 
     ###################################
     ### scale and smear corrections ###

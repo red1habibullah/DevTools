@@ -36,8 +36,7 @@ git cms-merge-topic ikrav:egm_id_80X_v3_photons
 
 # EGMRegressions
 # https://twiki.cern.ch/twiki/bin/view/CMS/EGMRegression
-# available since CMSSW_8_0_26_patch1
-#git cms-merge-topic rafaellopesdesa:Regression80XEgammaAnalysis
+git cms-merge-topic rafaellopesdesa:EgammaAnalysis80_EGMSmearer_Moriond17_23Jan
 
 # EGMSmearer
 # https://twiki.cern.ch/twiki/bin/view/CMS/EGMSmearer
