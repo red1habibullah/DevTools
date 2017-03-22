@@ -348,7 +348,7 @@ muonBranches = commonPatCandidates.clone(
     rochesterEta                = cms.vstring('userFloat("rochesterEta")','F'),
     rochesterPhi                = cms.vstring('userFloat("rochesterPhi")','F'),
     rochesterEnergy             = cms.vstring('userFloat("rochesterEnergy")','F'),
-    rochesterError              = cms.vstring('userFloat("rochesterError")','F'),
+    #rochesterError              = cms.vstring('userFloat("rochesterError")','F'),
     # energy shifts
     pt_muonEnUp                 = cms.vstring('userCand("MuonEnUp").pt()','F'),
     eta_muonEnUp                = cms.vstring('userCand("MuonEnUp").eta()','F'),

@@ -35,6 +35,7 @@ def customizeMuons(process,coll,**kwargs):
         "RochesterCorrectionEmbedder",
         src = cms.InputTag(mSrc),
         isData = cms.bool(not isMC),
+        directory = cms.FileInPath("DevTools/Ntuplizer/data/rcdata.2016.v3/config.txt"),
     )
     mSrc = 'mRoch'
 

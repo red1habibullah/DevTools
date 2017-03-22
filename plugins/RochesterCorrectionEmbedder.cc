@@ -6,11 +6,17 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/ParameterSet/interface/FileInPath.h"
 
 #include "DataFormats/PatCandidates/interface/Muon.h"
 
-#include "DevTools/Ntuplizer/plugins/rochcor2016.h"
-//#include "DevTools/Ntuplizer/plugins/RoccoR.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "FWCore/Utilities/interface/RandomNumberGenerator.h"
+#include "CLHEP/Random/RandomEngine.h"
+
+#include "DevTools/Ntuplizer/plugins/RoccoR.h"
+
+#include "TLorentzVector.h"
 
 class RochesterCorrectionEmbedder : public edm::stream::EDProducer<>
 {
@@ -28,17 +34,21 @@ private:
 
   // Data
   edm::EDGetTokenT<edm::View<pat::Muon> > collectionToken_; // input collection
+  edm::FileInPath directory_;
   bool isData_;
   std::auto_ptr<std::vector<pat::Muon> > out;             // Collection we'll output at the end
-  std::auto_ptr<rochcor2016> rmcor;
+  std::auto_ptr<RoccoR> rc;
 };
 
 // Constructors and destructors
 RochesterCorrectionEmbedder::RochesterCorrectionEmbedder(const edm::ParameterSet& iConfig):
   collectionToken_(consumes<edm::View<pat::Muon> >(iConfig.getParameter<edm::InputTag>("src"))),
+  directory_(iConfig.getParameter<edm::FileInPath>("directory")),
   isData_(iConfig.getParameter<bool>("isData"))
 {
-  rmcor = std::auto_ptr<rochcor2016>(new rochcor2016());
+  std::string rochCorrDataDirPath = directory_.fullPath();
+  rochCorrDataDirPath.erase(rochCorrDataDirPath.length()-10);
+  rc = std::auto_ptr<RoccoR>(new RoccoR(rochCorrDataDirPath));
   produces<std::vector<pat::Muon> >();
 }
 
@@ -49,6 +59,9 @@ void RochesterCorrectionEmbedder::produce(edm::Event& iEvent, const edm::EventSe
   edm::Handle<edm::View<pat::Muon> > collection;
   iEvent.getByToken(collectionToken_, collection);
 
+   // get random number generator
+   edm::Service<edm::RandomNumberGenerator> rng;
+   CLHEP::HepRandomEngine& engine = rng->getEngine(iEvent.streamID());
 
   for (size_t c = 0; c < collection->size(); ++c) {
     const auto obj = collection->at(c);
@@ -61,31 +74,41 @@ void RochesterCorrectionEmbedder::produce(edm::Event& iEvent, const edm::EventSe
       newObj.addUserFloat("rochesterEta", obj.eta());
       newObj.addUserFloat("rochesterPhi", obj.phi());
       newObj.addUserFloat("rochesterEnergy", obj.energy());
-      newObj.addUserFloat("rochesterError", 1.);
       out->push_back(newObj);
       continue;
     }
 
-    TLorentzVector p4;
-    p4.SetPtEtaPhiM(obj.pt(),obj.eta(),obj.phi(),obj.mass());
+    double sf = 1.0;
     int charge = obj.charge();
-    float qter = 1.0; 
-
+    double pt = obj.pt();
+    double eta = obj.eta();
+    double phi = obj.phi();
     if (isData_) {
-      int runopt = 0;
-      rmcor->momcor_data(p4, charge, runopt, qter);
+      //for each data muon in the loop, use this function to get a scale factor for its momentum:
+      sf = rc->kScaleDT(charge, pt, eta, phi, 0, 0);
     }
     else {
-      int ntrk = 0;
-      rmcor->momcor_mc(p4, charge, ntrk, qter);
+      //for MC, if matched gen-level muon (genPt) is available, use this function
+      //sf = rc->kScaleFromGenMC(charge, pt, eta, phi, nl, genPt, u1, 0, 0);
+    
+      //if not, then:
+      double u1 = engine.flat();
+      double u2 = engine.flat();
+      sf = rc->kScaleAndSmearMC(charge, pt, eta, phi, obj.bestTrack()->hitPattern().trackerLayersWithMeasurement(), u1, u2, 0, 0);
     }
+
+    float sf_f = (float) sf;
+
+    TLorentzVector p4;
+    p4.SetPtEtaPhiM(obj.pt()*sf_f,obj.eta(),obj.phi(),obj.mass());
 
     newObj.addUserFloat("rochesterPt", p4.Pt());
     newObj.addUserFloat("rochesterEta", p4.Eta());
     newObj.addUserFloat("rochesterPhi", p4.Phi());
     newObj.addUserFloat("rochesterEnergy", p4.Energy());
-    newObj.addUserFloat("rochesterError", qter);
     out->push_back(newObj);
+
+    
   }
 
   iEvent.put(out);
