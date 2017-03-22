@@ -269,7 +269,8 @@ float ElectronSUSYMVAEmbedder::getMVAValue(const pat::Electron & el, const reco:
     LepGood_JetPtRatio =           std::min(el.userFloat("jet_ptRatio"),(float)1.5);
     LepGood_JetBTagCSV =           std::max(el.userFloat("jet_pfCombinedInclusiveSecondaryVertexV2BJetTags"),(float)0.);
     LepGood_SIP =                  fabs(el.dB(pat::Electron::PV3D))/el.edB(pat::Electron::PV3D);
-    LepGood_dxyBS =                log(fabs(el.userFloat("dxy_beamspot")));
+    //LepGood_dxyBS =                log(fabs(el.userFloat("dxy_beamspot")));
+    LepGood_dxyBS =                log(fabs(el.userFloat("dxy")));
     LepGood_dzPV =                 log(fabs(el.userFloat("dz")));
     LepGood_nontrigMVA =           el.userFloat(nonTrigLabel);
     return tmvaReader->EvaluateMVA("BDTG");

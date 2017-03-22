@@ -176,7 +176,8 @@ float MuonSUSYMVAEmbedder::getMVAValue(const pat::Muon & mu, const reco::Vertex&
     LepGood_JetPtRatio =           std::min(mu.userFloat("jet_ptRatio"),(float)1.5);
     LepGood_JetBTagCSV =           std::max(mu.userFloat("jet_pfCombinedInclusiveSecondaryVertexV2BJetTags"),(float)0.);
     LepGood_SIP =                  fabs(mu.dB(pat::Muon::PV3D))/mu.edB(pat::Muon::PV3D);
-    LepGood_dxyBS =                log(fabs(mu.userFloat("dxy_beamspot")));
+    //LepGood_dxyBS =                log(fabs(mu.userFloat("dxy_beamspot")));
+    LepGood_dxyBS =                log(fabs(mu.userFloat("dB2D")));
     LepGood_dzPV =                 log(fabs(mu.userFloat("dz")));
     LepGood_segmentCompatibility = mu.segmentCompatibility();
     return tmvaReader->EvaluateMVA("BDTG");
