@@ -69,7 +69,7 @@ void RochesterCorrectionEmbedder::produce(edm::Event& iEvent, const edm::EventSe
 
     //std::cout << "muon " << c << " " << obj.pt() << " " << obj.eta() << " " << obj.phi() << " " << obj.mass() << std::endl;
     
-    if (!obj.mass()) { // something breaks when mass = 0, just dont run
+    if (!obj.mass() || !obj.pt()) { // something breaks when mass = 0 or pt = 0, just dont run
       newObj.addUserFloat("rochesterPt", obj.pt());
       newObj.addUserFloat("rochesterEta", obj.eta());
       newObj.addUserFloat("rochesterPhi", obj.phi());
