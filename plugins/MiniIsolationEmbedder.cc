@@ -68,16 +68,9 @@ void MiniIsolationEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup
     double iso_ph;
     double iso_pu;
     std::tie(iso,iso_ch,iso_nh,iso_ph,iso_pu) = getMiniIsolation(pfcands,obj,0.05,0.2,10.);
-
-    //neutral mini-iso for SUSYMVA
-    double iso_an=0;    
-    if(obj.pt())
-      iso_an=std::max(0., iso - iso_ch/obj.pt() );
-
     newObj.addUserFloat("MiniIsolation", (float)(iso));
     newObj.addUserFloat("MiniIsolationCharged", (float)(iso_ch));
     newObj.addUserFloat("MiniIsolationNeutral", (float)(iso_nh));
-    newObj.addUserFloat("MiniIsolationAllNeutral", (float)(iso_an));
     newObj.addUserFloat("MiniIsolationPhoton", (float)(iso_ph));
     newObj.addUserFloat("MiniIsolationPileup", (float)(iso_pu));
     

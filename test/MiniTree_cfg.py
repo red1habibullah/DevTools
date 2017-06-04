@@ -45,10 +45,6 @@ process.RandomNumberGeneratorService = cms.Service(
         initialSeed = cms.untracked.uint32(2),
         engineName = cms.untracked.string('TRandom3')
     ),
-    mRoch = cms.PSet(
-        initialSeed = cms.untracked.uint32(3),
-        engineName = cms.untracked.string('TRandom3')
-    ),
 )
 
 #################

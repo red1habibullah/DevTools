@@ -171,7 +171,7 @@ float MuonSUSYMVAEmbedder::getMVAValue(const pat::Muon & mu, const reco::Vertex&
     LepGood_eta =                  mu.eta();
     LepGood_JetNDauCharged =       mu.userInt("jet_numberOfChargedDaughters");
     LepGood_miniRelIsoCharged =    mu.userFloat("MiniIsolationCharged")/mu.pt();
-    LepGood_miniRelIsoNeutral =    mu.userFloat("MiniIsolationAllNeutral");
+    LepGood_miniRelIsoNeutral =    mu.userFloat("MiniIsolationNeutral")/mu.pt();
     LepGood_JetPtRel =             mu.userFloat("jet_ptRel");
     LepGood_JetPtRatio =           std::min(mu.userFloat("jet_ptRatio"),(float)1.5);
     LepGood_JetBTagCSV =           std::max(mu.userFloat("jet_pfCombinedInclusiveSecondaryVertexV2BJetTags"),(float)0.);
