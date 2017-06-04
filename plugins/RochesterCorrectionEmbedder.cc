@@ -100,7 +100,8 @@ void RochesterCorrectionEmbedder::produce(edm::Event& iEvent, const edm::EventSe
     float sf_f = (float) sf;
 
     TLorentzVector p4;
-    p4.SetPtEtaPhiM(obj.pt()*sf_f,obj.eta(),obj.phi(),obj.mass());
+    p4.SetPtEtaPhiM(std::max(0.0001,obj.pt()*sf_f),obj.eta(),obj.phi(),obj.mass()); //protect against negative pt from corrections in misreconstructed muons
+    //std::cout << "scaled muon " << c << " " << p4.Pt() << " " << p4.Eta() << " " << p4.Phi() << " " << p4.Energy() << std::endl;
 
     newObj.addUserFloat("rochesterPt", p4.Pt());
     newObj.addUserFloat("rochesterEta", p4.Eta());

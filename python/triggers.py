@@ -4,19 +4,19 @@ triggerMap = {
     'Mu8_TrkIsoVVL'                                        : {'path' : 'HLT_Mu8_TrkIsoVVL_v\\[0-9]+',                                     'objects' : ['muon'], }, # prescaled always
     'Mu17_TrkIsoVVL'                                       : {'path' : 'HLT_Mu17_TrkIsoVVL_v\\[0-9]+',                                    'objects' : ['muon'], }, # prescaled always
     #'IsoMu18'                                              : {'path' : 'HLT_IsoMu18_v\\[0-9]+',                                           'objects' : ['muon'], }, # prescaled 
-    #'IsoMu20'                                              : {'path' : 'HLT_IsoMu20_v\\[0-9]+',                                           'objects' : ['muon'], }, # prescaled
-    #'IsoMu22'                                              : {'path' : 'HLT_IsoMu22_v\\[0-9]+',                                           'objects' : ['muon'], }, # prescaled 1.05e34
+    'IsoMu20'                                              : {'path' : 'HLT_IsoMu20_v\\[0-9]+',                                           'objects' : ['muon'], }, # prescaled # follow ken
+    'IsoMu22'                                              : {'path' : 'HLT_IsoMu22_v\\[0-9]+',                                           'objects' : ['muon'], }, # prescaled 1.05e34 # follow ken
     'IsoMu24'                                              : {'path' : 'HLT_IsoMu24_v\\[0-9]+',                                           'objects' : ['muon'], },
     'IsoMu27'                                              : {'path' : 'HLT_IsoMu27_v\\[0-9]+',                                           'objects' : ['muon'], },
     #'IsoMu22_eta2p1'                                       : {'path' : 'HLT_IsoMu22_eta2p1_v\\[0-9]+',                                    'objects' : ['muon'], },
     #'IsoMu24_eta2p1'                                       : {'path' : 'HLT_IsoMu24_eta2p1_v\\[0-9]+',                                    'objects' : ['muon'], },
     #'IsoTkMu18'                                            : {'path' : 'HLT_IsoTkMu18_v\\[0-9]+',                                         'objects' : ['muon'], }, # prescaled
-    #'IsoTkMu20'                                            : {'path' : 'HLT_IsoTkMu20_v\\[0-9]+',                                         'objects' : ['muon'], }, # prescaled
-    #'IsoTkMu22'                                            : {'path' : 'HLT_IsoTkMu22_v\\[0-9]+',                                         'objects' : ['muon'], }, # prescaled 1.05e34
+    'IsoTkMu20'                                            : {'path' : 'HLT_IsoTkMu20_v\\[0-9]+',                                         'objects' : ['muon'], }, # prescaled # follow ken
+    'IsoTkMu22'                                            : {'path' : 'HLT_IsoTkMu22_v\\[0-9]+',                                         'objects' : ['muon'], }, # prescaled 1.05e34 # follow ken
     'IsoTkMu24'                                            : {'path' : 'HLT_IsoTkMu24_v\\[0-9]+',                                         'objects' : ['muon'], },
     'IsoTkMu27'                                            : {'path' : 'HLT_IsoTkMu27_v\\[0-9]+',                                         'objects' : ['muon'], },
     #'IsoTkMu24_eta2p1'                                     : {'path' : 'HLT_IsoTkMu24_eta2p1_v\\[0-9]+',                                  'objects' : ['muon'], },
-    #'Mu45_eta2p1'                                          : {'path' : 'HLT_Mu45_eta2p1_v\\[0-9]+',                                       'objects' : ['muon'], }, # prescaled
+    'Mu45_eta2p1'                                          : {'path' : 'HLT_Mu45_eta2p1_v\\[0-9]+',                                       'objects' : ['muon'], }, # prescaled #follow ken
     'Mu50'                                                 : {'path' : 'HLT_Mu50_v\\[0-9]+',                                              'objects' : ['muon'], },
     'Mu55'                                                 : {'path' : 'HLT_Mu55_v\\[0-9]+',                                              'objects' : ['muon'], },
     'TkMu50'                                               : {'path' : 'HLT_TkMu50_v\\[0-9]+',                                            'objects' : ['muon'], },
@@ -27,7 +27,7 @@ triggerMap = {
     #'Ele22_eta2p1_WPLoose_Gsf'                             : {'path' : 'HLT_Ele22_eta2p1_WPLoose_Gsf_v\\[0-9]+',                          'objects' : ['electron'], }, # prescaled
     #'Ele24_eta2p1_WPLoose_Gsf'                             : {'path' : 'HLT_Ele24_eta2p1_WPLoose_Gsf_v\\[0-9]+',                          'objects' : ['electron'], }, # prescaled
     #'Ele25_eta2p1_WPLoose_Gsf'                             : {'path' : 'HLT_Ele25_eta2p1_WPLoose_Gsf_v\\[0-9]+',                          'objects' : ['electron'], }, # prescaled
-    #'Ele27_eta2p1_WPLoose_Gsf'                             : {'path' : 'HLT_Ele27_eta2p1_WPLoose_Gsf_v\\[0-9]+',                          'objects' : ['electron'], }, # prescaled
+    'Ele27_eta2p1_WPLoose_Gsf'                             : {'path' : 'HLT_Ele27_eta2p1_WPLoose_Gsf_v\\[0-9]+',                          'objects' : ['electron'], }, # prescaled # follow ken
     'Ele25_eta2p1_WPTight_Gsf'                             : {'path' : 'HLT_Ele25_eta2p1_WPTight_Gsf_v\\[0-9]+',                          'objects' : ['electron'], },
     'Ele27_eta2p1_WPTight_Gsf'                             : {'path' : 'HLT_Ele27_eta2p1_WPTight_Gsf_v\\[0-9]+',                          'objects' : ['electron'], },
     'Ele30_eta2p1_WPTight_Gsf'                             : {'path' : 'HLT_Ele30_eta2p1_WPTight_Gsf_v\\[0-9]+',                          'objects' : ['electron'], },
@@ -41,19 +41,19 @@ triggerMap = {
     'Ele30_WPTight_Gsf'                                    : {'path' : 'HLT_Ele30_WPTight_Gsf_v\\[0-9]+',                                 'objects' : ['electron'], },
     'Ele32_WPTight_Gsf'                                    : {'path' : 'HLT_Ele32_WPTight_Gsf_v\\[0-9]+',                                 'objects' : ['electron'], },
     # double muon
-    #'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL'                         : {'path' : 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v\\[0-9]+',                      'objects' : ['muon'], }, # prescaled
-    #'Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'                       : {'path' : 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v\\[0-9]+',                    'objects' : ['muon'], }, # prescaled
+    'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL'                         : {'path' : 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v\\[0-9]+',                      'objects' : ['muon'], }, # prescaled # follow Ken
+    'Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'                       : {'path' : 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v\\[0-9]+',                    'objects' : ['muon'], }, # prescaled # follow Ken
     'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'                      : {'path' : 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\[0-9]+',                   'objects' : ['muon'], },
     'Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ'                    : {'path' : 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\[0-9]+',                 'objects' : ['muon'], },
     # double electron
     #'Ele17_Ele12_CaloIdL_TrackIdL_IsoVL'                   : {'path' : 'HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',                'objects' : ['electron'], }, # prescaled
     #'Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'                   : {'path' : 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',                'objects' : ['electron'], }, # prescaled
-    #'Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'                : {'path' : 'HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\[0-9]+',             'objects' : ['electron'], }, # prescaled
+    'Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'                : {'path' : 'HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\[0-9]+',             'objects' : ['electron'], }, # prescaled # follow Ken
     'Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'                : {'path' : 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\[0-9]+',             'objects' : ['electron'], },
     # electron muon
-    #'Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL'           : {'path' : 'HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',        'objects' : ['electron','muon'], }, # prescaled 9.5e33
+    'Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL'           : {'path' : 'HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',        'objects' : ['electron','muon'], }, # prescaled 9.5e33 #follow Ken
     'Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL'           : {'path' : 'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',        'objects' : ['electron','muon'], }, # good before run 281639
-    #'Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL'          : {'path' : 'HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',       'objects' : ['electron','muon'], }, # prescaled 9.5e33
+    'Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL'          : {'path' : 'HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',       'objects' : ['electron','muon'], }, # prescaled 9.5e33 # follow Ken
     'Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL'           : {'path' : 'HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',        'objects' : ['electron','muon'], }, # good before run 281639
     'Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL'          : {'path' : 'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',       'objects' : ['electron','muon'], }, # good before run 281639
     'Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ'        : {'path' : 'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v\\[0-9]+',     'objects' : ['electron','muon'], }, # >=281639
@@ -86,5 +86,9 @@ triggerMap = {
     'Mu8_DiEle12_CaloIdL_TrackIdL'                         : {'path' : 'HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\[0-9]+',                      'objects' : ['electron','muon'], },
     'DiMu9_Ele9_CaloIdL_TrackIdL'                          : {'path' : 'HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\[0-9]+',                       'objects' : ['electron','muon'], },
     'TripleMu_12_10_5'                                     : {'path' : 'HLT_TripleMu_12_10_5_v\\[0-9]+',                                  'objects' : ['muon'], },
+    
+    # other triggers from Kens list:
+    'DoubleEle33_CaloIdL_GsfTrkIdVL'                       : {'path' : 'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v\\[0-9]+ ',                   'objects' : ['electron','electron'], },
+    
 
 }

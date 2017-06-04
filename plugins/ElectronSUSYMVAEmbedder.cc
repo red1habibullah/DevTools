@@ -264,7 +264,7 @@ float ElectronSUSYMVAEmbedder::getMVAValue(const pat::Electron & el, const reco:
     LepGood_eta =                  el.eta();
     LepGood_JetNDauCharged =       el.userInt("jet_numberOfChargedDaughters");
     LepGood_miniRelIsoCharged =    el.userFloat("MiniIsolationCharged")/el.pt();
-    LepGood_miniRelIsoNeutral =    el.userFloat("MiniIsolationNeutral")/el.pt();
+    LepGood_miniRelIsoNeutral =    el.userFloat("MiniIsolationAllNeutral");
     LepGood_JetPtRel =             el.userFloat("jet_ptRel");
     LepGood_JetPtRatio =           std::min(el.userFloat("jet_ptRatio"),(float)1.5);
     LepGood_JetBTagCSV =           std::max(el.userFloat("jet_pfCombinedInclusiveSecondaryVertexV2BJetTags"),(float)0.);
