@@ -69,7 +69,7 @@ void RochesterCorrectionEmbedder::produce(edm::Event& iEvent, const edm::EventSe
 
     //std::cout << "muon " << c << " " << obj.pt() << " " << obj.eta() << " " << obj.phi() << " " << obj.mass() << std::endl;
     
-    if (!obj.mass()) { // something breaks when mass = 0, just dont run
+    if (!obj.mass() || !obj.pt()) { // something breaks when mass = 0 or pt = 0, just dont run
       newObj.addUserFloat("rochesterPt", obj.pt());
       newObj.addUserFloat("rochesterEta", obj.eta());
       newObj.addUserFloat("rochesterPhi", obj.phi());
@@ -100,7 +100,8 @@ void RochesterCorrectionEmbedder::produce(edm::Event& iEvent, const edm::EventSe
     float sf_f = (float) sf;
 
     TLorentzVector p4;
-    p4.SetPtEtaPhiM(obj.pt()*sf_f,obj.eta(),obj.phi(),obj.mass());
+    p4.SetPtEtaPhiM(std::max(0.0001,obj.pt()*sf_f),obj.eta(),obj.phi(),obj.mass()); //protect against negative pt from corrections in misreconstructed muons
+    //std::cout << "scaled muon " << c << " " << p4.Pt() << " " << p4.Eta() << " " << p4.Phi() << " " << p4.Energy() << std::endl;
 
     newObj.addUserFloat("rochesterPt", p4.Pt());
     newObj.addUserFloat("rochesterEta", p4.Eta());
