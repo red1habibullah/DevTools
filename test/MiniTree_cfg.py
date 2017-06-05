@@ -290,7 +290,7 @@ if options.isMC:
 process.miniTree.collections.electrons.collection = collections['electrons']
 process.miniTree.collections.muons.collection = collections['muons']
 process.miniTree.collections.taus.collection = collections['taus']
-#process.miniTree.collections.photons.collection = collections['photons']
+process.miniTree.collections.photons.collection = collections['photons']
 process.miniTree.collections.jets.collection = collections['jets']
 process.miniTree.collections.pfmet.collection = collections['pfmet']
 process.miniTree.rho = collections['rho']

@@ -196,7 +196,7 @@ def customizeElectrons(process,coll,**kwargs):
     #############################
     ### embed effective areas ###
     #############################
-    eaFile = 'RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_25ns.txt'
+    eaFile = 'RecoEgamma/ElectronIdentification/data/Summer16/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_80X.txt'
     process.eEffArea = cms.EDProducer(
         "ElectronEffectiveAreaEmbedder",
         src = cms.InputTag(eSrc),
