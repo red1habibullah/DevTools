@@ -40,6 +40,10 @@ triggerMap = {
     'Ele27_WPTight_Gsf'                                    : {'path' : 'HLT_Ele27_WPTight_Gsf_v\\[0-9]+',                                 'objects' : ['electron'], },
     'Ele30_WPTight_Gsf'                                    : {'path' : 'HLT_Ele30_WPTight_Gsf_v\\[0-9]+',                                 'objects' : ['electron'], },
     'Ele32_WPTight_Gsf'                                    : {'path' : 'HLT_Ele32_WPTight_Gsf_v\\[0-9]+',                                 'objects' : ['electron'], },
+    # single photon
+    'Photon175'                                            : {'path' : 'HLT_Photon175_v\\[0-9]+',                                         'objects' : ['photon'], },
+    'Photon500'                                            : {'path' : 'HLT_Photon500_v\\[0-9]+',                                         'objects' : ['photon'], },
+    'Photon600'                                            : {'path' : 'HLT_Photon600_v\\[0-9]+',                                         'objects' : ['photon'], },
     # double muon
     #'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL'                         : {'path' : 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v\\[0-9]+',                      'objects' : ['muon'], }, # prescaled
     #'Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'                       : {'path' : 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v\\[0-9]+',                    'objects' : ['muon'], }, # prescaled
@@ -68,6 +72,8 @@ triggerMap = {
     'DoubleMediumCombinedIsoPFTau40_Trk1_eta2p1_Reg'       : {'path' : 'HLT_DoubleMediumCombinedIsoPFTau40_Trk1_eta2p1_Reg_v\\[0-9]+',    'objects' : ['tau'], },
     # double photon
     'DoublePhoton60'                                       : {'path' : 'HLT_DoublePhoton60_v\\[0-9]+',                                    'objects' : ['photon'], },
+    'DoublePhoton85'                                       : {'path' : 'HLT_DoublePhoton85_v\\[0-9]+',                                    'objects' : ['photon'], },
+    'Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90'   : {'path' : 'HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90_v\\[0-9]+','objects' : ['photon'], },
     # muon tau
     #'IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1'              : {'path' : 'HLT_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1_v\\[0-9]+',           'objects' : ['muon','tau'], }, # prescaled/removed
     'IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1'              : {'path' : 'HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v\\[0-9]+',           'objects' : ['muon','tau'], },
