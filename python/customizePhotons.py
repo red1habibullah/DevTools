@@ -82,18 +82,34 @@ def customizePhotons(process,coll,**kwargs):
     nMinusOneIDLabels = [
     ]
     mvaValueLabels = [
-        'PhotonMVAEstimatorRun2Spring16NonTrigV1Values'
-        #'phoFull5x5SigmaIEtaIEta',
-        #'phoChargedIsolation',
-        #'phoNeutralHadronIsolation',
-        #'phoPhotonIsolation',
+        'PhotonMVAEstimatorRun2Spring16NonTrigV1Values',
+        'gammaDR030',
+        "phoWorstChargedIsolationWithConeVeto",
+        "phoESEffSigmaRR",
+        "phoFull5x5E1x3",
+        "phoFull5x5E2x2",
+        "phoFull5x5E2x5Max",
+        "phoFull5x5E5x5",
+        "phoFull5x5SigmaIEtaIEta",
+        "phoFull5x5SigmaIEtaIPhi",
+        "phoChargedIsolation",
+        "phoNeutralHadronIsolation",
+        "phoPhotonIsolation",
     ]
     mvaValueTags = [
         cms.InputTag('photonMVAValueMapProducer:PhotonMVAEstimatorRun2Spring16NonTrigV1Values'),
-        #cms.InputTag('photonIDValueMapProducer:phoFull5x5SigmaIEtaIEta'),
-        #cms.InputTag('photonIDValueMapProducer:phoChargedIsolation'),
-        #cms.InputTag('photonIDValueMapProducer:phoNeutralHadronIsolation'),
-        #cms.InputTag('photonIDValueMapProducer:phoPhotonIsolation'),
+        cms.InputTag("egmPhotonIsolation","gamma-DR030-"),
+        cms.InputTag("photonIDValueMapProducer","phoWorstChargedIsolationWithConeVeto"),
+        cms.InputTag("photonIDValueMapProducer","phoESEffSigmaRR"),
+        cms.InputTag("photonIDValueMapProducer","phoFull5x5E1x3"),
+        cms.InputTag("photonIDValueMapProducer","phoFull5x5E2x2"),
+        cms.InputTag("photonIDValueMapProducer","phoFull5x5E2x5Max"),
+        cms.InputTag("photonIDValueMapProducer","phoFull5x5E5x5"),
+        cms.InputTag("photonIDValueMapProducer","phoFull5x5SigmaIEtaIEta"),
+        cms.InputTag("photonIDValueMapProducer","phoFull5x5SigmaIEtaIPhi"),
+        cms.InputTag("photonIDValueMapProducer","phoChargedIsolation"),
+        cms.InputTag("photonIDValueMapProducer","phoNeutralHadronIsolation"),
+        cms.InputTag("photonIDValueMapProducer","phoPhotonIsolation"),
     ]
     mvaCategoryLabels = [
         'PhotonMVAEstimatorRun2Spring16NonTrigV1Categories',
