@@ -162,8 +162,8 @@ selections = {
     'electrons' : 'pt>10 && abs(eta)<2.5',
     'muons'     : 'pt>10 && abs(eta)<2.2',
     'taus'      : 'pt>20 && abs(eta)<2.3',
-    'photons'   : 'pt>20 && abs(eta)<3.0',
-    'jets'      : 'pt>20 && abs(eta)<4.7',
+    'photons'   : 'pt>10 && abs(eta)<3.0',
+    'jets'      : 'pt>15 && abs(eta)<4.7',
 }
 
 # selection for cleaning (objects should match final selection)

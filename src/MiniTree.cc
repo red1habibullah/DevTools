@@ -82,7 +82,7 @@ void MiniTree::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup) 
     }
 
     // decide if we store it
-    // for now, require at least 1 lepton or photon
+    // for now, require at least 1 lepton or 2 photons
     bool keep = false;
     for ( auto& coll : collectionBranches_ ) {
         std::string name = coll->getName();
@@ -93,7 +93,7 @@ void MiniTree::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup) 
             keep = true;
         if (name=="taus" && count>0)
             keep = true;
-        if (name=="photons" && count>0)
+        if (name=="photons" && count>1)
             keep = true;
     }
 

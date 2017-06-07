@@ -468,6 +468,7 @@ photonBranches = commonPatCandidates.clone(
     effectiveAreaChargedHadrons    = cms.vstring('userFloat("EffectiveAreaChargedHadrons")','F'),
     effectiveAreaNeutralHadrons    = cms.vstring('userFloat("EffectiveAreaNeutralHadrons")','F'),
     effectiveAreaPhotons           = cms.vstring('userFloat("EffectiveAreaPhotons")','F'),
+    trackIso                       = cms.vstring('trackIso','F'),
     # type
     passElectronVeto               = cms.vstring('passElectronVeto','I'),
     hasPixelSeed                   = cms.vstring('hasPixelSeed','I'),
