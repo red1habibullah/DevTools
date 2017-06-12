@@ -166,6 +166,15 @@ selections = {
     'jets'      : 'pt>15 && abs(eta)<4.7',
 }
 
+# requirements to store events
+requiredCounts = {
+    'electrons' : 1,
+    'muons'     : 1,
+    'taus'      : 1,
+    'photons'   : 2,
+    'jets'      : 0,
+}
+
 # selection for cleaning (objects should match final selection)
 # just do at analysis level
 cleaning = {
@@ -294,6 +303,8 @@ process.miniTree.collections.photons.collection = collections['photons']
 process.miniTree.collections.jets.collection = collections['jets']
 process.miniTree.collections.pfmet.collection = collections['pfmet']
 process.miniTree.rho = collections['rho']
+for coll, count in requiredCounts.iteritems():
+    getattr(process.miniTree.collections,coll).minCount = cms.int32(count)
 
 process.miniTreePath = cms.Path()
 for f in filters:

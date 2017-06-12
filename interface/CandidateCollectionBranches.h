@@ -21,7 +21,7 @@ class CandidateCollectionFunction {
     std::string functionString_;
     std::string functionName_;
     TBranch * vectorBranch_;
-    std::vector<T> values_;
+    std::vector<T> values_; 
 };
 
 typedef CandidateCollectionFunction<int> CandidateCollectionIntFunction;
@@ -33,6 +33,7 @@ class CandidateCollectionBranches {
     void fill(const edm::Event& iEvent);
     std::string getName() { return collectionName_; }
     int getCount() { return collectionCount_; }
+    int keep() { return minCount_ > 0 ? collectionCount_ >= minCount_ : false; }
 
   private:
     edm::EDGetTokenT<reco::CandidateView> collectionToken_;
@@ -42,4 +43,5 @@ class CandidateCollectionBranches {
     TBranch * collectionCountBranch_;
     std::string collectionName_;
     int collectionCount_;
+    int minCount_;
 };

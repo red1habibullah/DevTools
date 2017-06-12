@@ -26,26 +26,32 @@ miniTree = cms.EDAnalyzer("MiniTree",
         electrons = cms.PSet(
             collection = cms.InputTag("slimmedElectrons"),
             branches = electronBranches,
+            minCount = cms.int32(0),
         ),
         muons = cms.PSet(
             collection = cms.InputTag("slimmedMuons"),
             branches = muonBranches,
+            minCount = cms.int32(0),
         ),
         taus = cms.PSet(
             collection = cms.InputTag("slimmedTaus"),
             branches = tauBranches,
+            minCount = cms.int32(0),
         ),
         photons = cms.PSet(
             collection = cms.InputTag("slimmedPhotons"),
             branches = photonBranches,
+            minCount = cms.int32(0),
         ),
         jets = cms.PSet(
             collection = cms.InputTag("slimmedJets"),
             branches = jetBranches,
+            minCount = cms.int32(0),
         ),
         pfmet = cms.PSet(
             collection = cms.InputTag("slimmedMETs"),
             branches = metBranches,
+            minCount = cms.int32(0),
         ),
     ),
 )

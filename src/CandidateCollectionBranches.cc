@@ -27,7 +27,8 @@ void CandidateCollectionFunction<T>::evaluate(const reco::CandidateView& candida
 CandidateCollectionBranches::CandidateCollectionBranches(TTree * tree, std::string collectionName,  const edm::ParameterSet& iConfig, edm::ConsumesCollector cc):
   collectionToken_(cc.consumes<reco::CandidateView>(iConfig.getParameter<edm::InputTag>("collection"))),
   branches_(iConfig.getParameter<edm::ParameterSet>("branches")),
-  collectionName_(collectionName)
+  collectionName_(collectionName),
+  minCount_(iConfig.exists("minCount") ? iConfig.getParameter<int>("minCount") : 0)
 {
   // to verify no duplicate entries
   std::set<std::string> allBranches;

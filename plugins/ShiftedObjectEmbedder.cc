@@ -60,9 +60,10 @@ void ShiftedObjectEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup
       reco::CandidatePtr shiftObj = shiftedSrc->ptrAt(o);
       newObj.addUserCand(label_, shiftObj);
     }
-    else {
-      newObj.addUserCand(label_, edm::Ptr<T>());
-    }
+    // Don't add nulll ptr, just check later if userCand exists
+    //else {
+    //  newObj.addUserCand(label_, edm::Ptr<T>());
+    //}
 
     out->push_back(newObj);
   }
