@@ -1,11 +1,12 @@
 #include "DevTools/Ntuplizer/interface/VertexCollectionBranches.h"
 
 template<typename T>
-VertexCollectionFunction<T>::VertexCollectionFunction(TTree * tree, std::string functionName, std::string functionString):
+VertexCollectionFunction<T>::VertexCollectionFunction(TTree * tree, std::string functionName, std::string functionString, int maxCount):
   function_(functionString),
   functionString_(functionString),
   functionName_(functionName),
-  vectorBranch_(tree->Branch(functionName.c_str(), &values_))
+  vectorBranch_(tree->Branch(functionName.c_str(), &values_)),
+  maxCount_(maxCount)
 {
 }
 
@@ -14,8 +15,11 @@ void VertexCollectionFunction<T>::evaluate(const reco::VertexCollection& candida
 {
   values_.clear();
   try {
+    int i = 0;
     for (const auto& candidate: candidates) {
+      if (maxCount_>0 and i>=maxCount_) break;
       values_.push_back(function_(candidate));
+      i++;
     }
   } catch(cms::Exception& iException) {
     iException << "Caught exception in evaluating branch: "
@@ -27,7 +31,9 @@ void VertexCollectionFunction<T>::evaluate(const reco::VertexCollection& candida
 
 VertexCollectionBranches::VertexCollectionBranches(TTree * tree, std::string collectionName,  const edm::ParameterSet& iConfig, edm::ConsumesCollector cc):
   collectionToken_(cc.consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("collection"))),
-  branches_(iConfig.getParameter<edm::ParameterSet>("branches"))
+  branches_(iConfig.getParameter<edm::ParameterSet>("branches")),
+  minCount_(iConfig.exists("minCount") ? iConfig.getParameter<int>("minCount") : 0),
+  maxCount_(iConfig.exists("maxCount") ? iConfig.getParameter<int>("maxCount") : 0)
 {
   // to verify no duplicate entries
   std::set<std::string> allBranches;
@@ -46,10 +52,10 @@ VertexCollectionBranches::VertexCollectionBranches(TTree * tree, std::string col
             << "Branch name \"" << branchName <<"\" already added to ntuple." << std::endl;
     }
     if (functionType=='F') {
-      floatFunctions_.emplace_back(new VertexCollectionFloatFunction(tree, branchName, functionString));
+      floatFunctions_.emplace_back(new VertexCollectionFloatFunction(tree, branchName, functionString, maxCount_));
     }
     else if (functionType=='I') {
-      intFunctions_.emplace_back(new VertexCollectionIntFunction(tree, branchName, functionString));
+      intFunctions_.emplace_back(new VertexCollectionIntFunction(tree, branchName, functionString, maxCount_));
     }
     allBranches.insert(branchName);
   }

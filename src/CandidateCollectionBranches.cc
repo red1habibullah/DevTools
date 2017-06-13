@@ -1,11 +1,12 @@
 #include "DevTools/Ntuplizer/interface/CandidateCollectionBranches.h"
 
 template<typename T>
-CandidateCollectionFunction<T>::CandidateCollectionFunction(TTree * tree, std::string functionName, std::string functionString):
+CandidateCollectionFunction<T>::CandidateCollectionFunction(TTree * tree, std::string functionName, std::string functionString, int maxCount):
   function_(functionString),
   functionString_(functionString),
   functionName_(functionName),
-  vectorBranch_(tree->Branch(functionName.c_str(), &values_))
+  vectorBranch_(tree->Branch(functionName.c_str(), &values_)),
+  maxCount_(maxCount)
 {
 }
 
@@ -14,8 +15,11 @@ void CandidateCollectionFunction<T>::evaluate(const reco::CandidateView& candida
 {
   values_.clear();
   try {
+    int i = 0;
     for (const auto& candidate: candidates) {
+      if (maxCount_>0 && i>=maxCount_) break;
       values_.push_back(function_(candidate));
+      i++;
     }
   } catch(cms::Exception& iException) {
     iException << "Caught exception in evaluating branch: "
@@ -28,7 +32,8 @@ CandidateCollectionBranches::CandidateCollectionBranches(TTree * tree, std::stri
   collectionToken_(cc.consumes<reco::CandidateView>(iConfig.getParameter<edm::InputTag>("collection"))),
   branches_(iConfig.getParameter<edm::ParameterSet>("branches")),
   collectionName_(collectionName),
-  minCount_(iConfig.exists("minCount") ? iConfig.getParameter<int>("minCount") : 0)
+  minCount_(iConfig.exists("minCount") ? iConfig.getParameter<int>("minCount") : 0),
+  maxCount_(iConfig.exists("maxCount") ? iConfig.getParameter<int>("maxCount") : 0)
 {
   // to verify no duplicate entries
   std::set<std::string> allBranches;
@@ -47,10 +52,10 @@ CandidateCollectionBranches::CandidateCollectionBranches(TTree * tree, std::stri
             << "Branch name \"" << branchName <<"\" already added to ntuple." << std::endl;
     }
     if (functionType=='F') {
-      floatFunctions_.emplace_back(new CandidateCollectionFloatFunction(tree, branchName, functionString));
+      floatFunctions_.emplace_back(new CandidateCollectionFloatFunction(tree, branchName, functionString, maxCount_));
     }
     else if (functionType=='I') {
-      intFunctions_.emplace_back(new CandidateCollectionIntFunction(tree, branchName, functionString));
+      intFunctions_.emplace_back(new CandidateCollectionIntFunction(tree, branchName, functionString, maxCount_));
     }
     allBranches.insert(branchName);
   }

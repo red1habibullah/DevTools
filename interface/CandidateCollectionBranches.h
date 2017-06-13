@@ -13,7 +13,7 @@
 template<typename T>
 class CandidateCollectionFunction {
   public:
-    CandidateCollectionFunction(TTree * tree, std::string functionName, std::string functionString);
+    CandidateCollectionFunction(TTree * tree, std::string functionName, std::string functionString, int maxCount);
     void evaluate(const reco::CandidateView& candidates);
 
   private:
@@ -22,6 +22,7 @@ class CandidateCollectionFunction {
     std::string functionName_;
     TBranch * vectorBranch_;
     std::vector<T> values_; 
+    int maxCount_;
 };
 
 typedef CandidateCollectionFunction<int> CandidateCollectionIntFunction;
@@ -44,4 +45,5 @@ class CandidateCollectionBranches {
     std::string collectionName_;
     int collectionCount_;
     int minCount_;
+    int maxCount_;
 };

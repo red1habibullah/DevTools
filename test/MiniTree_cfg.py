@@ -159,20 +159,29 @@ collections = {
 # the selections for each object (to be included in ntuple)
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
-    'electrons' : 'pt>10 && abs(eta)<2.5',
-    'muons'     : 'pt>10 && abs(eta)<2.2',
-    'taus'      : 'pt>20 && abs(eta)<2.3',
-    'photons'   : 'pt>10 && abs(eta)<3.0',
-    'jets'      : 'pt>15 && abs(eta)<4.7',
+    'electrons'   : 'pt>10 && abs(eta)<2.5',
+    'muons'       : 'pt>10 && abs(eta)<2.2',
+    'taus'        : 'pt>20 && abs(eta)<2.3',
+    'photons'     : 'pt>10 && abs(eta)<3.0',
+    'jets'        : 'pt>15 && abs(eta)<4.7',
+    'genParticles': 'pt>4',
 }
 
 # requirements to store events
-requiredCounts = {
+minCounts = {
     'electrons' : 1,
     'muons'     : 1,
     'taus'      : 1,
     'photons'   : 2,
     'jets'      : 0,
+}
+
+# maximum candidates to store
+# selects the first n in the collection
+# patobjects are pt ordered
+# vertices has pv first
+maxCounts = {
+    'vertices': 1,
 }
 
 # selection for cleaning (objects should match final selection)
@@ -303,8 +312,20 @@ process.miniTree.collections.photons.collection = collections['photons']
 process.miniTree.collections.jets.collection = collections['jets']
 process.miniTree.collections.pfmet.collection = collections['pfmet']
 process.miniTree.rho = collections['rho']
-for coll, count in requiredCounts.iteritems():
-    getattr(process.miniTree.collections,coll).minCount = cms.int32(count)
+for coll, count in minCounts.iteritems():
+    if  process.miniTree.vertexCollections.hasParameter(coll):
+        getattr(process.miniTree.vertexCollections,coll).minCount = cms.int32(count)
+    if process.miniTree.collections.hasParameter(coll):
+        getattr(process.miniTree.collections,coll).minCount = cms.int32(count)
+    else:
+        print 'Unrecognized collection {0}'.format(coll)
+for coll, count in maxCounts.iteritems():
+    if process.miniTree.vertexCollections.hasParameter(coll):
+        getattr(process.miniTree.vertexCollections,coll).maxCount = cms.int32(count)
+    elif process.miniTree.collections.hasParameter(coll):
+        getattr(process.miniTree.collections,coll).maxCount = cms.int32(count)
+    else:
+        print 'Unrecognized collection {0}'.format(coll)
 
 process.miniTreePath = cms.Path()
 for f in filters:

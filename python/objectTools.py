@@ -5,12 +5,19 @@ def getCapitalizedSingular(name):
 
 def objectSelector(process,obj,objSrc,selection):
     '''Filter an object collection based on a cut string'''
-    
-    module = cms.EDFilter(
-        "PAT{0}Selector".format(getCapitalizedSingular(obj)),
-        src = cms.InputTag(objSrc),
-        cut = cms.string(selection),
-    )
+
+    if obj=='genParticles':
+        module = cms.EDFilter("GenParticleSelector",
+            src = cms.InputTag(objSrc),
+            cut = cms.string(selection),
+            filter = cms.bool(False)
+        )
+    else:
+        module = cms.EDFilter(
+            "PAT{0}Selector".format(getCapitalizedSingular(obj)),
+            src = cms.InputTag(objSrc),
+            cut = cms.string(selection),
+        )
     modName = '{0}Selection'.format(obj)
     setattr(process,modName,module)
 
