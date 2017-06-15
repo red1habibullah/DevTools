@@ -18,12 +18,13 @@ def customizeElectrons(process,coll,**kwargs):
     #######################
     ### ECAL Regression ###
     #######################
-    from EgammaAnalysis.ElectronTools.regressionWeights_cfi import regressionWeights
-    process = regressionWeights(process)
+    # TODO reenable when new recipe released
+    #from EgammaAnalysis.ElectronTools.regressionWeights_cfi import regressionWeights
+    #process = regressionWeights(process)
 
-    # note: also brings in photons, customize in customizePhotons.py
-    process.load('EgammaAnalysis.ElectronTools.regressionApplication_cff')
-    process.electronCustomization *= process.regressionApplication
+    ## note: also brings in photons, customize in customizePhotons.py
+    #process.load('EgammaAnalysis.ElectronTools.regressionApplication_cff')
+    #process.electronCustomization *= process.regressionApplication
 
     # embed the uncorrected stuff
     process.uncorElec = cms.EDProducer(
@@ -48,11 +49,12 @@ def customizeElectrons(process,coll,**kwargs):
     eSrc = "selectedElectrons"
     process.electronCustomization *= process.selectedElectrons
 
-    process.load('EgammaAnalysis.ElectronTools.calibratedPatElectronsRun2_cfi')
-    process.calibratedPatElectrons.electrons = eSrc
-    process.calibratedPatElectrons.isMC = isMC
-    process.electronCustomization *= process.calibratedPatElectrons
-    eSrc = 'calibratedPatElectrons'
+    # TODO: reenable when new recipe released
+    #process.load('EgammaAnalysis.ElectronTools.calibratedPatElectronsRun2_cfi')
+    #process.calibratedPatElectrons.electrons = eSrc
+    #process.calibratedPatElectrons.isMC = isMC
+    #process.electronCustomization *= process.calibratedPatElectrons
+    #eSrc = 'calibratedPatElectrons'
 
     #################
     ### embed VID ###

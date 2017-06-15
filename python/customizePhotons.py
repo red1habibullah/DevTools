@@ -23,11 +23,12 @@ def customizePhotons(process,coll,**kwargs):
     pSrc = "uncorPho"
     process.photonCustomization *= process.uncorPho
 
-    process.load('EgammaAnalysis.ElectronTools.calibratedPatPhotonsRun2_cfi')
-    process.calibratedPatPhotons.photons = pSrc
-    process.calibratedPatPhotons.isMC = isMC
-    process.photonCustomization *= process.calibratedPatPhotons
-    pSrc = 'calibratedPatPhotons'
+    # TODO: reenable when new recipe released
+    #process.load('EgammaAnalysis.ElectronTools.calibratedPatPhotonsRun2_cfi')
+    #process.calibratedPatPhotons.photons = pSrc
+    #process.calibratedPatPhotons.isMC = isMC
+    #process.photonCustomization *= process.calibratedPatPhotons
+    #pSrc = 'calibratedPatPhotons'
 
     #######################
     ### embed Isolation ###

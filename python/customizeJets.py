@@ -13,14 +13,15 @@ def customizeJets(process,coll,**kwargs):
     #################################
     ### add updated pileup jet id ###
     #################################
-    process.load("RecoJets.JetProducers.PileupJetID_cfi")
-    process.pileupJetIdUpdated = process.pileupJetId.clone(
-        jets=cms.InputTag(jSrc),
-        inputIsCorrected=True,
-        applyJec=True,
-        vertexes=cms.InputTag(pvSrc),
-    )
-    process.jetCustomization *= process.pileupJetIdUpdated
+    # TODO: why is this here?
+    #process.load("RecoJets.JetProducers.PileupJetID_cfi")
+    #process.pileupJetIdUpdated = process.pileupJetId.clone(
+    #    jets=cms.InputTag(jSrc),
+    #    inputIsCorrected=True,
+    #    applyJec=True,
+    #    vertexes=cms.InputTag(pvSrc),
+    #)
+    #process.jetCustomization *= process.pileupJetIdUpdated
 
     ######################
     ### recorrect jets ###
@@ -44,7 +45,7 @@ def customizeJets(process,coll,**kwargs):
     process.jID = cms.EDProducer(
         "JetIdEmbedder",
         src = cms.InputTag(jSrc),
-        discriminator = cms.string('pileupJetIdUpdated:fullDiscriminant'),
+        discriminator = cms.string('pileupJetId:fullDiscriminant'),
     )
     process.jetCustomization *= process.jID
     jSrc = "jID"
