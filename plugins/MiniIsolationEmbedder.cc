@@ -35,7 +35,7 @@ private:
   // Data
   edm::EDGetTokenT<edm::View<T> > collectionToken_;               // input collection
   edm::EDGetTokenT<pat::PackedCandidateCollection> pfcandsToken_; // pfcands
-  std::auto_ptr<std::vector<T> > out;                             // Collection we'll output at the end
+  std::unique_ptr<std::vector<T> > out;                             // Collection we'll output at the end
 };
 
 // Constructors and destructors
@@ -50,7 +50,7 @@ MiniIsolationEmbedder<T>::MiniIsolationEmbedder(const edm::ParameterSet& iConfig
 template<typename T>
 void MiniIsolationEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+  out = std::unique_ptr<std::vector<T> >(new std::vector<T>);
 
   edm::Handle<edm::View<T> > collection;
   iEvent.getByToken(collectionToken_, collection);
@@ -77,7 +77,7 @@ void MiniIsolationEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup
     out->push_back(newObj);
   }
 
-  iEvent.put(out);
+  iEvent.put(std::move(out));
 }
 
 // Isolation

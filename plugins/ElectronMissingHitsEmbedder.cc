@@ -23,7 +23,7 @@ ElectronMissingHitsEmbedder::ElectronMissingHitsEmbedder(const edm::ParameterSet
 }
 
 void ElectronMissingHitsEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
-  std::auto_ptr<pat::ElectronCollection> output(new pat::ElectronCollection);
+  std::unique_ptr<pat::ElectronCollection> output(new pat::ElectronCollection);
 
   edm::Handle<edm::View<pat::Electron> > input;
   evt.getByToken(srcToken_, input);
@@ -38,7 +38,7 @@ void ElectronMissingHitsEmbedder::produce(edm::Event& evt, const edm::EventSetup
     output->push_back(electron);
   }
 
-  evt.put(output);
+  evt.put(std::move(output));
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"

@@ -33,7 +33,7 @@ class JetEmbedder : public edm::stream::EDProducer<>
     edm::EDGetTokenT<edm::View<pat::Jet> > jetSrcToken_;
     edm::EDGetTokenT<reco::JetCorrector> tagL1Corrector_;
     edm::EDGetTokenT<reco::JetCorrector> tagL1L2L3ResCorrector_;
-    std::auto_ptr<std::vector<T> > out;
+    std::unique_ptr<std::vector<T> > out;
     double dRmax_;
 };
 
@@ -52,7 +52,7 @@ JetEmbedder<T>::JetEmbedder(const edm::ParameterSet& iConfig):
 template<class T>
 void JetEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+  out = std::unique_ptr<std::vector<T> >(new std::vector<T>);
 
   bool verbose_ = false;
 
@@ -152,7 +152,7 @@ void JetEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     out->push_back(newObj);
   }
 
-  iEvent.put(out);
+  iEvent.put(std::move(out));
 }
 
 template<class T>

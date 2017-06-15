@@ -25,7 +25,7 @@ SelfEmbedder<T>::SelfEmbedder(const edm::ParameterSet& pset):
 
 template<typename T>
 void SelfEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup& es) {
-  std::auto_ptr<std::vector<T> > output = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+  std::unique_ptr<std::vector<T> > output = std::unique_ptr<std::vector<T> >(new std::vector<T>);
 
   edm::Handle<edm::View<T> > input;
   evt.getByToken(srcToken_, input);
@@ -47,7 +47,7 @@ void SelfEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup& es) {
     output->push_back(obj);
   }
 
-  evt.put(output);
+  evt.put(std::move(output));
 }
 
 #include "DataFormats/PatCandidates/interface/Muon.h"

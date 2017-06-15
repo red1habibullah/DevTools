@@ -26,7 +26,7 @@ private:
 
   // Data
   edm::EDGetTokenT<edm::View<pat::MET> > metToken_; // input collection
-  std::auto_ptr<std::vector<pat::MET> > out;        // Collection we'll output at the end
+  std::unique_ptr<std::vector<pat::MET> > out;        // Collection we'll output at the end
 };
 
 // Constructors and destructors
@@ -38,7 +38,7 @@ METShiftEmbedder::METShiftEmbedder(const edm::ParameterSet& iConfig):
 
 void METShiftEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std::auto_ptr<std::vector<pat::MET> >(new std::vector<pat::MET>);
+  out = std::unique_ptr<std::vector<pat::MET> >(new std::vector<pat::MET>);
 
   edm::Handle<edm::View<pat::MET> > met;
   iEvent.getByToken(metToken_, met);
@@ -80,7 +80,7 @@ void METShiftEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup
     out->push_back(newObj);
   }
 
-  iEvent.put(out);
+  iEvent.put(std::move(out));
 }
 
 void METShiftEmbedder::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {

@@ -18,7 +18,7 @@ class GenJetEmbedder : public edm::stream::EDProducer<> {
   private:
     edm::EDGetTokenT<edm::View<T> > srcToken_;
     edm::EDGetTokenT<edm::View<reco::GenJet> > genJetToken_;
-    std::auto_ptr<std::vector<T> > out;
+    std::unique_ptr<std::vector<T> > out;
     double deltaR_;
     bool excludeLeptons_;
 };
@@ -35,7 +35,7 @@ GenJetEmbedder<T>::GenJetEmbedder(const edm::ParameterSet& pset):
 
 template<typename T>
 void GenJetEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup& es) {
-  out = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+  out = std::unique_ptr<std::vector<T> >(new std::vector<T>);
 
   edm::Handle<edm::View<T> > input;
   evt.getByToken(srcToken_, input);
@@ -71,7 +71,7 @@ void GenJetEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup& es) {
     out->push_back(obj);
   }
 
-  evt.put(out);
+  evt.put(std::move(out));
 }
 
 #include "DataFormats/PatCandidates/interface/Tau.h"

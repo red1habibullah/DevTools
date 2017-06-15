@@ -53,7 +53,7 @@ private:
   std::string isoLabel_;
   const edm::EDGetTokenT<reco::VertexCollection> vtxSrcToken_; // primary vertex (for veto PV and SIP cuts)
   edm::Handle<reco::VertexCollection> vertices;
-  std::auto_ptr<std::vector<pat::Muon> > out; // Collection we'll output at the end
+  std::unique_ptr<std::vector<pat::Muon> > out; // Collection we'll output at the end
 
   double ptCut;
   double etaCut;
@@ -91,7 +91,7 @@ PATMuonZZIDEmbedder::PATMuonZZIDEmbedder(const edm::ParameterSet& iConfig):
 
 void PATMuonZZIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std::auto_ptr<std::vector<pat::Muon> >(new std::vector<pat::Muon>);
+  out = std::unique_ptr<std::vector<pat::Muon> >(new std::vector<pat::Muon>);
 
   edm::Handle<edm::View<pat::Muon> > muonsIn;
   iEvent.getByToken(muonCollectionToken_, muonsIn);
@@ -125,7 +125,7 @@ void PATMuonZZIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSe
       out->back().addUserInt(idLabel_+"TightNoVtx", int(idResultNoVtx && (mi->isPFMuon() || trackerHighPtID)));
     }
 
-  iEvent.put(out);
+  iEvent.put(std::move(out));
 }
 
 

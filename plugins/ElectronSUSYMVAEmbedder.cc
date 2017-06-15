@@ -48,7 +48,7 @@ private:
   edm::EDGetTokenT<reco::VertexCollection> vertexToken_;         // vertices
   edm::EDGetTokenT<double> rhoToken_;                            // rho
   std::string nonTrigLabel_;                                     // embedded mva
-  std::auto_ptr<std::vector<pat::Electron> > out;                // Collection we'll output at the end
+  std::unique_ptr<std::vector<pat::Electron> > out;                // Collection we'll output at the end
   edm::FileInPath weightsfile_;                                  // MVA weights file
   TMVA::Reader* tmvaReader;                                      // TMVA reader
 
@@ -83,7 +83,7 @@ ElectronSUSYMVAEmbedder::ElectronSUSYMVAEmbedder(const edm::ParameterSet& iConfi
 
 void ElectronSUSYMVAEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std::auto_ptr<std::vector<pat::Electron> >(new std::vector<pat::Electron>);
+  out = std::unique_ptr<std::vector<pat::Electron> >(new std::vector<pat::Electron>);
 
   edm::Handle<edm::View<pat::Electron> > collection;
   iEvent.getByToken(collectionToken_, collection);
@@ -118,7 +118,7 @@ void ElectronSUSYMVAEmbedder::produce(edm::Event& iEvent, const edm::EventSetup&
     out->push_back(newObj);
   }
 
-  iEvent.put(out);
+  iEvent.put(std::move(out));
 }
 
 // Preselection

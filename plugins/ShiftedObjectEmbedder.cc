@@ -28,7 +28,7 @@ private:
   edm::EDGetTokenT<edm::View<T> > srcToken_;        // input collection
   edm::EDGetTokenT<edm::View<reco::Candidate> > shiftedSrcToken_; // shifted collection
   std::string label_;                               // label for embedding
-  std::auto_ptr<std::vector<T> > out;               // Collection we'll output at the end
+  std::unique_ptr<std::vector<T> > out;               // Collection we'll output at the end
 };
 
 // Constructors and destructors
@@ -44,7 +44,7 @@ ShiftedObjectEmbedder<T>::ShiftedObjectEmbedder(const edm::ParameterSet& iConfig
 template<typename T>
 void ShiftedObjectEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+  out = std::unique_ptr<std::vector<T> >(new std::vector<T>);
 
   edm::Handle<edm::View<T> > src;
   iEvent.getByToken(srcToken_, src);
@@ -68,7 +68,7 @@ void ShiftedObjectEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup
     out->push_back(newObj);
   }
 
-  iEvent.put(out);
+  iEvent.put(std::move(out));
 }
 
 template<typename T>

@@ -36,8 +36,8 @@ private:
   edm::EDGetTokenT<edm::View<pat::Muon> > collectionToken_; // input collection
   edm::FileInPath directory_;
   bool isData_;
-  std::auto_ptr<std::vector<pat::Muon> > out;             // Collection we'll output at the end
-  std::auto_ptr<RoccoR> rc;
+  std::unique_ptr<std::vector<pat::Muon> > out;             // Collection we'll output at the end
+  std::unique_ptr<RoccoR> rc;
 };
 
 // Constructors and destructors
@@ -48,13 +48,13 @@ RochesterCorrectionEmbedder::RochesterCorrectionEmbedder(const edm::ParameterSet
 {
   std::string rochCorrDataDirPath = directory_.fullPath();
   rochCorrDataDirPath.erase(rochCorrDataDirPath.length()-10);
-  rc = std::auto_ptr<RoccoR>(new RoccoR(rochCorrDataDirPath));
+  rc = std::unique_ptr<RoccoR>(new RoccoR(rochCorrDataDirPath));
   produces<std::vector<pat::Muon> >();
 }
 
 void RochesterCorrectionEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std::auto_ptr<std::vector<pat::Muon> >(new std::vector<pat::Muon>);
+  out = std::unique_ptr<std::vector<pat::Muon> >(new std::vector<pat::Muon>);
 
   edm::Handle<edm::View<pat::Muon> > collection;
   iEvent.getByToken(collectionToken_, collection);
@@ -112,7 +112,7 @@ void RochesterCorrectionEmbedder::produce(edm::Event& iEvent, const edm::EventSe
     
   }
 
-  iEvent.put(out);
+  iEvent.put(std::move(out));
 }
 
 void RochesterCorrectionEmbedder::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {

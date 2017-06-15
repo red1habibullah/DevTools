@@ -27,7 +27,7 @@ private:
   edm::EDGetTokenT<edm::View<T> > collectionToken_; // input collection
   edm::EDGetTokenT<double> rhoToken_;               // rho
   const std::string label_;                         // label for the embedded userfloat
-  std::auto_ptr<std::vector<T> > out;               // Collection we'll output at the end
+  std::unique_ptr<std::vector<T> > out;               // Collection we'll output at the end
 };
 
 // Constructors and destructors
@@ -43,7 +43,7 @@ RhoEmbedder<T>::RhoEmbedder(const edm::ParameterSet& iConfig):
 template<typename T>
 void RhoEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+  out = std::unique_ptr<std::vector<T> >(new std::vector<T>);
 
   edm::Handle<edm::View<T> > collection;
   iEvent.getByToken(collectionToken_, collection);
@@ -59,7 +59,7 @@ void RhoEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     out->push_back(newObj);
   }
 
-  iEvent.put(out);
+  iEvent.put(std::move(out));
 }
 
 template<typename T>

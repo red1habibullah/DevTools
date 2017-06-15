@@ -37,7 +37,7 @@ class VIDEmbedder : public edm::stream::EDProducer<>
     std::vector<edm::EDGetTokenT<edm::ValueMap<float> > > valueTokens_;
     std::vector<std::string> categoryLabels_;
     std::vector<edm::EDGetTokenT<edm::ValueMap<int> > > categoryTokens_;
-    std::auto_ptr<std::vector<T> > out;
+    std::unique_ptr<std::vector<T> > out;
 };
 
 
@@ -78,7 +78,7 @@ VIDEmbedder<T>::VIDEmbedder(const edm::ParameterSet& iConfig):
 template<typename T>
 void VIDEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+  out = std::unique_ptr<std::vector<T> >(new std::vector<T>);
   
   edm::Handle<edm::View<T> > collection;
   std::vector<edm::Handle<edm::ValueMap<bool> > > ids(idMapTokens_.size(), edm::Handle<edm::ValueMap<bool> >() );
@@ -135,7 +135,7 @@ void VIDEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     out->push_back(newObj);
   }
   
-  iEvent.put(out);
+  iEvent.put(std::move(out));
 }
 
 

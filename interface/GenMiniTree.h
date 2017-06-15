@@ -29,6 +29,9 @@
 #include "DataFormats/Math/interface/deltaR.h"
 
 #include "DevTools/Ntuplizer/interface/CandidateCollectionBranches.h"
+#include "DevTools/Ntuplizer/interface/LumiSummaryBranches.h"
+#include "DevTools/Ntuplizer/interface/EventBranches.h"
+#include "DevTools/Ntuplizer/interface/MonteCarloBranches.h"
 
 class GenMiniTree : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one::WatchLuminosityBlocks> {
   public:
@@ -59,21 +62,17 @@ class GenMiniTree : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::o
     TTree *tree_;
     TTree *lumitree_;
 
-    // lumitree branches
-    Int_t   runBranch_;
-    Int_t   lumiBranch_;
-    Int_t   neventsBranch_;
-    Float_t summedWeightsBranch_;
+    // lumi summary
+    std::unique_ptr<LumiSummaryBranches> lumiSummary_;
 
     // one off tree branches
-    Float_t               genWeightBranch_;
-    Int_t                 numWeightsBranch_;
-    std::vector<Float_t>  genWeightsBranch_;
-    ULong64_t             eventBranch_;
-    Float_t               nTrueVerticesBranch_;
-    Int_t                 nupBranch_;
-    Int_t                 numGenJetsBranch_;
-    Float_t               genHTBranch_;
+    Int_t                 isDataBranch_;
+
+    // event
+    std::unique_ptr<EventBranches> event_;
+
+    // monte carlo info
+    std::unique_ptr<MonteCarloBranches> mcBranches_;
 
     // collections
     std::vector<std::unique_ptr<CandidateCollectionBranches> > collectionBranches_;

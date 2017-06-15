@@ -44,7 +44,7 @@ private:
   edm::EDGetTokenT<edm::View<pat::Muon> > collectionToken_;       // input collection
   edm::EDGetTokenT<reco::VertexCollection> vertexToken_;          // vertices
   edm::EDGetTokenT<double> rhoToken_;                             // rho
-  std::auto_ptr<std::vector<pat::Muon> > out;                     // Collection we'll output at the end
+  std::unique_ptr<std::vector<pat::Muon> > out;                     // Collection we'll output at the end
   edm::FileInPath weightsfile_;                                   // MVA weights file
   TMVA::Reader* tmvaReader;                                       // TMVA reader
 
@@ -77,7 +77,7 @@ MuonSUSYMVAEmbedder::MuonSUSYMVAEmbedder(const edm::ParameterSet& iConfig):
 
 void MuonSUSYMVAEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std::auto_ptr<std::vector<pat::Muon> >(new std::vector<pat::Muon>);
+  out = std::unique_ptr<std::vector<pat::Muon> >(new std::vector<pat::Muon>);
 
   edm::Handle<edm::View<pat::Muon> > collection;
   iEvent.getByToken(collectionToken_, collection);
@@ -104,7 +104,7 @@ void MuonSUSYMVAEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSe
     out->push_back(newObj);
   }
 
-  iEvent.put(out);
+  iEvent.put(std::move(out));
 }
 
 // Preselection

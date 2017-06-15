@@ -55,7 +55,7 @@ private:
   const std::string isoLabel_;
   const edm::EDGetTokenT<reco::VertexCollection> vtxSrcToken_; // primary vertex (for veto PV and SIP cuts)
   edm::Handle<reco::VertexCollection> vertices;
-  std::auto_ptr<std::vector<pat::Electron> > out; // Collection we'll output at the end
+  std::unique_ptr<std::vector<pat::Electron> > out; // Collection we'll output at the end
 
   const double ptCut;
   const double etaCut;
@@ -119,7 +119,7 @@ PATElectronZZIDEmbedder::PATElectronZZIDEmbedder(const edm::ParameterSet& iConfi
 
 void PATElectronZZIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std::auto_ptr<std::vector<pat::Electron> >(new std::vector<pat::Electron>);
+  out = std::unique_ptr<std::vector<pat::Electron> >(new std::vector<pat::Electron>);
 
   edm::Handle<edm::View<pat::Electron> > electronsIn;
   iEvent.getByToken(vtxSrcToken_,vertices);
@@ -146,7 +146,7 @@ void PATElectronZZIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetup&
       out->back().addUserInt(idLabel_+"Tight", int(idResult && passBDT(eptr))); // 1 for true, 0 for false
     }
 
-  iEvent.put(out);
+  iEvent.put(std::move(out));
 }
 
 

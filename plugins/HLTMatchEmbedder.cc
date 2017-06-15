@@ -43,7 +43,7 @@ private:
   double deltaR_;                                                                // deltaR for object match
   std::vector<std::string> labels_;                                              // labels for the embedded userfloat
   std::vector<std::string> paths_;                                               // paths for the matched object
-  std::auto_ptr<std::vector<T> > out;                                            // Collection we'll output at the end
+  std::unique_ptr<std::vector<T> > out;                                            // Collection we'll output at the end
 };
 
 // Constructors and destructors
@@ -68,7 +68,7 @@ HLTMatchEmbedder<T>::HLTMatchEmbedder(const edm::ParameterSet& iConfig):
 template<typename T>
 void HLTMatchEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+  out = std::unique_ptr<std::vector<T> >(new std::vector<T>);
 
   edm::Handle<edm::View<T> > collection;
   iEvent.getByToken(collectionToken_, collection);
@@ -92,7 +92,7 @@ void HLTMatchEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSe
     out->push_back(newObj);
   }
 
-  iEvent.put(out);
+  iEvent.put(std::move(out));
 }
 
 template<typename T>
