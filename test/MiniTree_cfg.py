@@ -164,8 +164,9 @@ selections = {
     'taus'        : 'pt>20 && abs(eta)<2.3',
     'photons'     : 'pt>10 && abs(eta)<3.0',
     'jets'        : 'pt>15 && abs(eta)<4.7',
-    'genParticles': 'pt>4',
 }
+if options.isMC:
+    selections['genParticles'] = 'pt>4'
 
 # requirements to store events
 minCounts = {
