@@ -9,6 +9,7 @@ MonteCarloBranches::MonteCarloBranches(TTree * tree, const edm::ParameterSet& iC
   tree->Branch("genWeight", &genWeightBranch_, "genWeight/F");
   tree->Branch("numWeights", &numWeightsBranch_, "numWeights/I");
   tree->Branch("genWeights", &genWeightsBranch_);
+  tree->Branch("ptHat", &ptHatBranch_, "ptHat/F");
   tree->Branch("nTrueVertices", &nTrueVerticesBranch_, "nTrueVertices/F");
   tree->Branch("NUP", &nupBranch_, "NUP/I");
   tree->Branch("numGenJets", &numGenJetsBranch_, "numGenJets/I");
@@ -31,6 +32,7 @@ void MonteCarloBranches::fill(const edm::Event& iEvent)
     genWeightBranch_ = 0.;
     if (genEventInfo.isValid()) {
         genWeightBranch_ = genEventInfo->weight();
+        ptHatBranch_ = genEventInfo->hasBinningValues() ? genEventInfo->binningValues()[0] : 0;
     }
 
     nTrueVerticesBranch_ = 0;
