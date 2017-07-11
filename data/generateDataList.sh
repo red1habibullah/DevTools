@@ -1,1 +1,1 @@
-betterDAS.py dataset --primaryDatasets "SingleElectron" "SingleMuon" "MuonEG" "DoubleMuon" "DoubleEG" "Tau" --dataTiers "MINIAOD" --acquisitionEras "Run2016*" --processNames "*03Feb2017-v*" "*03Feb2017_ver2*" "*03Feb2017_ver3*" > datasetList_Data_new.txt
+betterDAS.py dataset --primaryDatasets "SingleElectron" "SinglePhoton" "SingleMuon" "MuonEG" "DoubleMuon" "DoubleEG" "Tau" --dataTiers "MINIAOD" --acquisitionEras "Run2017*" --processNames "*PromptReco-v*" > datasetList_Data_new.txt
