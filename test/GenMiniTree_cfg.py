@@ -86,7 +86,8 @@ process.schedule = cms.Schedule()
 #process.schedule.append(process.igprofPath)
 
 # first create collections to analyze
-genColl = 'prunedGenParticles'
+genColl = 'prunedGenParticles' # miniAOD
+#genColl = 'genParticles'       # other
 collections = {
     'electrons'    : genColl,
     'muons'        : genColl,
@@ -99,7 +100,8 @@ collections = {
 # hard process higgs
 process.higgsSelected = cms.EDFilter("GenParticleSelector",
     src = cms.InputTag(collections['higgs']),
-    cut = cms.string('(abs(pdgId)==9900041 || abs(pdgId)==37) && isLastCopy'),
+    #cut = cms.string('(abs(pdgId)==9900041 || abs(pdgId)==37) && isLastCopy'), # H++ H+
+    cut = cms.string('(abs(pdgId)==35 || abs(pdgId)==36)'), # H2 A
     filter = cms.bool(False)
 )
 collections['higgs'] = 'higgsSelected'
