@@ -173,7 +173,7 @@ minCounts = {
     'electrons' : 1,
     'muons'     : 1,
     'taus'      : 1,
-    'photons'   : 2,
+    'photons'   : 1,
     'jets'      : 0,
 }
 
