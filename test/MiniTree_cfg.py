@@ -155,6 +155,7 @@ collections = {
     'vertices'     : 'offlineSlimmedPrimaryVertices',
     'packed'       : 'packedPFCandidates',
 }
+if not options.isMC: collections['pfmet'] = 'slimmedMETsMuEGClean'
 
 # the selections for each object (to be included in ntuple)
 # will always be the last thing done to the collection, so can use embedded things from previous steps
