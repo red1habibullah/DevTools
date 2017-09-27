@@ -1,22 +1,24 @@
 import FWCore.ParameterSet.Config as cms
 
-def customizeMuons(process,coll,**kwargs):
+def customizeMuons(process,coll,srcLabel='muons',postfix='',**kwargs):
     '''Customize muons'''
     reHLT = kwargs.pop('reHLT',False)
     isMC = kwargs.pop('isMC',False)
-    mSrc = coll['muons']
+    mSrc = coll[srcLabel]
     jSrc = coll['jets']
     rhoSrc = coll['rho']
     pvSrc = coll['vertices']
     pfSrc = coll['packed']
 
     # customization path
-    process.muonCustomization = cms.Path()
+    pathName = 'muonCustomization{0}'.format(postfix)
+    setattr(process,pathName,cms.Path())
+    path = getattr(process,pathName)
 
     #########################
     ### embed nearest jet ###
     #########################
-    process.mJet = cms.EDProducer(
+    module = cms.EDProducer(
         "MuonJetEmbedder",
         src = cms.InputTag(mSrc),
         jetSrc = cms.InputTag(jSrc),
@@ -24,60 +26,70 @@ def customizeMuons(process,coll,**kwargs):
         L1Corrector = cms.InputTag("ak4PFCHSL1FastjetCorrector"),
         L1L2L3ResCorrector= cms.InputTag("ak4PFCHSL1FastL2L3Corrector"),
     )
-    mSrc = 'mJet'
+    modName = 'mJet{0}'.format(postfix)
+    setattr(process,modName,module)
+    mSrc = modName
 
-    process.muonCustomization *= process.mJet
+    path *= getattr(process,modName)
 
     ###################################
     ### embed rochester corrections ###
     ###################################
-    process.mRoch = cms.EDProducer(
+    module = cms.EDProducer(
         "RochesterCorrectionEmbedder",
         src = cms.InputTag(mSrc),
         isData = cms.bool(not isMC),
         directory = cms.FileInPath("DevTools/Ntuplizer/data/rcdata.2016.v3/config.txt"),
     )
-    mSrc = 'mRoch'
+    modName = 'mRoch{0}'.format(postfix)
+    setattr(process,modName,module)
+    mSrc = modName
 
-    process.muonCustomization *= process.mRoch
+    path *= getattr(process,modName)
 
     #####################
     ### embed muon id ###
     #####################
-    process.mID = cms.EDProducer(
+    module = cms.EDProducer(
         "MuonIdEmbedder",
         src = cms.InputTag(mSrc),
         vertexSrc = cms.InputTag(pvSrc),
     )
-    mSrc = 'mID'
+    modName = 'mID{0}'.format(postfix)
+    setattr(process,modName,module)
+    mSrc = modName
 
-    process.muonCustomization *= process.mID
+    path *= getattr(process,modName)
 
     #################
     ### embed rho ###
     #################
-    process.mRho = cms.EDProducer(
+    module = cms.EDProducer(
         "MuonRhoEmbedder",
         src = cms.InputTag(mSrc),
         rhoSrc = cms.InputTag(rhoSrc),
         label = cms.string("rho"),
     )
-    mSrc = 'mRho'
+    modName = 'mRho{0}'.format(postfix)
+    setattr(process,modName,module)
+    mSrc = modName
 
-    process.muonCustomization *= process.mRho
+    path *= getattr(process,modName)
 
     ################
     ### embed pv ###
     ################
-    process.mPV = cms.EDProducer(
+    module = cms.EDProducer(
         "MuonIpEmbedder",
         src = cms.InputTag(mSrc),
         vertexSrc = cms.InputTag(pvSrc),
         beamspotSrc = cms.InputTag("offlineBeamSpot"),
     )
-    mSrc = 'mPV'
+    modName = 'mPV{0}'.format(postfix)
+    setattr(process,modName,module)
+    mSrc = modName
 
-    process.muonCustomization *= process.mPV
+    path *= getattr(process,modName)
 
     ##############################
     ### embed trigger matching ###
@@ -89,7 +101,7 @@ def customizeMuons(process,coll,**kwargs):
         if 'muon' in triggerMap[trigger]['objects']:
             labels += ['matches_{0}'.format(trigger)]
             paths += [triggerMap[trigger]['path']]
-    process.mTrig = cms.EDProducer(
+    module = cms.EDProducer(
         "MuonHLTMatchEmbedder",
         src = cms.InputTag(mSrc),
         #triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
@@ -99,49 +111,60 @@ def customizeMuons(process,coll,**kwargs):
         labels = cms.vstring(*labels),
         paths = cms.vstring(*paths),
     )
-    mSrc = 'mTrig'
+    modName = 'mTrig{0}'.format(postfix)
+    setattr(process,modName,module)
+    mSrc = modName
 
-    process.muonCustomization *= process.mTrig
+    path *= getattr(process,modName)
 
     #####################
     ### embed HZZ IDs ###
     #####################
     # https://github.com/nwoods/UWVV/blob/ichep/AnalysisTools/python/templates/ZZID.py
     # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016
-    process.mHZZEmbedder = cms.EDProducer(
+    module = cms.EDProducer(
         "PATMuonZZIDEmbedder",
         src = cms.InputTag(mSrc),
         vtxSrc = cms.InputTag(pvSrc),
         ptCut = cms.double(5.),
     )
-    mSrc = 'mHZZEmbedder'
-    process.muonCustomization *= process.mHZZEmbedder
+    modName = 'mHZZEmbedder{0}'.format(postfix)
+    setattr(process,modName,module)
+    mSrc = modName
+
+    path *= getattr(process,modName)
 
     ######################
     ### embed SUSY IDs ###
     ######################
     # https://twiki.cern.ch/twiki/bin/view/CMS/LeptonMVA
-    process.mMiniIsoEmbedder = cms.EDProducer(
+    module = cms.EDProducer(
         "MuonMiniIsolationEmbedder",
         src = cms.InputTag(mSrc),
         packedSrc = cms.InputTag(pfSrc),
     )
-    mSrc = 'mMiniIsoEmbedder'
-    process.muonCustomization *= process.mMiniIsoEmbedder
+    modName = 'mMiniIsoEmbedder{0}'.format(postfix)
+    setattr(process,modName,module)
+    mSrc = modName
 
-    process.mSUSYEmbedder = cms.EDProducer(
+    path *= getattr(process,modName)
+
+    module = cms.EDProducer(
         "MuonSUSYMVAEmbedder",
         src = cms.InputTag(mSrc),
         vertexSrc = cms.InputTag(pvSrc),
         rhoSrc = cms.InputTag('fixedGridRhoFastjetCentralNeutral'),
         weights = cms.FileInPath('DevTools/Ntuplizer/data/susy_mu_BDTG.weights.xml'), # https://github.com/CERN-PH-CMG/cmgtools-lite/blob/80X/TTHAnalysis/data/leptonMVA/tth
     )
-    mSrc = 'mSUSYEmbedder'
-    process.muonCustomization *= process.mSUSYEmbedder
+    modName = 'mSUSYEmbedder{0}'.format(postfix)
+    setattr(process,modName,module)
+    mSrc = modName
+
+    path *= getattr(process,modName)
 
     # add to schedule
-    process.schedule.append(process.muonCustomization)
+    process.schedule.append(path)
 
-    coll['muons'] = mSrc
+    coll[srcLabel] = mSrc
 
     return coll

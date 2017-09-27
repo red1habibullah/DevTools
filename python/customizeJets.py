@@ -1,26 +1,31 @@
 import FWCore.ParameterSet.Config as cms
 
-def customizeJets(process,coll,**kwargs):
+def customizeJets(process,coll,srcLabel='jets',postfix='',**kwargs):
     '''Customize jets'''
     isMC = kwargs.pop('isMC',False)
-    jSrc = coll['jets']
+    jSrc = coll[srcLabel]
     rhoSrc = coll['rho']
     pvSrc = coll['vertices']
 
     # customization path
-    process.jetCustomization = cms.Path()
+    pathName = 'jetCustomization{0}'.format(postfix)
+    setattr(process,pathName,cms.Path())
+    path = getattr(process,pathName)
 
     #################################
     ### add updated pileup jet id ###
     #################################
     process.load("RecoJets.JetProducers.PileupJetID_cfi")
-    process.pileupJetIdUpdated = process.pileupJetId.clone(
+    module = process.pileupJetId.clone(
         jets=cms.InputTag(jSrc),
         inputIsCorrected=True,
         applyJec=True,
         vertexes=cms.InputTag(pvSrc),
     )
-    process.jetCustomization *= process.pileupJetIdUpdated
+    modName = 'pileupJetIdUpdated{0}'.format(postfix)
+    setattr(process,modName,module)
+
+    path *= getattr(process,modName)
 
     ######################
     ### recorrect jets ###
@@ -34,52 +39,62 @@ def customizeJets(process,coll,**kwargs):
         process,
         jetSource = cms.InputTag(jSrc),
         jetCorrections = jetCorr,
+        postfix=postfix,
     )
-    process.updatedPatJets.userData.userFloats.src += ['pileupJetIdUpdated:fullDiscriminant']
-    jSrc = 'updatedPatJets'
+    modName = 'updatedPatJets{0}'.format(postfix)
+    getattr(process,modName).userData.userFloats.src += ['pileupJetIdUpdated{0}:fullDiscriminant'.format(postfix)]
+    jSrc = modName
 
     #################
     ### embed ids ###
     #################
-    process.jID = cms.EDProducer(
+    module = cms.EDProducer(
         "JetIdEmbedder",
         src = cms.InputTag(jSrc),
         discriminator = cms.string('pileupJetIdUpdated:fullDiscriminant'),
     )
-    process.jetCustomization *= process.jID
-    jSrc = "jID"
+    modName = 'jID{0}'.format(postfix)
+    setattr(process,modName,module)
+    jSrc = modName
+
+    path *= getattr(process,modName)
 
     #################
     ### embed rho ###
     #################
-    process.jRho = cms.EDProducer(
+    module = cms.EDProducer(
         "JetRhoEmbedder",
         src = cms.InputTag(jSrc),
         rhoSrc = cms.InputTag(rhoSrc),
         label = cms.string("rho"),
     )
-    jSrc = 'jRho'
+    modName = 'jRho{0}'.format(postfix)
+    setattr(process,modName,module)
+    jSrc = modName
 
-    process.jetCustomization *= process.jRho
+    path *= getattr(process,modName)
 
     ##########################
     ### embed jet gen jets ###
     ##########################
     if isMC:
-        process.jGenJetMatching = cms.EDProducer(
+        module = cms.EDProducer(
             "JetGenJetEmbedder",
             src = cms.InputTag(jSrc),
             genJets = cms.InputTag("slimmedGenJets"),
             excludeLeptons = cms.bool(False),
             deltaR = cms.double(0.5),
         )
-        jSrc = "jGenJetMatching"
-        process.jetCustomization *= process.jGenJetMatching
+        modName = 'jGenJetMatching{0}'.format(postfix)
+        setattr(process,modName,module)
+        jSrc = modName
+
+        path *= getattr(process,modName)
 
 
     # add to schedule
-    process.schedule.append(process.jetCustomization)
+    process.schedule.append(path)
 
-    coll['jets'] = jSrc
+    coll[srcLabel] = jSrc
 
     return coll
