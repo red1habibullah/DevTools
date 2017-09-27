@@ -161,7 +161,7 @@ if not options.isMC: collections['pfmet'] = 'slimmedMETsMuEGClean'
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
     'electrons'   : 'pt>10 && abs(eta)<2.5',
-    'muons'       : 'pt>10 && abs(eta)<2.2',
+    'muons'       : 'pt>10 && abs(eta)<2.4',
     'taus'        : 'pt>20 && abs(eta)<2.3',
     'photons'     : 'pt>10 && abs(eta)<3.0',
     'jets'        : 'pt>15 && abs(eta)<4.7',
