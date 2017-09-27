@@ -1,42 +1,48 @@
 import FWCore.ParameterSet.Config as cms
 
-def customizeTaus(process,coll,**kwargs):
+def customizeTaus(process,coll,srcLabel='taus',postfix='',**kwargs):
     '''Customize taus'''
     reHLT = kwargs.pop('reHLT',False)
     isMC = kwargs.pop('isMC',False)
-    tSrc = coll['taus']
+    tSrc = coll[srcLabel]
     rhoSrc = coll['rho']
     pvSrc = coll['vertices']
     genSrc = coll['genParticles']
 
     # customization path
-    process.tauCustomization = cms.Path()
+    pathName = 'tauCustomization{0}'.format(postfix)
+    setattr(process,pathName,cms.Path())
+    path = getattr(process,pathName)
 
     #################
     ### embed rho ###
     #################
-    process.tRho = cms.EDProducer(
+    module = cms.EDProducer(
         "TauRhoEmbedder",
         src = cms.InputTag(tSrc),
         rhoSrc = cms.InputTag(rhoSrc),
         label = cms.string("rho"),
     )
-    tSrc = 'tRho'
+    modName = 'tRho{0}'.format(postfix)
+    setattr(process,modName,module)
+    tSrc = modName
 
-    process.tauCustomization *= process.tRho
+    path *= getattr(process,modName)
 
     ################
     ### embed pv ###
     ################
-    process.tPV = cms.EDProducer(
+    module = cms.EDProducer(
         "TauIpEmbedder",
         src = cms.InputTag(tSrc),
         vertexSrc = cms.InputTag(pvSrc),
         beamspotSrc = cms.InputTag("offlineBeamSpot"),
     )
-    tSrc = 'tPV'
+    modName = 'tPV{0}'.format(postfix)
+    setattr(process,modName,module)
+    tSrc = modName
 
-    process.tauCustomization *= process.tPV
+    path *= getattr(process,modName)
 
     ##############################
     ### embed trigger matching ###
@@ -48,7 +54,7 @@ def customizeTaus(process,coll,**kwargs):
         if 'tau' in triggerMap[trigger]['objects']:
             labels += ['matches_{0}'.format(trigger)]
             paths += [triggerMap[trigger]['path']]
-    process.tTrig = cms.EDProducer(
+    module = cms.EDProducer(
         "TauHLTMatchEmbedder",
         src = cms.InputTag(tSrc),
         #triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
@@ -58,9 +64,11 @@ def customizeTaus(process,coll,**kwargs):
         labels = cms.vstring(*labels),
         paths = cms.vstring(*paths),
     )
-    tSrc = 'tTrig'
+    modName = 'tTrig{0}'.format(postfix)
+    setattr(process,modName,module)
+    tSrc = modName
 
-    process.tauCustomization *= process.tTrig
+    path *= getattr(process,modName)
 
     ##########################
     ### embed tau gen jets ###
@@ -70,20 +78,23 @@ def customizeTaus(process,coll,**kwargs):
         process.tauGenJets = tauGenJets.clone(GenParticles = cms.InputTag(genSrc))
         process.tauCustomization *= process.tauGenJets
 
-        process.tGenJetMatching = cms.EDProducer(
+        module = cms.EDProducer(
             "TauGenJetEmbedder",
             src = cms.InputTag(tSrc),
             genJets = cms.InputTag("tauGenJets"),
             excludeLeptons = cms.bool(True),
             deltaR = cms.double(0.5),
         )
-        tSrc = "tGenJetMatching"
-        process.tauCustomization *= process.tGenJetMatching
+        modName = 'tGenJetMatching{0}'.format(postfix)
+        setattr(process,modName,module)
+        tSrc = modName
+
+        path *= getattr(process,modName)
 
 
     # add to schedule
-    process.schedule.append(process.tauCustomization)
+    process.schedule.append(path)
 
-    coll['taus'] = tSrc
+    coll[srcLabel] = tSrc
 
     return coll

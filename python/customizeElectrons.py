@@ -1,10 +1,10 @@
 import FWCore.ParameterSet.Config as cms
 
-def customizeElectrons(process,coll,**kwargs):
+def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
     '''Customize electrons'''
     reHLT = kwargs.pop('reHLT',False)
     isMC = kwargs.pop('isMC',False)
-    eSrc = coll['electrons']
+    eSrc = coll[srcLabel]
     pSrc = coll['photons']
     jSrc = coll['jets']
     rhoSrc = coll['rho']
@@ -12,7 +12,9 @@ def customizeElectrons(process,coll,**kwargs):
     pfSrc = coll['packed']
 
     # customization path
-    process.electronCustomization = cms.Path()
+    pathName = 'electronCustomization{0}'.format(postfix)
+    setattr(process,pathName,cms.Path())
+    path = getattr(process,pathName)
 
 
     #######################
@@ -27,29 +29,36 @@ def customizeElectrons(process,coll,**kwargs):
     #process.electronCustomization *= process.regressionApplication
 
     # embed the uncorrected stuff
-    process.uncorElec = cms.EDProducer(
+    module = cms.EDProducer(
         "ShiftedElectronEmbedder",
         src=cms.InputTag(eSrc),
         label=cms.string('uncorrected'),
         shiftedSrc=cms.InputTag('slimmedElectrons::PAT'),
     )
-    eSrc = "uncorElec"
-    process.electronCustomization *= process.uncorElec
+    modName = 'uncorElec{0}'.format(postfix)
+    setattr(process,modName,module)
+    eSrc = modName
+
+    path *= getattr(process,modName)
 
     ###################################
     ### scale and smear corrections ###
     ###################################
 
     # first need to add a manual protection for the corrections
-    process.selectedElectrons = cms.EDFilter(
+    module = cms.EDFilter(
         "PATElectronSelector",
         src = cms.InputTag(eSrc),
         cut = cms.string("pt > 5 && abs(eta)<2.5")
     )
-    eSrc = "selectedElectrons"
-    process.electronCustomization *= process.selectedElectrons
+    modName = 'selectedElectrons{0}'.format(postfix)
+    setattr(process,modName,module)
+    eSrc = modName
+
+    path *= getattr(process,modName)
 
     # TODO: reenable when new recipe released
+    # TODO: Note, postfix doesn't work on electrons yet
     #process.load('EgammaAnalysis.ElectronTools.calibratedPatElectronsRun2_cfi')
     #process.calibratedPatElectrons.electrons = eSrc
     #process.calibratedPatElectrons.isMC = isMC
@@ -137,7 +146,7 @@ def customizeElectrons(process,coll,**kwargs):
         cms.InputTag('electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring16HZZV1Categories'),
     ]
 
-    process.eidEmbedder = cms.EDProducer(
+    module = cms.EDProducer(
         "ElectronVIDEmbedder",
         src=cms.InputTag(eSrc),
         idLabels = cms.vstring(*idDecisionLabels),          # labels for bool maps
@@ -151,16 +160,19 @@ def customizeElectrons(process,coll,**kwargs):
         categoryLabels = cms.vstring(*mvaCategoryLabels),   # labels for int maps
         categories = cms.VInputTag(*mvaCategoryTags),       # int maps
     )
-    eSrc = 'eidEmbedder'
+    modName = 'eidEmbedder{0}'.format(postfix)
+    setattr(process,modName,module)
+    eSrc = modName
 
-    process.electronCustomization *= process.egmGsfElectronIDSequence
-    process.electronCustomization *= process.eidEmbedder
+    path *= process.egmGsfElectronIDSequence
+    path *= getattr(process,modName)
+
 
 
     #########################
     ### embed nearest jet ###
     #########################
-    process.eJet = cms.EDProducer(
+    module = cms.EDProducer(
         "ElectronJetEmbedder",
         src = cms.InputTag(eSrc),
         jetSrc = cms.InputTag(jSrc),
@@ -168,72 +180,84 @@ def customizeElectrons(process,coll,**kwargs):
         L1Corrector = cms.InputTag("ak4PFCHSL1FastjetCorrector"),
         L1L2L3ResCorrector= cms.InputTag("ak4PFCHSL1FastL2L3Corrector"),
     )
-    eSrc = 'eJet'
+    modName = 'eJet{0}'.format(postfix)
+    setattr(process,modName,module)
+    eSrc = modName
 
-    process.electronCustomization *= process.eJet
+    path *= getattr(process,modName)
 
     ##########################
     ### embed missing hits ###
     ##########################
-    process.eMissingHits = cms.EDProducer(
+    module = cms.EDProducer(
         "ElectronMissingHitsEmbedder",
         src = cms.InputTag(eSrc),
     )
-    eSrc = 'eMissingHits'
+    modName = 'eMissingHits{0}'.format(postfix)
+    setattr(process,modName,module)
+    eSrc = modName
 
-    process.electronCustomization *= process.eMissingHits
+    path *= getattr(process,modName)
 
     ###################
     ### embed ww id ###
     ###################
-    process.eWW = cms.EDProducer(
+    module = cms.EDProducer(
         "ElectronWWIdEmbedder",
         src = cms.InputTag(eSrc),
         vertexSrc = cms.InputTag(pvSrc),
     )
-    eSrc = 'eWW'
+    modName = 'eWW{0}'.format(postfix)
+    setattr(process,modName,module)
+    eSrc = modName
 
-    process.electronCustomization *= process.eWW
+    path *= getattr(process,modName)
 
     #############################
     ### embed effective areas ###
     #############################
     eaFile = 'RecoEgamma/ElectronIdentification/data/Summer16/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_80X.txt'
-    process.eEffArea = cms.EDProducer(
+    module = cms.EDProducer(
         "ElectronEffectiveAreaEmbedder",
         src = cms.InputTag(eSrc),
         label = cms.string("EffectiveArea"), # embeds a user float with this name
         configFile = cms.FileInPath(eaFile), # the effective areas file
     )
-    eSrc = 'eEffArea'
+    modName = 'eEffArea{0}'.format(postfix)
+    setattr(process,modName,module)
+    eSrc = modName
 
-    process.electronCustomization *= process.eEffArea
+    path *= getattr(process,modName)
 
     #################
     ### embed rho ###
     #################
-    process.eRho = cms.EDProducer(
+    module = cms.EDProducer(
         "ElectronRhoEmbedder",
         src = cms.InputTag(eSrc),
         rhoSrc = cms.InputTag(rhoSrc),
         label = cms.string("rho"),
     )
-    eSrc = 'eRho'
+    modName = 'eRho{0}'.format(postfix)
+    setattr(process,modName,module)
+    eSrc = modName
 
-    process.electronCustomization *= process.eRho
+    path *= getattr(process,modName)
 
     ################
     ### embed pv ###
     ################
-    process.ePV = cms.EDProducer(
+    module = cms.EDProducer(
         "ElectronIpEmbedder",
         src = cms.InputTag(eSrc),
         vertexSrc = cms.InputTag(pvSrc),
         beamspotSrc = cms.InputTag("offlineBeamSpot"),
     )
-    eSrc = 'ePV'
+    modName = 'ePV{0}'.format(postfix)
+    setattr(process,modName,module)
+    eSrc = modName
 
-    process.electronCustomization *= process.ePV
+    path *= getattr(process,modName)
 
     ##############################
     ### embed trigger matching ###
@@ -245,7 +269,7 @@ def customizeElectrons(process,coll,**kwargs):
         if 'electron' in triggerMap[trigger]['objects']:
             labels += ['matches_{0}'.format(trigger)]
             paths += [triggerMap[trigger]['path']]
-    process.eTrig = cms.EDProducer(
+    module = cms.EDProducer(
         "ElectronHLTMatchEmbedder",
         src = cms.InputTag(eSrc),
         #triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
@@ -255,16 +279,18 @@ def customizeElectrons(process,coll,**kwargs):
         labels = cms.vstring(*labels),
         paths = cms.vstring(*paths),
     )
-    eSrc = 'eTrig'
+    modName = 'eTrig{0}'.format(postfix)
+    setattr(process,modName,module)
+    eSrc = modName
 
-    process.electronCustomization *= process.eTrig
+    path *= getattr(process,modName)
 
     #####################
     ### embed HZZ IDs ###
     #####################
     # https://github.com/nwoods/UWVV/blob/ichep/AnalysisTools/python/templates/ZZID.py
     # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016
-    process.eHZZEmbedder = cms.EDProducer(
+    module = cms.EDProducer(
         "PATElectronZZIDEmbedder",
         src = cms.InputTag(eSrc),
         vtxSrc = cms.InputTag(pvSrc),
@@ -278,22 +304,28 @@ def customizeElectrons(process,coll,**kwargs):
         missingHitsCut = cms.int32(999),
         ptCut = cms.double(7.), 
     )
-    eSrc = 'eHZZEmbedder'
-    process.electronCustomization *= process.eHZZEmbedder
+    modName = 'eHZZEmbedder{0}'.format(postfix)
+    setattr(process,modName,module)
+    eSrc = modName
+
+    path *= getattr(process,modName)
 
     ######################
     ### embed SUSY IDs ###
     ######################
     # https://twiki.cern.ch/twiki/bin/view/CMS/LeptonMVA
-    process.eMiniIsoEmbedder = cms.EDProducer(
+    module = cms.EDProducer(
         "ElectronMiniIsolationEmbedder",
         src = cms.InputTag(eSrc),
         packedSrc = cms.InputTag(pfSrc),
     )
-    eSrc = 'eMiniIsoEmbedder'
-    process.electronCustomization *= process.eMiniIsoEmbedder
+    modName = 'eMiniIsoEmbedder{0}'.format(postfix)
+    setattr(process,modName,module)
+    eSrc = modName
 
-    process.eSUSYEmbedder = cms.EDProducer(
+    path *= getattr(process,modName)
+
+    module = cms.EDProducer(
         "ElectronSUSYMVAEmbedder",
         src = cms.InputTag(eSrc),
         vertexSrc = cms.InputTag(pvSrc),
@@ -301,12 +333,15 @@ def customizeElectrons(process,coll,**kwargs):
         mva = cms.string('ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Values'),
         weights = cms.FileInPath('DevTools/Ntuplizer/data/susy_el_BDTG.weights.xml'), # https://github.com/CERN-PH-CMG/cmgtools-lite/blob/80X/TTHAnalysis/data/leptonMVA/tth
     )
-    eSrc = 'eSUSYEmbedder'
-    process.electronCustomization *= process.eSUSYEmbedder
+    modName = 'eSUSYEmbedder{0}'.format(postfix)
+    setattr(process,modName,module)
+    eSrc = modName
+
+    path *= getattr(process,modName)
 
     # add to schedule
-    process.schedule.append(process.electronCustomization)
+    process.schedule.append(path)
 
-    coll['electrons'] = eSrc
+    coll[srcLabel] = eSrc
 
     return coll

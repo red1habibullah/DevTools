@@ -1,33 +1,39 @@
 import FWCore.ParameterSet.Config as cms
 
-def customizePhotons(process,coll,**kwargs):
+def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
     '''Customize photons'''
     reHLT = kwargs.pop('reHLT',False)
     isMC = kwargs.pop('isMC',False)
-    pSrc = coll['photons']
+    pSrc = coll[srcLabel]
     rhoSrc = coll['rho']
 
     # customization path
-    process.photonCustomization = cms.Path()
+    pathName = 'photonCustomization{0}'.format(postfix)
+    setattr(process,pathName,cms.Path())
+    path = getattr(process,pathName)
 
     ###################################
     ### scale and smear corrections ###
     ###################################
     # embed the uncorrected stuff
-    process.uncorPho = cms.EDProducer(
+    module = cms.EDProducer(
         "ShiftedPhotonEmbedder",
         src=cms.InputTag(pSrc),
         label=cms.string('uncorrected'),
         shiftedSrc=cms.InputTag('slimmedPhotons::PAT'),
     )
-    pSrc = "uncorPho"
-    process.photonCustomization *= process.uncorPho
+    modName = 'uncorPho{0}'.format(postfix)
+    setattr(process,modName,module)
+    pSrc = modName
+
+    path *= getattr(process,modName)
 
     # TODO: reenable when new recipe released
+    # TODO: postfix doesnt work for photons
     #process.load('EgammaAnalysis.ElectronTools.calibratedPatPhotonsRun2_cfi')
     #process.calibratedPatPhotons.photons = pSrc
     #process.calibratedPatPhotons.isMC = isMC
-    #process.photonCustomization *= process.calibratedPatPhotons
+    #path *= process.calibratedPatPhotons
     #pSrc = 'calibratedPatPhotons'
 
     #######################
@@ -35,7 +41,7 @@ def customizePhotons(process,coll,**kwargs):
     #######################
     process.load("RecoEgamma/PhotonIdentification/PhotonIDValueMapProducer_cfi")
 
-    process.photonCustomization *= process.photonIDValueMapProducer
+    path *= process.photonIDValueMapProducer
 
     #################
     ### embed VID ###
@@ -119,7 +125,7 @@ def customizePhotons(process,coll,**kwargs):
         cms.InputTag('photonMVAValueMapProducer:PhotonMVAEstimatorRun2Spring16NonTrigV1Categories'),
     ]
 
-    process.pidEmbedder = cms.EDProducer(
+    module = cms.EDProducer(
         "PhotonVIDEmbedder",
         src=cms.InputTag(pSrc),
         idLabels = cms.vstring(*idDecisionLabels),          # labels for bool maps
@@ -133,23 +139,27 @@ def customizePhotons(process,coll,**kwargs):
         categoryLabels = cms.vstring(*mvaCategoryLabels),   # labels for int maps
         categories = cms.VInputTag(*mvaCategoryTags),       # int maps
     )
-    pSrc = 'pidEmbedder'
+    modName = 'pidEmbedder{0}'.format(postfix)
+    setattr(process,modName,module)
+    pSrc = modName
 
     process.photonCustomization *= process.egmPhotonIDSequence
-    process.photonCustomization *= process.pidEmbedder
+    path *= getattr(process,modName)
 
     #################
     ### embed rho ###
     #################
-    process.pRho = cms.EDProducer(
+    module = cms.EDProducer(
         "PhotonRhoEmbedder",
         src = cms.InputTag(pSrc),
         rhoSrc = cms.InputTag(rhoSrc),
         label = cms.string("rho"),
     )
-    pSrc = 'pRho'
+    modName = 'pRho{0}'.format(postfix)
+    setattr(process,modName,module)
+    pSrc = modName
 
-    process.photonCustomization *= process.pRho
+    path *= getattr(process,modName)
 
     #############################
     ### embed effective areas ###
@@ -159,33 +169,41 @@ def customizePhotons(process,coll,**kwargs):
     #eaPhotonsFile = 'RecoEgamma/PhotonIdentification/data/Spring16/effAreaPhotons_cone03_pfPhotons_90percentBased_3bins.txt'
     eaPhotonsFile = 'RecoEgamma/PhotonIdentification/data/Spring16/effAreaPhotons_cone03_pfPhotons_90percentBased.txt'
 
-    process.pChargedHadronsEffArea = cms.EDProducer(
+    module = cms.EDProducer(
         "PhotonEffectiveAreaEmbedder",
         src = cms.InputTag(pSrc),
         label = cms.string("EffectiveAreaChargedHadrons"), # embeds a user float with this name
         configFile = cms.FileInPath(eaChargedHadronsFile), # the effective areas file
     )
-    pSrc = 'pChargedHadronsEffArea'
+    modName = 'pChargedHadronsEffArea{0}'.format(postfix)
+    setattr(process,modName,module)
+    pSrc = modName
 
-    process.pNeutralHadronsEffArea = cms.EDProducer(
+    path *= getattr(process,modName)
+
+    module = cms.EDProducer(
         "PhotonEffectiveAreaEmbedder",
         src = cms.InputTag(pSrc),
         label = cms.string("EffectiveAreaNeutralHadrons"), # embeds a user float with this name
         configFile = cms.FileInPath(eaNeutralHadronsFile), # the effective areas file
     )
-    pSrc = 'pNeutralHadronsEffArea'
+    modName = 'pNeutralHadronsEffArea{0}'.format(postfix)
+    setattr(process,modName,module)
+    pSrc = modName
 
-    process.pPhotonsEffArea = cms.EDProducer(
+    path *= getattr(process,modName)
+
+    module = cms.EDProducer(
         "PhotonEffectiveAreaEmbedder",
         src = cms.InputTag(pSrc),
         label = cms.string("EffectiveAreaPhotons"), # embeds a user float with this name
         configFile = cms.FileInPath(eaPhotonsFile), # the effective areas file
     )
-    pSrc = 'pPhotonsEffArea'
+    modName = 'pPhotonsEffArea{0}'.format(postfix)
+    setattr(process,modName,module)
+    pSrc = modName
 
-    process.photonCustomization *= process.pChargedHadronsEffArea
-    process.photonCustomization *= process.pNeutralHadronsEffArea
-    process.photonCustomization *= process.pPhotonsEffArea
+    path *= getattr(process,modName)
 
     ##############################
     ### embed trigger matching ###
@@ -197,7 +215,7 @@ def customizePhotons(process,coll,**kwargs):
         if 'photon' in triggerMap[trigger]['objects']:
             labels += ['matches_{0}'.format(trigger)]
             paths += [triggerMap[trigger]['path']]
-    process.pTrig = cms.EDProducer(
+    module = cms.EDProducer(
         "PhotonHLTMatchEmbedder",
         src = cms.InputTag(pSrc),
         #triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
@@ -207,13 +225,15 @@ def customizePhotons(process,coll,**kwargs):
         labels = cms.vstring(*labels),
         paths = cms.vstring(*paths),
     )
-    pSrc = 'pTrig'
+    modName = 'pTrig{0}'.format(postfix)
+    setattr(process,modName,module)
+    pSrc = modName
 
-    process.photonCustomization *= process.pTrig
+    path *= getattr(process,modName)
 
     # add to schedule
-    process.schedule.append(process.photonCustomization)
+    process.schedule.append(path)
 
-    coll['photons'] = pSrc
+    coll[srcLabel] = pSrc
 
     return coll
