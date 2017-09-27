@@ -3,7 +3,7 @@ import FWCore.ParameterSet.Config as cms
 def getCapitalizedSingular(name):
     return name.rstrip('s').capitalize()
 
-def objectSelector(process,obj,objSrc,selection):
+def objectSelector(process,obj,objSrc,selection,postfix=''):
     '''Filter an object collection based on a cut string'''
 
     if obj=='genParticles':
@@ -18,10 +18,10 @@ def objectSelector(process,obj,objSrc,selection):
             src = cms.InputTag(objSrc),
             cut = cms.string(selection),
         )
-    modName = '{0}Selection'.format(obj)
+    modName = '{0}Selected{1}'.format(obj,postfix)
     setattr(process,modName,module)
 
-    pathName = '{0}SlectionPath'.format(obj)
+    pathName = '{0}SlectionPath{1}'.format(obj,postfix)
     path = cms.Path(getattr(process,modName))
     setattr(process,pathName,path)
 
@@ -29,7 +29,18 @@ def objectSelector(process,obj,objSrc,selection):
 
     return modName
 
-def objectCleaner(process,obj,objSrc,collections,cleaning):
+def objectCountFilter(process,path,obj,objSrc,count,postfix=''):
+    module = cms.EDFilter("PATCandViewCountFilter",
+        minNumber = cms.uint32(count),
+        maxNumber = cms.uint32(999999),
+        src = cms.InputTag(objSrc)
+    )
+    modName = '{0}Count{1}'.format(obj,postfix)
+    setattr(process,modName,module)
+    path *= getattr(process,modName)
+
+
+def objectCleaner(process,obj,objSrc,collections,cleaning,postfix=''):
     '''Clean an object collection'''
 
     cleanParams = cms.PSet()
@@ -57,10 +68,10 @@ def objectCleaner(process,obj,objSrc,collections,cleaning):
         checkOverlaps = cleanParams,
         finalCut = cms.string(''),
     )
-    modName = '{0}Cleaning'.format(obj)
+    modName = '{0}Cleaned{1}'.format(obj,postfix)
     setattr(process,modName,module)
 
-    pathName = '{0}CleaningPath'.format(obj)
+    pathName = '{0}CleaningPath{1}'.format(obj,postfix)
     path = cms.Path(getattr(process,modName))
     setattr(process,pathName,path)
 
