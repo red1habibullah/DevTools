@@ -22,6 +22,7 @@ class MonteCarloBranches {
     std::vector<Float_t>  genWeightsBranch_;
     Float_t               ptHatBranch_;
     Float_t               nTrueVerticesBranch_;
+    Int_t                 nObservedVerticesBranch_;
     Int_t                 nupBranch_;
     Int_t                 numGenJetsBranch_;
     Float_t               genHTBranch_;

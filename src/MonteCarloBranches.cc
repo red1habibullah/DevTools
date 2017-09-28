@@ -11,6 +11,7 @@ MonteCarloBranches::MonteCarloBranches(TTree * tree, const edm::ParameterSet& iC
   tree->Branch("genWeights", &genWeightsBranch_);
   tree->Branch("ptHat", &ptHatBranch_, "ptHat/F");
   tree->Branch("nTrueVertices", &nTrueVerticesBranch_, "nTrueVertices/F");
+  tree->Branch("nObservedVertices", &nObservedVerticesBranch_, "nTrueVertices/I");
   tree->Branch("NUP", &nupBranch_, "NUP/I");
   tree->Branch("numGenJets", &numGenJetsBranch_, "numGenJets/I");
   tree->Branch("genHT", &genHTBranch_, "genHT/I");
@@ -36,8 +37,16 @@ void MonteCarloBranches::fill(const edm::Event& iEvent)
     }
 
     nTrueVerticesBranch_ = 0;
+    nObservedVerticesBranch_ = 0;
     if (pileupSummaryInfo.isValid() && pileupSummaryInfo->size()>0) {
-        nTrueVerticesBranch_ = pileupSummaryInfo->at(1).getTrueNumInteractions();
+        for( auto & pu : *pileupSummaryInfo ) {
+            if( pu.getBunchCrossing() == 0 ) {
+                nTrueVerticesBranch_ = pu.getTrueNumInteractions();
+                nObservedVerticesBranch_ = pu.getPU_NumInteractions();
+                break;
+            }
+        }
+        //nTrueVerticesBranch_ = pileupSummaryInfo->at(1).getTrueNumInteractions();
     }
 
     // calculate lhe related information
