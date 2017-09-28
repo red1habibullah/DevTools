@@ -2,6 +2,7 @@ betterDAS.py dataset --primaryDatasets\
  "DiPhotonJets_MGG*" "DiPhotonJetsBox_M*"\
  "DY1*pythia8" "DY2*pythia8" "DY3*pythia8" "DY4*pythia8" "DYJetsToLL_Pt*pythia8" "DYJetsToLL_M-50_Tune*pythia8" "DYJetsToLL_M-10to50_Tune*pythia8"\
  "HPlusPlus*"\
+ "SUSYGluGluToHToAA_AToMuMu_AToTauTau*"\
  "QCD_Pt_*0_Tune*pythia8" "QCD_Pt*DoubleEMEnriched*" "QCD_Pt*MuEnrichedPt5*"\
  "GJet_Pt*DoubleEMEnriched*"\
  "ST_s-*" "ST_t-*f_incl*" "ST_tW_*f_incl*"\
