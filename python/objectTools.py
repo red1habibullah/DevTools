@@ -1,6 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 def getCapitalizedSingular(name):
+    if name=='mets': return 'MET'
     return name.rstrip('s').capitalize()
 
 def objectSelector(process,obj,objSrc,selection,postfix=''):
