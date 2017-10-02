@@ -35,6 +35,7 @@ process.load('Configuration.StandardSequences.Services_cff')
 
 process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True),
+    wantSummary = cms.untracked.bool(True),
 )
 
 process.options.numberOfThreads=cms.untracked.uint32(options.numThreads)
@@ -163,9 +164,16 @@ if not options.isMC: collections['pfmet'] = 'slimmedMETsMuEGClean'
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
     'electrons'   : 'pt>5 && abs(eta)<2.5',
-    'muons'       : 'pt>0 && abs(eta)<2.4 && isMediumMuon',
-    'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronLooseMVA6") && tauID("againstMuonLoose3")',
-    'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronLooseMVA6") && tauID("againstMuonLoose3")',
+    'muons'       : 'pt>0 && abs(eta)<2.4 && isMediumMuon && abs(userFloat("dz"))<0.5 && abs(userFloat("dxy"))<0.2 && (pfIsolationR04().sumChargedHadronPt + max(0., pfIsolationR04().sumNeutralHadronEt + pfIsolationR04().sumPhotonEt - 0.5*pfIsolationR04().sumPUPt))/pt<0.25',
+    #'muons'       : 'pt>0 && abs(eta)<2.4 && isMediumMuon && abs(userFloat("dz"))<0.5 && abs(userFloat("dxy"))<0.2',
+    'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6") && tauID("againstMuonLoose3")',
+    #'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6")',
+    #'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstMuonLoose3")',
+    #'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding")',
+    'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6") && tauID("againstMuonLoose3")',
+    #'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6")',
+    #'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstMuonLoose3")',
+    #'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding")',
     'photons'     : 'pt>10 && abs(eta)<3.0',
     'jets'        : 'pt>15 && abs(eta)<4.7',
 }
@@ -319,13 +327,13 @@ process.tautau = cms.EDProducer("CandViewShallowCloneCombiner",
     decay = cms.string("{0}@+ {0}@-".format(collections['taus'])),
     cut   = cms.string(""),
 )
-objectCountFilter(process,process.main_path,'tautau','tautau',1)
+#objectCountFilter(process,process.main_path,'tautau','tautau',1)
 
 process.tautauBoosted = cms.EDProducer("CandViewShallowCloneCombiner",
     decay = cms.string("{0}@+ {0}@-".format(collections['tausBoosted'])),
     cut   = cms.string(""),
 )
-objectCountFilter(process,process.main_path_boosted,'tautauBoosted','tautauBoosted',1)
+#objectCountFilter(process,process.main_path_boosted,'tautauBoosted','tautauBoosted',1)
 
 process.mumutautau = cms.EDProducer("CandViewShallowCloneCombiner",
     decay = cms.string("mumu tautau"),
@@ -371,6 +379,7 @@ process.out = cms.OutputModule('PoolOutputModule',
         'keep *_{0}_*_*'.format(collections['pfmet']),
         #'keep *_{0}_*_*'.format(collections['packed']),
         'keep *_{0}_*_*'.format(collections['genParticles']),
+        'keep *_packedGenParticles_*_*',
         'keep *_mumu_*_*',
         'keep *_tautau_*_*',
         'keep *_tautauBoosted_*_*',
