@@ -35,7 +35,7 @@ process.load('Configuration.StandardSequences.Services_cff')
 
 process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True),
-    wantSummary = cms.untracked.bool(True),
+    #wantSummary = cms.untracked.bool(True),
 )
 
 process.options.numberOfThreads=cms.untracked.uint32(options.numThreads)
@@ -163,14 +163,14 @@ if not options.isMC: collections['pfmet'] = 'slimmedMETsMuEGClean'
 # the selections for each object (to be included in ntuple)
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
-    'electrons'   : 'pt>5 && abs(eta)<2.5',
+    'electrons'   : 'pt>5 && abs(eta)<2.5 && userInt("mvaEleID-Spring16-GeneralPurpose-V1-wp90")',
     'muons'       : 'pt>0 && abs(eta)<2.4 && isMediumMuon && abs(userFloat("dz"))<0.5 && abs(userFloat("dxy"))<0.2 && (pfIsolationR04().sumChargedHadronPt + max(0., pfIsolationR04().sumNeutralHadronEt + pfIsolationR04().sumPhotonEt - 0.5*pfIsolationR04().sumPUPt))/pt<0.25',
     #'muons'       : 'pt>0 && abs(eta)<2.4 && isMediumMuon && abs(userFloat("dz"))<0.5 && abs(userFloat("dxy"))<0.2',
-    'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6") && tauID("againstMuonLoose3")',
+    'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6") && tauID("againstMuonLoose3") && tauID("byLooseIsolationMVArun2v1DBoldDMwLT")',
     #'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6")',
     #'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstMuonLoose3")',
     #'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding")',
-    'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6") && tauID("againstMuonLoose3")',
+    'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6") && tauID("againstMuonLoose3") && tauID("byLooseIsolationMVArun2v1DBoldDMwLT")',
     #'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6")',
     #'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstMuonLoose3")',
     #'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding")',
@@ -327,21 +327,69 @@ process.tautau = cms.EDProducer("CandViewShallowCloneCombiner",
     decay = cms.string("{0}@+ {0}@-".format(collections['taus'])),
     cut   = cms.string(""),
 )
-#objectCountFilter(process,process.main_path,'tautau','tautau',1)
+
+process.mutau = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("{0}@+ {1}@-".format(collections['muons'],collections['taus'])),
+    cut   = cms.string(""),
+)
+
+process.etau = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("{0}@+ {1}@-".format(collections['electrons'],collections['taus'])),
+    cut   = cms.string(""),
+)
+
+process.emu = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("{0}@+ {1}@-".format(collections['electrons'],collections['muons'])),
+    cut   = cms.string(""),
+)
 
 process.tautauBoosted = cms.EDProducer("CandViewShallowCloneCombiner",
     decay = cms.string("{0}@+ {0}@-".format(collections['tausBoosted'])),
     cut   = cms.string(""),
 )
-#objectCountFilter(process,process.main_path_boosted,'tautauBoosted','tautauBoosted',1)
+
+process.mutauBoosted = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("{0}@+ {1}@-".format(collections['muons'],collections['tausBoosted'])),
+    cut   = cms.string(""),
+)
+
+process.etauBoosted = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("{0}@+ {1}@-".format(collections['electrons'],collections['tausBoosted'])),
+    cut   = cms.string(""),
+)
 
 process.mumutautau = cms.EDProducer("CandViewShallowCloneCombiner",
     decay = cms.string("mumu tautau"),
     cut   = cms.string(""),
 )
 
+process.mumumutau = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("mumu mutau"),
+    cut   = cms.string(""),
+)
+
+process.mumuetau = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("mumu etau"),
+    cut   = cms.string(""),
+)
+
+process.mumuemu = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("mumu emu"),
+    cut   = cms.string(""),
+)
+
 process.mumutautauBoosted = cms.EDProducer("CandViewShallowCloneCombiner",
     decay = cms.string("mumu tautauBoosted"),
+    cut   = cms.string(""),
+)
+
+process.mumumutauBoosted = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("mumu mutauBoosted"),
+    cut   = cms.string(""),
+)
+
+process.mumuetauBoosted = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("mumu etauBoosted"),
     cut   = cms.string(""),
 )
 
@@ -370,7 +418,7 @@ process.out = cms.OutputModule('PoolOutputModule',
         'keep *_*PileupInfo_*_*',
         #'keep *_bunchSpacingProducer_*_*',
         'keep *_{0}_*_*'.format(collections['vertices']),
-        #'keep *_{0}_*_*'.format(collections['electrons']),
+        'keep *_{0}_*_*'.format(collections['electrons']),
         'keep *_{0}_*_*'.format(collections['muons']),
         'keep *_{0}_*_*'.format(collections['taus']),
         'keep *_{0}_*_*'.format(collections['tausBoosted']),
@@ -381,10 +429,14 @@ process.out = cms.OutputModule('PoolOutputModule',
         'keep *_{0}_*_*'.format(collections['genParticles']),
         'keep *_packedGenParticles_*_*',
         'keep *_mumu_*_*',
-        'keep *_tautau_*_*',
-        'keep *_tautauBoosted_*_*',
-        'keep *_mumutautau_*_*',
-        'keep *_mumutautauBoosted_*_*',
+        'keep *_tautau*_*_*',
+        'keep *_mutau*_*_*',
+        'keep *_etau*_*_*',
+        'keep *_emu*_*_*',
+        'keep *_mumutautau*_*_*',
+        'keep *_mumumutau*_*_*',
+        'keep *_mumuetau*_*_*',
+        'keep *_mumuemu*_*_*',
     ),
     SelectEvents = cms.untracked.PSet(
         SelectEvents = cms.vstring('main_path','main_path_boosted'),
