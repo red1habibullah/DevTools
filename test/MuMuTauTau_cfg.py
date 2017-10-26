@@ -1,61 +1,51 @@
-import os
-
 import FWCore.ParameterSet.Config as cms
+
 
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 
 options.outputFile = 'mumutautau.root'
-#options.inputFiles= '/store/mc/RunIISummer16MiniAODv2/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/2E1C211C-05C2-E611-90D3-02163E01306F.root' # WZ
-#options.inputFiles = '/store/mc/RunIISummer16MiniAODv2/HPlusPlusHMinusHTo3L_M-500_13TeV-calchep-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/08ECD723-E4CA-E611-8C93-0CC47A1E0DC2.root' # Hpp3l
-options.inputFiles = '/store/mc/RunIISummer16MiniAODv2/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-19_TuneCUETP8M1_13TeV_madgraph_pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/60000/0CB90DE6-93DE-E611-8DAF-0025905B855C.root' # HToAA
-#options.inputFiles = '/store/data/Run2016G/DoubleMuon/MINIAOD/03Feb2017-v1/100000/00182C13-EEEA-E611-8897-001E675A6C2A.root' # ReReco
+options.inputFiles = '/store/data/Run2016H/SingleMuon/AOD/PromptReco-v2/000/284/035/00000/5849226D-569F-E611-B874-02163E011EAC.root'
+#options.inputFiles = '/store/mc/RunIISummer16DR80Premix/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/AODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/60001/D04F22AE-3FF1-E611-BDB5-02163E019C78.root'
+#options.inputFiles = '/store/mc/RunIISummer16DR80Premix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-15_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/82114092-19BB-E611-926B-FA163E0D86FB.root'
 options.maxEvents = -1
 options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
 options.register('reportEvery', 100, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Report every")
-#options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
-options.register('isMC', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
-options.register('reHLT', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is reHLT")
-options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
+options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
+#options.register('isMC', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
+#options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
 options.register('crab', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Make changes needed for crab")
 options.register('numThreads', 4, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Set number of threads")
 
 options.parseArguments()
 
 #####################
-### setup process ###
+### Setup Process ###
 #####################
+from Configuration.StandardSequences.Eras import eras
 
-process = cms.Process("MuMuTauTau")
+process = cms.Process("PAT",eras.Run2_2016)
 
-process.load('Configuration.Geometry.GeometryRecoDB_cff')
-process.load('Configuration.StandardSequences.MagneticField_38T_cff')
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 process.load('Configuration.StandardSequences.Services_cff')
+process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
+process.load('FWCore.MessageService.MessageLogger_cfi')
+process.load('Configuration.EventContent.EventContent_cff')
+process.load('SimGeneral.MixingModule.mixNoPU_cfi')
+process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
+process.load('Configuration.StandardSequences.MagneticField_cff')
+process.load('PhysicsTools.PatAlgos.slimming.metFilterPaths_cff')
+process.load('Configuration.StandardSequences.EndOfProcess_cff')
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True),
-    #wantSummary = cms.untracked.bool(True),
+    wantSummary = cms.untracked.bool(True),
 )
 
 process.options.numberOfThreads=cms.untracked.uint32(options.numThreads)
 process.options.numberOfStreams=cms.untracked.uint32(0)
 
-process.RandomNumberGeneratorService = cms.Service(
-    "RandomNumberGeneratorService",
-    calibratedPatElectrons = cms.PSet(
-        initialSeed = cms.untracked.uint32(1),
-        engineName = cms.untracked.string('TRandom3')
-    ),
-    calibratedPatPhotons = cms.PSet(
-        initialSeed = cms.untracked.uint32(2),
-        engineName = cms.untracked.string('TRandom3')
-    ),
-    mRoch = cms.PSet(
-        initialSeed = cms.untracked.uint32(3),
-        engineName = cms.untracked.string('TRandom3')
-    ),
-)
+
 
 #################
 ### GlobalTag ###
@@ -68,31 +58,6 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7'}
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
-##################
-### JEC source ###
-##################
-# this is if we need to override the jec in global tag
-#sqfile = 'DevTools/Ntuplizer/data/{0}.db'.format('Summer16_23Sep2016V3_MC' if options.isMC else 'Summer16_23Sep2016AllV3_DATA')
-#if options.crab: sqfile = 'src/{0}'.format(sqfile) # uncomment to submit to crab
-#tag = 'JetCorrectorParametersCollection_Summer16_23Sep2016AllV3_DATA_AK4PFchs'
-#if options.isMC: tag = 'JetCorrectorParametersCollection_Summer16_23Sep2016V3_MC_AK4PFchs' # MoriondMC
-#process.load("CondCore.DBCommon.CondDBCommon_cfi")
-#from CondCore.DBCommon.CondDBSetup_cfi import *
-#process.jec = cms.ESSource("PoolDBESSource",
-#    DBParameters = cms.PSet(
-#        messageLevel = cms.untracked.int32(0)
-#    ),
-#    timetype = cms.string('runnumber'),
-#    toGet = cms.VPSet(
-#        cms.PSet(
-#            record = cms.string('JetCorrectionsRecord'),
-#            tag    = cms.string(tag),
-#            label  = cms.untracked.string('AK4PFchs')
-#        ),
-#    ), 
-#    connect = cms.string('sqlite:{0}'.format(sqfile)),
-#)
-#process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
 #############################
 ### Setup rest of running ###
@@ -118,7 +83,7 @@ process.schedule = cms.Schedule()
 #      "ProfilerService",
 #       firstEvent = cms.untracked.int32(2),
 #       lastEvent = cms.untracked.int32(500),
-#       paths = cms.untracked.vstring('schedule') 
+#       paths = cms.untracked.vstring('schedule')
 #)
 
 #process.SimpleMemoryCheck = cms.Service(
@@ -126,9 +91,9 @@ process.schedule = cms.Schedule()
 #    ignoreTotal = cms.untracked.int32(1)
 #)
 
-### To use IgProf's neat memory profiling tools, uncomment the following 
+### To use IgProf's neat memory profiling tools, uncomment the following
 ### lines then run this cfg with igprof like so:
-###      $ igprof -d -mp -z -o igprof.mp.gz cmsRun ... 
+###      $ igprof -d -mp -z -o igprof.mp.gz cmsRun ...
 ### this will create a memory profile every 250 events so you can track use
 ### Turn the profile into text with
 ###      $ igprof-analyse -d -v -g -r MEM_LIVE igprof.yourOutputFile.gz > igreport_live.res
@@ -144,260 +109,13 @@ process.schedule = cms.Schedule()
 #process.igprof.reportToFileAtEvent = cms.untracked.string("|gzip -c>igprof.%I.%E.%L.%R.event.gz")
 #process.schedule.append(process.igprofPath)
 
-# first create collections to analyze
-collections = {
-    'genParticles' : 'prunedGenParticles',
-    'electrons'    : 'slimmedElectrons',
-    'muons'        : 'slimmedMuons',
-    'taus'         : 'slimmedTaus',
-    'tausBoosted'  : 'slimmedTausBoosted',
-    'photons'      : 'slimmedPhotons',
-    'jets'         : 'slimmedJets',
-    'pfmet'        : 'slimmedMETs',
-    'rho'          : 'fixedGridRhoFastjetAll',
-    'vertices'     : 'offlineSlimmedPrimaryVertices',
-    'packed'       : 'packedPFCandidates',
-}
-if not options.isMC: collections['pfmet'] = 'slimmedMETsMuEGClean'
 
-# the selections for each object (to be included in ntuple)
-# will always be the last thing done to the collection, so can use embedded things from previous steps
-selections = {
-    'electrons'   : 'pt>5 && abs(eta)<2.5 && userInt("mvaEleID-Spring16-GeneralPurpose-V1-wp90")',
-    'muons'       : 'pt>0 && abs(eta)<2.4 && isMediumMuon && abs(userFloat("dz"))<0.5 && abs(userFloat("dxy"))<0.2 && (pfIsolationR04().sumChargedHadronPt + max(0., pfIsolationR04().sumNeutralHadronEt + pfIsolationR04().sumPhotonEt - 0.5*pfIsolationR04().sumPUPt))/pt<0.25',
-    #'muons'       : 'pt>0 && abs(eta)<2.4 && isMediumMuon && abs(userFloat("dz"))<0.5 && abs(userFloat("dxy"))<0.2',
-    'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6") && tauID("againstMuonLoose3") && tauID("byLooseIsolationMVArun2v1DBoldDMwLT")',
-    #'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6")',
-    #'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstMuonLoose3")',
-    #'taus'        : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding")',
-    'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6") && tauID("againstMuonLoose3") && tauID("byLooseIsolationMVArun2v1DBoldDMwLT")',
-    #'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstElectronVLooseMVA6")',
-    #'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding") && tauID("againstMuonLoose3")',
-    #'tausBoosted' : 'pt>18 && abs(eta)<2.3 && tauID("decayModeFinding")',
-    'photons'     : 'pt>10 && abs(eta)<3.0',
-    'jets'        : 'pt>15 && abs(eta)<4.7',
-}
-if options.isMC:
-    selections['genParticles'] = 'pt>0'
-
-# requirements to store events
-minCounts = {
-    'electrons'  : 0,
-    'muons'      : 2,
-    'taus'       : 0,
-    'tausBoosted': 0,
-    'photons'    : 0,
-    'jets'       : 0,
-}
-
-# maximum candidates to store
-# selects the first n in the collection
-# patobjects are pt ordered
-# vertices has pv first
-maxCounts = {
-    'vertices': 1,
-}
-
-# filters
-filters = []
-
-# met filters
-#if options.runMetFilter:
-# run all the time and store result
-print 'Preparing MET filters'
-from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
-hltFilter = hltHighLevel.clone()
-# PAT if miniaod by itself (MC) and RECO if at the same time as reco (data)
-hltFilter.TriggerResultsTag = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
-hltFilter.throw = cms.bool(True)
-# Moriond17 recommendation
-# https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#Moriond_2017
-for flag in ['HBHENoiseFilter','HBHENoiseIsoFilter','EcalDeadCellTriggerPrimitiveFilter','goodVertices','eeBadScFilter','globalTightHalo2016Filter']:
-    mod = hltFilter.clone(HLTPaths=cms.vstring('Flag_{0}'.format(flag)))
-    modName = 'filter{0}'.format(flag)
-    setattr(process,modName,mod)
-    if options.isMC and flag in ['eeBadScFilter']: continue
-    filters += [getattr(process,modName)]
-process.load('RecoMET.METFilters.BadChargedCandidateFilter_cfi')
-process.BadChargedCandidateFilter.muons = cms.InputTag("slimmedMuons")
-process.BadChargedCandidateFilter.PFCandidates = cms.InputTag("packedPFCandidates")
-filters += [process.BadChargedCandidateFilter]
-    
 #########################
-### Customize objects ###
+### Output Definition ###
 #########################
-print 'Customizing jets'
-from DevTools.Ntuplizer.customizeJets import customizeJets
-collections = customizeJets(
-    process,
-    collections,
-    isMC=bool(options.isMC),
-    reHLT=bool(options.reHLT),
-)
 
-print 'Customizing electrons'
-from DevTools.Ntuplizer.customizeElectrons import customizeElectrons
-collections = customizeElectrons(
-    process,
-    collections,
-    isMC=bool(options.isMC),
-    reHLT=bool(options.reHLT),
-)
-
-print 'Customizing muons'
-from DevTools.Ntuplizer.customizeMuons import customizeMuons
-collections = customizeMuons(
-    process,
-    collections,
-    isMC=bool(options.isMC),
-    reHLT=bool(options.reHLT),
-)
-
-print 'Customizing taus'
-from DevTools.Ntuplizer.customizeTaus import customizeTaus
-collections = customizeTaus(
-    process,
-    collections,
-    isMC=bool(options.isMC),
-    reHLT=bool(options.reHLT),
-)
-
-print 'Customizing tausBoosted'
-collections = customizeTaus(
-    process,
-    collections,
-    srcLabel='tausBoosted',
-    postfix='Boosted',
-    isMC=bool(options.isMC),
-    reHLT=bool(options.reHLT),
-)
-
-print 'Customizing photons'
-from DevTools.Ntuplizer.customizePhotons import customizePhotons
-collections = customizePhotons(
-    process,
-    collections,
-    isMC=bool(options.isMC),
-    reHLT=bool(options.reHLT),
-)
-
-print 'Customizing METs'
-from DevTools.Ntuplizer.customizeMets import customizeMets
-collections = customizeMets(
-    process,
-    collections,
-    isMC=bool(options.isMC),
-    reHLT=bool(options.reHLT),
-)
-
-######################
-### select objects ###
-######################
-process.main_path = cms.Path()
-process.main_path_boosted = cms.Path()
-
-print 'Selecting objects'
-from DevTools.Ntuplizer.objectTools import objectSelector, objectCleaner, objectCountFilter
-for coll in selections:
-    if coll=='tausBoosted':
-        collections[coll] = objectSelector(process,'taus',collections[coll],selections[coll],postfix='Boosted')
-    else:
-        collections[coll] = objectSelector(process,coll,collections[coll],selections[coll])
-collections['pfmet'] = objectSelector(process,'mets',collections['pfmet'],'')
-# TODO: memory problem
-#for coll in cleaning:
-#    collections[coll] = objectCleaner(process,coll,collections[coll],collections,cleaning[coll])
-for coll in minCounts:
-    objectCountFilter(process,process.main_path,coll,collections[coll],minCounts[coll])
-    objectCountFilter(process,process.main_path_boosted,coll,collections[coll],minCounts[coll])
-process.schedule.append(process.main_path)
-process.schedule.append(process.main_path_boosted)
-
-#######################
-### Combine objects ###
-#######################
-process.mumu = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("{0}@+ {0}@-".format(collections['muons'])),
-    cut   = cms.string(""),
-)
-objectCountFilter(process,process.main_path,'mumu','mumu',1)
-objectCountFilter(process,process.main_path_boosted,'mumu','mumu',1)
-
-process.tautau = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("{0}@+ {0}@-".format(collections['taus'])),
-    cut   = cms.string(""),
-)
-
-process.mutau = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("{0}@+ {1}@-".format(collections['muons'],collections['taus'])),
-    cut   = cms.string(""),
-)
-
-process.etau = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("{0}@+ {1}@-".format(collections['electrons'],collections['taus'])),
-    cut   = cms.string(""),
-)
-
-process.emu = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("{0}@+ {1}@-".format(collections['electrons'],collections['muons'])),
-    cut   = cms.string(""),
-)
-
-process.tautauBoosted = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("{0}@+ {0}@-".format(collections['tausBoosted'])),
-    cut   = cms.string(""),
-)
-
-process.mutauBoosted = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("{0}@+ {1}@-".format(collections['muons'],collections['tausBoosted'])),
-    cut   = cms.string(""),
-)
-
-process.etauBoosted = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("{0}@+ {1}@-".format(collections['electrons'],collections['tausBoosted'])),
-    cut   = cms.string(""),
-)
-
-process.mumutautau = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("mumu tautau"),
-    cut   = cms.string(""),
-)
-
-process.mumumutau = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("mumu mutau"),
-    cut   = cms.string(""),
-)
-
-process.mumuetau = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("mumu etau"),
-    cut   = cms.string(""),
-)
-
-process.mumuemu = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("mumu emu"),
-    cut   = cms.string(""),
-)
-
-process.mumutautauBoosted = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("mumu tautauBoosted"),
-    cut   = cms.string(""),
-)
-
-process.mumumutauBoosted = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("mumu mutauBoosted"),
-    cut   = cms.string(""),
-)
-
-process.mumuetauBoosted = cms.EDProducer("CandViewShallowCloneCombiner",
-    decay = cms.string("mumu etauBoosted"),
-    cut   = cms.string(""),
-)
-
-#####################
-### define output ###
-#####################
 process.TFileService = cms.Service("TFileService",
-    fileName = cms.string('lumi_'+options.outputFile),
+    fileName = cms.string(options.outputFile.split('.root')[0]+'_lumi.root'),
 )
 
 process.lumiTree = cms.EDAnalyzer("LumiTree",
@@ -406,41 +124,340 @@ process.lumiTree = cms.EDAnalyzer("LumiTree",
 process.lumi_step = cms.Path(process.lumiTree)
 process.schedule.append(process.lumi_step)
 
-process.out = cms.OutputModule('PoolOutputModule',
-    fileName = cms.untracked.string(options.outputFile),
-    outputCommands = cms.untracked.vstring(
-        'drop *',
-        'keep *_TriggerResults_*_*',
-        'keep *_generator_*_*',
-        'keep *_fixedGridRho*_*_*',
-        'keep *_patTrigger_*_*',
-        'keep *_selectedPatTrigger_*_*',
-        'keep *_*PileupInfo_*_*',
-        #'keep *_bunchSpacingProducer_*_*',
-        'keep *_{0}_*_*'.format(collections['vertices']),
-        'keep *_{0}_*_*'.format(collections['electrons']),
-        'keep *_{0}_*_*'.format(collections['muons']),
-        'keep *_{0}_*_*'.format(collections['taus']),
-        'keep *_{0}_*_*'.format(collections['tausBoosted']),
-        #'keep *_{0}_*_*'.format(collections['photons']),
-        #'keep *_{0}_*_*'.format(collections['jets']),
-        'keep *_{0}_*_*'.format(collections['pfmet']),
-        #'keep *_{0}_*_*'.format(collections['packed']),
-        'keep *_{0}_*_*'.format(collections['genParticles']),
-        'keep *_packedGenParticles_*_*',
-        'keep *_mumu_*_*',
-        'keep *_tautau*_*_*',
-        'keep *_mutau*_*_*',
-        'keep *_etau*_*_*',
-        'keep *_emu*_*_*',
-        'keep *_mumutautau*_*_*',
-        'keep *_mumumutau*_*_*',
-        'keep *_mumuetau*_*_*',
-        'keep *_mumuemu*_*_*',
+process.MINIAODoutput = cms.OutputModule('PoolOutputModule',
+    compressionAlgorithm = cms.untracked.string('LZMA'),
+    compressionLevel = cms.untracked.int32(4),
+    dataset = cms.untracked.PSet(
+        dataTier = cms.untracked.string('MINIAODSIM' if options.isMC else 'MINIAOD'),
+        filterName = cms.untracked.string('')
     ),
+    dropMetaData = cms.untracked.string('ALL'),
+    eventAutoFlushCompressedSize = cms.untracked.int32(15728640),
+    fastCloning = cms.untracked.bool(False),
+    outputCommands = process.MINIAODEventContent.outputCommands,
+    overrideInputFileSplitLevels = cms.untracked.bool(True),
+    fileName = cms.untracked.string(options.outputFile),
     SelectEvents = cms.untracked.PSet(
-        SelectEvents = cms.vstring('main_path','main_path_boosted'),
+        SelectEvents = cms.vstring('main_path'),
     ),
 )
-process.out_step = cms.EndPath(process.out)
-process.schedule.append(process.out_step)
+if options.isMC: process.MINIAODoutput.outputCommands = process.MINIAODSIMEventContent.outputCommands
+
+
+#####################
+### MINIAOD stuff ###
+#####################
+# Path and EndPath definitions
+process.Flag_trackingFailureFilter = cms.Path(process.goodVertices+process.trackingFailureFilter)
+process.Flag_goodVertices = cms.Path(process.primaryVertexFilter)
+process.Flag_CSCTightHaloFilter = cms.Path(process.CSCTightHaloFilter)
+process.Flag_trkPOGFilters = cms.Path(process.trkPOGFilters)
+process.Flag_HcalStripHaloFilter = cms.Path(process.HcalStripHaloFilter)
+process.Flag_trkPOG_logErrorTooManyClusters = cms.Path(~process.logErrorTooManyClusters)
+process.Flag_EcalDeadCellTriggerPrimitiveFilter = cms.Path(process.EcalDeadCellTriggerPrimitiveFilter)
+process.Flag_ecalLaserCorrFilter = cms.Path(process.ecalLaserCorrFilter)
+process.Flag_globalSuperTightHalo2016Filter = cms.Path(process.globalSuperTightHalo2016Filter)
+process.Flag_eeBadScFilter = cms.Path(process.eeBadScFilter)
+process.Flag_METFilters = cms.Path(process.metFilters)
+process.Flag_chargedHadronTrackResolutionFilter = cms.Path(process.chargedHadronTrackResolutionFilter)
+process.Flag_globalTightHalo2016Filter = cms.Path(process.globalTightHalo2016Filter)
+process.Flag_CSCTightHaloTrkMuUnvetoFilter = cms.Path(process.CSCTightHaloTrkMuUnvetoFilter)
+process.Flag_HBHENoiseIsoFilter = cms.Path(process.HBHENoiseFilterResultProducer+process.HBHENoiseIsoFilter)
+process.Flag_BadChargedCandidateSummer16Filter = cms.Path(process.BadChargedCandidateSummer16Filter)
+process.Flag_hcalLaserEventFilter = cms.Path(process.hcalLaserEventFilter)
+process.Flag_BadPFMuonFilter = cms.Path(process.BadPFMuonFilter)
+process.Flag_HBHENoiseFilter = cms.Path(process.HBHENoiseFilterResultProducer+process.HBHENoiseFilter)
+process.Flag_trkPOG_toomanystripclus53X = cms.Path(~process.toomanystripclus53X)
+process.Flag_EcalDeadCellBoundaryEnergyFilter = cms.Path(process.EcalDeadCellBoundaryEnergyFilter)
+process.Flag_BadChargedCandidateFilter = cms.Path(process.BadChargedCandidateFilter)
+process.Flag_trkPOG_manystripclus53X = cms.Path(~process.manystripclus53X)
+process.Flag_BadPFMuonSummer16Filter = cms.Path(process.BadPFMuonSummer16Filter)
+process.Flag_muonBadTrackFilter = cms.Path(process.muonBadTrackFilter)
+process.Flag_CSCTightHalo2015Filter = cms.Path(process.CSCTightHalo2015Filter)
+process.endjob_step = cms.EndPath(process.endOfProcess)
+process.MINIAODoutput_step = cms.EndPath(process.MINIAODoutput)
+
+process.schedule = cms.Schedule(process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.endjob_step,process.MINIAODoutput_step)
+
+from FWCore.ParameterSet.Utilities import convertToUnscheduled
+process=convertToUnscheduled(process)
+
+if options.isMC:
+    process.load('Configuration.StandardSequences.PATMC_cff')
+else:
+    process.load('Configuration.StandardSequences.PAT_cff')
+
+from FWCore.ParameterSet.Utilities import cleanUnscheduled
+process=cleanUnscheduled(process)
+
+from PhysicsTools.PatAlgos.slimming.miniAOD_tools import miniAOD_customizeAllMC, miniAOD_customizeAllData
+# ReMiniAOD fix for 2017: https://github.com/cms-sw/cmssw/pull/17308
+from PhysicsTools.PatAlgos.slimming.customizeMiniAOD_MuEGFixMoriond2017 import customizeAll
+
+if options.isMC:
+    process = miniAOD_customizeAllMC(process)
+else:
+    process = miniAOD_customizeAllData(process)
+    process = customizeAll(process)
+
+#########################
+### Muon Cleaned Taus ###
+#########################
+process.recoMuonsForJetCleaning = cms.EDFilter('MuonRefSelector',
+    src = cms.InputTag('muons'),
+    cut = cms.string('pt > 3.0 && isPFMuon && (isGlobalMuon || isTrackerMuon)'),
+)
+
+process.ak4PFJetsMuonCleaned = cms.EDProducer(
+    'MuonCleanedJetProducer',
+    jetSrc = cms.InputTag("ak4PFJets"),
+    muonSrc = cms.InputTag("recoMuonsForJetCleaning"),
+    pfCandSrc = cms.InputTag("particleFlow"),
+)
+
+from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet
+from PhysicsTools.PatAlgos.tools.helpers import massSearchReplaceAnyInputTag
+
+process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
+
+jetSrc = 'ak4PFJetsMuonCleaned'
+
+process.PATTauSequence = cms.Sequence(process.PFTau+process.makePatTaus+process.selectedPatTaus)
+process.PATTauSequenceMuonCleaned = cloneProcessingSnippet(process,process.PATTauSequence, 'MuonCleaned')
+process.recoTauAK4PFJets08RegionMuonCleaned.pfCandSrc = cms.InputTag(jetSrc,'particleFlowMuonCleaned')
+massSearchReplaceAnyInputTag(process.PATTauSequenceMuonCleaned,cms.InputTag('ak4PFJets'),cms.InputTag(jetSrc))
+process.slimmedTausMuonCleaned = process.slimmedTaus.clone(src = cms.InputTag('selectedPatTausMuonCleaned'))
+
+process.selectedPatTausMuonCleaned.cut = cms.string("pt > 10. && tauID(\'decayModeFindingNewDMs\')> 0.5")
+
+if options.isMC:
+    process.tauGenJetsMuonCleaned.GenParticles = "prunedGenParticles"
+    process.patTausMuonCleaned.embedGenMatch = False
+else:
+    from PhysicsTools.PatAlgos.tools.coreTools import _removeMCMatchingForPATObject
+    attrsToDelete = []
+    postfix = ''
+    print "removing MC dependencies for tausMuonCleaned"
+    _removeMCMatchingForPATObject(process, 'tauMatch', 'patTausMuonCleaned',postfix)
+    ## remove mc extra configs for taus
+    tauProducer = getattr(process,'patTausMuonCleaned'+postfix)
+    tauProducer.addGenJetMatch   = False
+    tauProducer.embedGenJetMatch = False
+    attrsToDelete += [tauProducer.genJetMatch.getModuleLabel()]
+    tauProducer.genJetMatch      = ''
+    attrsToDelete += ['tauGenJetsMuonCleaned'+postfix]
+    attrsToDelete += ['tauGenJetsSelectorAllHadronsMuonCleaned'+postfix]
+    for attr in attrsToDelete:
+        if hasattr(process,attr): delattr(process,attr)
+
+# input for slimmedMuons
+process.selectedPatMuons = cms.EDFilter('PATMuonSelector',
+    src = cms.InputTag('patMuons'),
+    cut = cms.string('pt > 3.0 && isPFMuon && (isGlobalMuon || isTrackerMuon)'),
+)
+
+#######################################
+### Update btagging for cleaned jet ###
+#######################################
+
+from RecoJets.JetAssociationProducers.j2tParametersVX_cfi import j2tParametersVX
+process.ak4PFJetsMuonCleanedTracksAssociatorAtVertex = cms.EDProducer("JetTracksAssociatorAtVertex",
+    j2tParametersVX,
+    jets = cms.InputTag("ak4PFJetsMuonCleaned")
+)
+process.patJetMuonCleanedCharge = cms.EDProducer("JetChargeProducer",
+    src = cms.InputTag("ak4PFJetsMuonCleanedTracksAssociatorAtVertex"),
+    var = cms.string('Pt'),
+    exp = cms.double(1.0)
+)
+
+from PhysicsTools.PatAlgos.tools.jetTools import addJetCollection
+addJetCollection(process, postfix   = "", labelName = 'MuonCleaned', jetSource = cms.InputTag('ak4PFJetsMuonCleaned'),
+                jetCorrections = ('AK4PF', ['L2Relative', 'L3Absolute'], ''),
+                algo= 'AK', rParam = 0.4, btagDiscriminators = map(lambda x: x.value() ,process.patJets.discriminatorSources)
+                )
+
+if options.isMC: process.patJetGenJetMatchMuonCleaned.matched = 'slimmedGenJets'
+process.patJetsMuonCleaned.jetChargeSource = cms.InputTag("patJetMuonCleanedCharge")
+
+process.slimmedJetsMuonCleaned = process.slimmedJets.clone(src = cms.InputTag("selectedPatJetsMuonCleaned"))
+
+#################
+### Skim Path ###
+#################
+process.main_path = cms.Path()
+process.z_path = cms.Path()
+
+# currently set to be fast, only using collections in AOD
+# can switch back to using MINIAOD collections but they will need to be produced first
+
+# preskim
+
+###############
+### Trigger ###
+###############
+process.HLT =cms.EDFilter("HLTHighLevel",
+     TriggerResultsTag = cms.InputTag("TriggerResults","","HLT"),
+     HLTPaths = cms.vstring("HLT_IsoMu27_v*", "HLT_IsoTkMu27_v*"),
+     eventSetupPathsKey = cms.string(''),
+     andOr = cms.bool(True), #----- True = OR, False = AND between the HLTPaths
+     throw = cms.bool(False) # throw exception on unknown path names
+)
+process.main_path *= process.HLT
+process.z_path *= process.HLT
+
+#########################
+### Muon ID embedding ###
+#########################
+#process.slimmedMuonsWithID = cms.EDProducer("MuonIdEmbedder",
+#    src = cms.InputTag('slimmedMuons'),
+#    vertexSrc = cms.InputTag('offlineSlimmedPrimaryVertices'),
+#)
+#process.main_path *= process.slimmedMuonsWithID
+#process.z_path *= process.slimmedMuonsWithID
+
+
+###############
+### Muon ID ###
+###############
+#process.analysisMuonsNoIso = cms.EDFilter('PATMuonSelector',
+process.analysisMuonsNoIso = cms.EDFilter('MuonSelector',
+    #src = cms.InputTag('slimmedMuonsWithID'),
+    src = cms.InputTag('muons'),
+    #cut = cms.string('pt > 3.0 && abs(eta)<2.4 && (isMediumMuon || userInt("isMediumMuonICHEP"))'),
+    cut = cms.string('pt > 3.0 && abs(eta)<2.4 && isPFMuon && (isGlobalMuon || isTrackerMuon)'),
+)
+#process.analysisMuonsIso = cms.EDFilter('PATMuonSelector',
+process.analysisMuonsIso = cms.EDFilter('MuonSelector',
+    src = cms.InputTag('analysisMuonsNoIso'),
+    cut = cms.string('(pfIsolationR04().sumChargedHadronPt'
+                     '+ max(0., pfIsolationR04().sumNeutralHadronEt'
+                     '+ pfIsolationR04().sumPhotonEt'
+                     '- 0.5*pfIsolationR04().sumPUPt))'
+                     '/pt()<0.25'),
+)
+process.analysisMuonsNoIsoCount = cms.EDFilter("PATCandViewCountFilter",
+     minNumber = cms.uint32(3),
+     maxNumber = cms.uint32(999),
+     src = cms.InputTag('analysisMuonsNoIso'),
+)
+process.analysisMuonsIsoCount = cms.EDFilter("PATCandViewCountFilter",
+     minNumber = cms.uint32(2),
+     maxNumber = cms.uint32(999),
+     src = cms.InputTag('analysisMuonsIso'),
+)
+process.main_path *= process.analysisMuonsNoIso
+process.main_path *= process.analysisMuonsNoIsoCount
+process.main_path *= process.analysisMuonsIso
+process.main_path *= process.analysisMuonsIsoCount
+process.z_path *= process.analysisMuonsNoIso
+process.z_path *= process.analysisMuonsIso
+process.z_path *= process.analysisMuonsIsoCount
+
+#############################
+### Second muon threshold ###
+#############################
+#process.secondMuon = cms.EDFilter('PATMuonSelector',
+process.secondMuon = cms.EDFilter('MuonSelector',
+    src = cms.InputTag('analysisMuonsIso'),
+    cut = cms.string('pt > 3.0'),
+)
+process.secondMuonCount = cms.EDFilter("PATCandViewCountFilter",
+     minNumber = cms.uint32(2),
+     maxNumber = cms.uint32(999),
+     src = cms.InputTag('secondMuon'),
+)
+process.main_path *= process.secondMuon
+process.main_path *= process.secondMuonCount
+process.z_path *= process.secondMuon
+process.z_path *= process.secondMuonCount
+
+#########################
+### Trigger Threshold ###
+#########################
+#process.triggerMuon = cms.EDFilter('PATMuonSelector',
+process.triggerMuon = cms.EDFilter('MuonSelector',
+    src = cms.InputTag('secondMuon'),
+    cut = cms.string('pt > 27.0'),
+)
+process.triggerMuonCount = cms.EDFilter("PATCandViewCountFilter",
+     minNumber = cms.uint32(1),
+     maxNumber = cms.uint32(999),
+     src = cms.InputTag('triggerMuon'),
+)
+process.main_path *= process.triggerMuon
+process.main_path *= process.triggerMuonCount
+process.z_path *= process.triggerMuon
+process.z_path *= process.triggerMuonCount
+
+
+############################
+### Require two OS muons ###
+############################
+process.mumu = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("{0}@+ {0}@-".format('slimmedMuons')),
+    cut   = cms.string("deltaR(daughter(0).eta,daughter(0).phi,daughter(1).eta,daughter(1).phi)<1.5 && mass<30"),
+)
+process.mumuCount = cms.EDFilter("PATCandViewCountFilter",
+     minNumber = cms.uint32(1),
+     maxNumber = cms.uint32(999),
+     src = cms.InputTag('mumu'),
+)
+process.main_path *= process.mumu
+process.main_path *= process.mumuCount
+
+process.mumuZ = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("{0}@+ {0}@-".format('slimmedMuons')),
+    cut   = cms.string("81<mass<101"),
+)
+process.mumuZCount = cms.EDFilter("PATCandViewCountFilter",
+     minNumber = cms.uint32(1),
+     maxNumber = cms.uint32(999),
+     src = cms.InputTag('mumuZ'),
+)
+process.z_path *= process.mumuZ
+process.z_path *= process.mumuZCount
+
+########################
+### Tau requirements ###
+########################
+# first step that requires the new collection
+process.analysisTaus = cms.EDFilter('PATTauSelector',
+    src = cms.InputTag('slimmedTausMuonCleaned'),
+    cut = cms.string('pt > 10.0 && abs(eta)<2.3 && tauID(\'decayModeFinding\')> 0.5'),
+)
+process.analysisTausCount = cms.EDFilter("PATCandViewCountFilter",
+     minNumber = cms.uint32(1),
+     maxNumber = cms.uint32(999),
+     src = cms.InputTag('analysisTaus'),
+)
+process.main_path *= process.analysisTaus
+process.main_path *= process.analysisTausCount
+
+
+# add to schedule
+process.schedule.append(process.main_path)
+process.schedule.append(process.z_path)
+
+# additional changes to standard MiniAOD content
+process.MINIAODoutput.outputCommands += [
+    'keep *_slimmedTausMuonCleaned_*_*',
+    'keep *_slimmedJetsMuonCleaned_8_*',
+    'drop *_slimmedTaus_*_*',
+    'drop *_slimmedTausBoosted_*_*',
+    'drop *_slimmedJetsAK8*_*_*',
+    'drop *_slimmedGenJetsAK8*_*_*',
+    'drop *_*Puppi*_*_*',
+    'drop *_*Digi*_*_*',
+    'drop *_*Backup_*_*',
+]
+
+# additional skims
+process.MINIAODoutputZSKIM = process.MINIAODoutput.clone(
+    SelectEvents = cms.untracked.PSet(
+        SelectEvents = cms.vstring('z_path'),
+    ),
+    fileName = cms.untracked.string(options.outputFile.split('.root')[0]+'_zskim.root'),
+)
+process.MINIAODoutputZSKIM_step = cms.EndPath(process.MINIAODoutputZSKIM)
+process.schedule.append(process.MINIAODoutputZSKIM_step)
