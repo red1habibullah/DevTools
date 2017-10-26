@@ -287,6 +287,7 @@ process.slimmedJetsMuonCleaned = process.slimmedJets.clone(src = cms.InputTag("s
 #################
 process.main_path = cms.Path()
 process.z_path = cms.Path()
+process.z_alt_path = cms.Path()
 
 # currently set to be fast, only using collections in AOD
 # can switch back to using MINIAOD collections but they will need to be produced first
@@ -305,6 +306,15 @@ process.HLT =cms.EDFilter("HLTHighLevel",
 )
 process.main_path *= process.HLT
 process.z_path *= process.HLT
+
+process.HLTalt =cms.EDFilter("HLTHighLevel",
+     TriggerResultsTag = cms.InputTag("TriggerResults","","HLT"),
+     HLTPaths = cms.vstring("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v*", "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*"),
+     eventSetupPathsKey = cms.string(''),
+     andOr = cms.bool(True), #----- True = OR, False = AND between the HLTPaths
+     throw = cms.bool(False) # throw exception on unknown path names
+)
+process.z_alt_path *= process.HLTalt
 
 #########################
 ### Muon ID embedding ###
@@ -353,6 +363,9 @@ process.main_path *= process.analysisMuonsIsoCount
 process.z_path *= process.analysisMuonsNoIso
 process.z_path *= process.analysisMuonsIso
 process.z_path *= process.analysisMuonsIsoCount
+process.z_alt_path *= process.analysisMuonsNoIso
+process.z_alt_path *= process.analysisMuonsIso
+process.z_alt_path *= process.analysisMuonsIsoCount
 
 #############################
 ### Second muon threshold ###
@@ -363,14 +376,27 @@ process.secondMuon = cms.EDFilter('MuonSelector',
     cut = cms.string('pt > 3.0'),
 )
 process.secondMuonCount = cms.EDFilter("PATCandViewCountFilter",
-     minNumber = cms.uint32(2),
-     maxNumber = cms.uint32(999),
-     src = cms.InputTag('secondMuon'),
+    minNumber = cms.uint32(2),
+    maxNumber = cms.uint32(999),
+    src = cms.InputTag('secondMuon'),
 )
 process.main_path *= process.secondMuon
 process.main_path *= process.secondMuonCount
 process.z_path *= process.secondMuon
 process.z_path *= process.secondMuonCount
+
+
+process.secondMuonAlt = cms.EDFilter('MuonSelector',
+    src = cms.InputTag('analysisMuonsIso'),
+    cut = cms.string('pt > 8.0'),
+)
+process.secondMuonAltCount = cms.EDFilter("PATCandViewCountFilter",
+    minNumber = cms.uint32(2),
+    maxNumber = cms.uint32(999),
+    src = cms.InputTag('secondMuonAlt'),
+)
+process.z_alt_path *= process.secondMuonAlt
+process.z_alt_path *= process.secondMuonAltCount
 
 #########################
 ### Trigger Threshold ###
@@ -390,6 +416,17 @@ process.main_path *= process.triggerMuonCount
 process.z_path *= process.triggerMuon
 process.z_path *= process.triggerMuonCount
 
+process.firstMuonAlt = cms.EDFilter('MuonSelector',
+    src = cms.InputTag('secondMuonAlt'),
+    cut = cms.string('pt > 17.0'),
+)
+process.firstMuonAltCount = cms.EDFilter("PATCandViewCountFilter",
+    minNumber = cms.uint32(1),
+    maxNumber = cms.uint32(999),
+    src = cms.InputTag('firstMuonAlt'),
+)
+process.z_alt_path *= process.firstMuonAlt
+process.z_alt_path *= process.firstMuonAltCount
 
 ############################
 ### Require two OS muons ###
@@ -417,6 +454,8 @@ process.mumuZCount = cms.EDFilter("PATCandViewCountFilter",
 )
 process.z_path *= process.mumuZ
 process.z_path *= process.mumuZCount
+process.z_alt_path *= process.mumuZ
+process.z_alt_path *= process.mumuZCount
 
 ########################
 ### Tau requirements ###
@@ -438,6 +477,7 @@ process.main_path *= process.analysisTausCount
 # add to schedule
 process.schedule.append(process.main_path)
 process.schedule.append(process.z_path)
+process.schedule.append(process.z_alt_path)
 
 # additional changes to standard MiniAOD content
 process.MINIAODoutput.outputCommands += [
@@ -455,9 +495,11 @@ process.MINIAODoutput.outputCommands += [
 # additional skims
 process.MINIAODoutputZSKIM = process.MINIAODoutput.clone(
     SelectEvents = cms.untracked.PSet(
-        SelectEvents = cms.vstring('z_path'),
+        #SelectEvents = cms.vstring('z_path'),
+        SelectEvents = cms.vstring('z_path','z_alt_path'),
     ),
     fileName = cms.untracked.string(options.outputFile.split('.root')[0]+'_zskim.root'),
 )
 process.MINIAODoutputZSKIM_step = cms.EndPath(process.MINIAODoutputZSKIM)
 process.schedule.append(process.MINIAODoutputZSKIM_step)
+
