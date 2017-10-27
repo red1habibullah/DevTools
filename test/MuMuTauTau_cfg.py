@@ -16,6 +16,8 @@ options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varTyp
 #options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
 options.register('crab', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Make changes needed for crab")
 options.register('numThreads', 4, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Set number of threads")
+#options.register('runH', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Make changes needed for Run2016H")
+options.register('runH', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Make changes needed for Run2016H")
 
 options.parseArguments()
 
@@ -51,11 +53,12 @@ process.options.numberOfStreams=cms.untracked.uint32(0)
 ### GlobalTag ###
 #################
 envvar = 'mcgt' if options.isMC else 'datagt'
+if options.runH and not options.isMC: envvar = 'datagtH'
 from Configuration.AlCa.GlobalTag import GlobalTag
 #GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMiniAOD
 # https://twiki.cern.ch/twiki/bin/view/CMS/JECDataMC
-GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7'}
+GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7', 'datagtH': '80X_dataRun2_Prompt_v16'}
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 
@@ -113,16 +116,6 @@ process.schedule = cms.Schedule()
 #########################
 ### Output Definition ###
 #########################
-
-process.TFileService = cms.Service("TFileService",
-    fileName = cms.string(options.outputFile.split('.root')[0]+'_lumi.root'),
-)
-
-process.lumiTree = cms.EDAnalyzer("LumiTree",
-    genEventInfo = cms.InputTag("generator"),
-)
-process.lumi_step = cms.Path(process.lumiTree)
-process.schedule.append(process.lumi_step)
 
 process.MINIAODoutput = cms.OutputModule('PoolOutputModule',
     compressionAlgorithm = cms.untracked.string('LZMA'),
@@ -473,11 +466,31 @@ process.analysisTausCount = cms.EDFilter("PATCandViewCountFilter",
 process.main_path *= process.analysisTaus
 process.main_path *= process.analysisTausCount
 
-
+#################
+### Finish up ###
+#################
 # add to schedule
 process.schedule.append(process.main_path)
 process.schedule.append(process.z_path)
 process.schedule.append(process.z_alt_path)
+
+# lumi summary
+process.TFileService = cms.Service("TFileService",
+    fileName = cms.string(options.outputFile.split('.root')[0]+'_lumi.root'),
+)
+
+process.lumiTree = cms.EDAnalyzer("LumiTree",
+    genEventInfo = cms.InputTag("generator"),
+)
+process.lumi_step = cms.Path(process.lumiTree)
+process.schedule.append(process.lumi_step)
+
+process.lumiSummary = cms.EDProducer("LumiSummaryProducer",
+    genEventInfo = cms.InputTag("generator"),
+)
+process.lumiSummary_step = cms.Path(process.lumiSummary)
+process.schedule.append(process.lumiSummary_step)
+
 
 # additional changes to standard MiniAOD content
 process.MINIAODoutput.outputCommands += [
@@ -490,6 +503,7 @@ process.MINIAODoutput.outputCommands += [
     'drop *_*Puppi*_*_*',
     'drop *_*Digi*_*_*',
     'drop *_*Backup_*_*',
+    'keep *_lumiSummary_*_*',
 ]
 
 # additional skims
