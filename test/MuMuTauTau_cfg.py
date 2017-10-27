@@ -495,7 +495,7 @@ process.schedule.append(process.lumiSummary_step)
 # additional changes to standard MiniAOD content
 process.MINIAODoutput.outputCommands += [
     'keep *_slimmedTausMuonCleaned_*_*',
-    'keep *_slimmedJetsMuonCleaned_8_*',
+    'keep *_slimmedJetsMuonCleaned_*_*',
     'drop *_slimmedTaus_*_*',
     'drop *_slimmedTausBoosted_*_*',
     'drop *_slimmedJetsAK8*_*_*',
