@@ -293,7 +293,7 @@ process.z_alt_path = cms.Path()
 process.HLT =cms.EDFilter("HLTHighLevel",
      TriggerResultsTag = cms.InputTag("TriggerResults","","HLT"),
      #HLTPaths = cms.vstring("HLT_IsoMu27_v*", "HLT_IsoTkMu27_v*"), # 2017
-     HLTPaths = cms.vstring("HLT_IsoMu24_v*", "HLT_IsoTkMu24_v*"),
+     HLTPaths = cms.vstring("HLT_IsoMu24_v*", "HLT_IsoTkMu24_v*", "HLT_IsoMu27_v*", "HLT_IsoTkMu27_v*"),
      eventSetupPathsKey = cms.string(''),
      andOr = cms.bool(True), #----- True = OR, False = AND between the HLTPaths
      throw = cms.bool(False) # throw exception on unknown path names
