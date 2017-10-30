@@ -440,7 +440,7 @@ process.main_path *= process.mumuCount
 
 process.mumuZ = cms.EDProducer("CandViewShallowCloneCombiner",
     decay = cms.string("{0}@+ {0}@-".format('slimmedMuons')),
-    cut   = cms.string("81<mass<101"),
+    cut   = cms.string("60<mass<120"),
 )
 process.mumuZCount = cms.EDFilter("PATCandViewCountFilter",
      minNumber = cms.uint32(1),
