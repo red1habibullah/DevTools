@@ -17,6 +17,9 @@ class LumiSummaryBranches {
 
   private:
     edm::EDGetTokenT<GenEventInfoProduct> genEventInfoToken_;
+    edm::EDGetTokenT<int> neventsToken_;
+    edm::EDGetTokenT<float> summedWeightsToken_;
+    bool hasSummary_;
 
     // branches
     Int_t   runBranch_;

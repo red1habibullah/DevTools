@@ -107,8 +107,13 @@ double IpEmbedder<pat::Muon>::dz(pat::Muon obj, const Point& p) {
 
 template<>
 double IpEmbedder<pat::Tau>::dz(pat::Tau obj, const Point& p) {
+  try {
     pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(obj.leadChargedHadrCand().get());
     return packedLeadTauCand->dz(p);
+  }
+  catch (const std::exception &e) {
+    return 0.;
+  }
 }
 
 template<>
@@ -123,8 +128,13 @@ double IpEmbedder<pat::Muon>::dxy(pat::Muon obj, const Point& p) {
 
 template<>
 double IpEmbedder<pat::Tau>::dxy(pat::Tau obj, const Point& p) {
+  try {
     pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(obj.leadChargedHadrCand().get());
     return packedLeadTauCand->dxy(p);
+  }
+  catch (const std::exception &e) {
+    return 0.;
+  }
 }
 
 template<>

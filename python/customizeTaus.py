@@ -75,13 +75,13 @@ def customizeTaus(process,coll,srcLabel='taus',postfix='',**kwargs):
     ##########################
     if isMC:
         from PhysicsTools.JetMCAlgos.TauGenJets_cfi import tauGenJets
-        process.tauGenJets = tauGenJets.clone(GenParticles = cms.InputTag(genSrc))
-        process.tauCustomization *= process.tauGenJets
+        process.tauGenJetsNew = tauGenJets.clone(GenParticles = cms.InputTag(genSrc))
+        process.tauCustomization *= process.tauGenJetsNew
 
         module = cms.EDProducer(
             "TauGenJetEmbedder",
             src = cms.InputTag(tSrc),
-            genJets = cms.InputTag("tauGenJets"),
+            genJets = cms.InputTag("tauGenJetsNew"),
             excludeLeptons = cms.bool(True),
             deltaR = cms.double(0.5),
         )
