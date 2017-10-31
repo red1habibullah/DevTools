@@ -500,6 +500,10 @@ process.MINIAODoutput.outputCommands += [
     'keep *_slimmedJetsMuonCleaned_*_*',
     'keep *_lumiSummary_*_*',
 ]
+if not options.isMC:
+    process.MINIAODoutput.outputCommands += [
+        'drop *_ctppsLocalTrackLiteProducer_*_*', # Don't know what this is, but it prevents running in older releases
+    ]
 
 # additional skims
 process.MINIAODoutputZSKIM = process.MINIAODoutput.clone(
