@@ -498,13 +498,6 @@ process.schedule.append(process.lumiSummary_step)
 process.MINIAODoutput.outputCommands += [
     'keep *_slimmedTausMuonCleaned_*_*',
     'keep *_slimmedJetsMuonCleaned_*_*',
-    'drop *_slimmedTaus_*_*',
-    'drop *_slimmedTausBoosted_*_*',
-    'drop *_slimmedJetsAK8*_*_*',
-    'drop *_slimmedGenJetsAK8*_*_*',
-    'drop *_*Puppi*_*_*',
-    'drop *_*Digi*_*_*',
-    'drop *_*Backup_*_*',
     'keep *_lumiSummary_*_*',
 ]
 
