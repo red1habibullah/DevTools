@@ -5,15 +5,15 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 
 options.outputFile = 'mumutautau.root'
-options.inputFiles = '/store/data/Run2016H/SingleMuon/AOD/PromptReco-v2/000/284/035/00000/5849226D-569F-E611-B874-02163E011EAC.root'
+#options.inputFiles = '/store/data/Run2016H/SingleMuon/AOD/PromptReco-v2/000/284/035/00000/5849226D-569F-E611-B874-02163E011EAC.root'
 #options.inputFiles = '/store/mc/RunIISummer16DR80Premix/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/AODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/60001/D04F22AE-3FF1-E611-BDB5-02163E019C78.root'
-#options.inputFiles = '/store/mc/RunIISummer16DR80Premix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-15_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/82114092-19BB-E611-926B-FA163E0D86FB.root'
+options.inputFiles = '/store/mc/RunIISummer16DR80Premix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-15_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/82114092-19BB-E611-926B-FA163E0D86FB.root'
 options.maxEvents = -1
 options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
 options.register('reportEvery', 100, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Report every")
-options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
-#options.register('isMC', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
-#options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
+#options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
+options.register('isMC', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
+options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
 options.register('crab', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Make changes needed for crab")
 options.register('numThreads', 4, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Set number of threads")
 #options.register('runH', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Make changes needed for Run2016H")
@@ -41,7 +41,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True),
-    wantSummary = cms.untracked.bool(True),
+    #wantSummary = cms.untracked.bool(True),
 )
 
 process.options.numberOfThreads=cms.untracked.uint32(options.numThreads)
@@ -208,6 +208,10 @@ process.ak4PFJetsMuonCleaned = cms.EDProducer(
     pfCandSrc = cms.InputTag("particleFlow"),
 )
 
+# special handling for 2017 reminiaod only
+if not options.isMC:
+    process.ak4PFJetsMuonCleaned.pfCandSrc = cms.InputTag("pfCandidatesBadMuonsCleaned")
+
 from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet
 from PhysicsTools.PatAlgos.tools.helpers import massSearchReplaceAnyInputTag
 
@@ -218,6 +222,7 @@ jetSrc = 'ak4PFJetsMuonCleaned'
 process.PATTauSequence = cms.Sequence(process.PFTau+process.makePatTaus+process.selectedPatTaus)
 process.PATTauSequenceMuonCleaned = cloneProcessingSnippet(process,process.PATTauSequence, 'MuonCleaned')
 process.recoTauAK4PFJets08RegionMuonCleaned.pfCandSrc = cms.InputTag(jetSrc,'particleFlowMuonCleaned')
+process.hpsPFTauChargedIsoPtSumMuonCleaned.particleFlowSrc = cms.InputTag(jetSrc,'particleFlowMuonCleaned')
 massSearchReplaceAnyInputTag(process.PATTauSequenceMuonCleaned,cms.InputTag('ak4PFJets'),cms.InputTag(jetSrc))
 process.slimmedTausMuonCleaned = process.slimmedTaus.clone(src = cms.InputTag('selectedPatTausMuonCleaned'))
 
@@ -352,8 +357,8 @@ process.analysisMuonsIsoCount = cms.EDFilter("PATCandViewCountFilter",
 )
 process.main_path *= process.analysisMuonsNoIso
 process.main_path *= process.analysisMuonsNoIsoCount
-process.main_path *= process.analysisMuonsIso
-process.main_path *= process.analysisMuonsIsoCount
+#process.main_path *= process.analysisMuonsIso
+#process.main_path *= process.analysisMuonsIsoCount
 process.z_path *= process.analysisMuonsNoIso
 process.z_path *= process.analysisMuonsIso
 process.z_path *= process.analysisMuonsIsoCount
@@ -374,8 +379,8 @@ process.secondMuonCount = cms.EDFilter("PATCandViewCountFilter",
     maxNumber = cms.uint32(999),
     src = cms.InputTag('secondMuon'),
 )
-process.main_path *= process.secondMuon
-process.main_path *= process.secondMuonCount
+#process.main_path *= process.secondMuon
+#process.main_path *= process.secondMuonCount
 process.z_path *= process.secondMuon
 process.z_path *= process.secondMuonCount
 
@@ -397,7 +402,8 @@ process.z_alt_path *= process.secondMuonAltCount
 #########################
 #process.triggerMuon = cms.EDFilter('PATMuonSelector',
 process.triggerMuon = cms.EDFilter('MuonSelector',
-    src = cms.InputTag('secondMuon'),
+    #src = cms.InputTag('secondMuon'),
+    src = cms.InputTag('analysisMuonsNoIso'),
     #cut = cms.string('pt > 27.0'),
     cut = cms.string('pt > 24.0'),
 )
@@ -497,7 +503,7 @@ process.schedule.append(process.lumiSummary_step)
 # additional changes to standard MiniAOD content
 process.MINIAODoutput.outputCommands += [
     'keep *_slimmedTausMuonCleaned_*_*',
-    'keep *_slimmedJetsMuonCleaned_*_*',
+    #'keep *_slimmedJetsMuonCleaned_*_*', # can't keep without warnings, can be recreated later anyway
     'keep *_lumiSummary_*_*',
 ]
 if not options.isMC:
