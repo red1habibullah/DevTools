@@ -5,14 +5,14 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 
 options.outputFile = 'mumutautau.root'
-#options.inputFiles = '/store/data/Run2016H/SingleMuon/AOD/PromptReco-v2/000/284/035/00000/5849226D-569F-E611-B874-02163E011EAC.root'
+options.inputFiles = '/store/data/Run2016H/SingleMuon/AOD/PromptReco-v2/000/284/035/00000/5849226D-569F-E611-B874-02163E011EAC.root'
 #options.inputFiles = '/store/mc/RunIISummer16DR80Premix/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/AODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/60001/D04F22AE-3FF1-E611-BDB5-02163E019C78.root'
-options.inputFiles = '/store/mc/RunIISummer16DR80Premix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-15_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/82114092-19BB-E611-926B-FA163E0D86FB.root'
+#options.inputFiles = '/store/mc/RunIISummer16DR80Premix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-15_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/82114092-19BB-E611-926B-FA163E0D86FB.root'
 options.maxEvents = -1
 options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
 options.register('reportEvery', 100, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Report every")
-#options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
-options.register('isMC', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
+options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
+#options.register('isMC', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
 options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
 options.register('crab', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Make changes needed for crab")
 options.register('numThreads', 4, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Set number of threads")
@@ -286,6 +286,7 @@ process.slimmedJetsMuonCleaned = process.slimmedJets.clone(src = cms.InputTag("s
 process.main_path = cms.Path()
 process.z_path = cms.Path()
 process.z_alt_path = cms.Path()
+process.z_tau_eff_path = cms.Path()
 
 # currently set to be fast, only using collections in AOD
 # can switch back to using MINIAOD collections but they will need to be produced first
@@ -305,6 +306,7 @@ process.HLT =cms.EDFilter("HLTHighLevel",
 )
 process.main_path *= process.HLT
 process.z_path *= process.HLT
+process.z_tau_eff_path *= process.HLT
 
 process.HLTalt =cms.EDFilter("HLTHighLevel",
      TriggerResultsTag = cms.InputTag("TriggerResults","","HLT"),
@@ -355,6 +357,11 @@ process.analysisMuonsIsoCount = cms.EDFilter("PATCandViewCountFilter",
      maxNumber = cms.uint32(999),
      src = cms.InputTag('analysisMuonsIso'),
 )
+process.analysisMuonsIsoCountTauEff = cms.EDFilter("PATCandViewCountFilter",
+     minNumber = cms.uint32(1),
+     maxNumber = cms.uint32(999),
+     src = cms.InputTag('analysisMuonsIso'),
+)
 process.main_path *= process.analysisMuonsNoIso
 process.main_path *= process.analysisMuonsNoIsoCount
 #process.main_path *= process.analysisMuonsIso
@@ -365,6 +372,9 @@ process.z_path *= process.analysisMuonsIsoCount
 process.z_alt_path *= process.analysisMuonsNoIso
 process.z_alt_path *= process.analysisMuonsIso
 process.z_alt_path *= process.analysisMuonsIsoCount
+process.z_tau_eff_path *= process.analysisMuonsNoIso
+process.z_tau_eff_path *= process.analysisMuonsIso
+process.z_tau_eff_path *= process.analysisMuonsIsoCountTauEff
 
 #############################
 ### Second muon threshold ###
@@ -416,6 +426,8 @@ process.main_path *= process.triggerMuon
 process.main_path *= process.triggerMuonCount
 process.z_path *= process.triggerMuon
 process.z_path *= process.triggerMuonCount
+process.z_tau_eff_path *= process.triggerMuon
+process.z_tau_eff_path *= process.triggerMuonCount
 
 process.firstMuonAlt = cms.EDFilter('MuonSelector',
     src = cms.InputTag('secondMuonAlt'),
@@ -473,6 +485,23 @@ process.analysisTausCount = cms.EDFilter("PATCandViewCountFilter",
 )
 process.main_path *= process.analysisTaus
 process.main_path *= process.analysisTausCount
+process.z_tau_eff_path *= process.analysisTaus
+process.z_tau_eff_path *= process.analysisTausCount
+
+############################
+### Tau Eff requirements ###
+############################
+process.mumuZTauEff = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("{0} {1}".format('slimmedMuons','analysisTaus')),
+    cut   = cms.string("30<mass<210 && deltaR(daughter(0).eta,daughter(0).phi,daughter(1).eta,daughter(1).phi)>0.5"),
+)
+process.mumuZCountTauEff = cms.EDFilter("PATCandViewCountFilter",
+     minNumber = cms.uint32(1),
+     maxNumber = cms.uint32(999),
+     src = cms.InputTag('mumuZTauEff'),
+)
+process.z_tau_eff_path *= process.mumuZTauEff
+process.z_tau_eff_path *= process.mumuZCountTauEff
 
 #################
 ### Finish up ###
@@ -481,6 +510,7 @@ process.main_path *= process.analysisTausCount
 process.schedule.append(process.main_path)
 process.schedule.append(process.z_path)
 process.schedule.append(process.z_alt_path)
+process.schedule.append(process.z_tau_eff_path)
 
 # lumi summary
 process.TFileService = cms.Service("TFileService",
@@ -521,4 +551,13 @@ process.MINIAODoutputZSKIM = process.MINIAODoutput.clone(
 )
 process.MINIAODoutputZSKIM_step = cms.EndPath(process.MINIAODoutputZSKIM)
 process.schedule.append(process.MINIAODoutputZSKIM_step)
+
+process.MINIAODoutputZMUTAUSKIM = process.MINIAODoutput.clone(
+    SelectEvents = cms.untracked.PSet(
+        SelectEvents = cms.vstring('z_tau_eff_path'),
+    ),
+    fileName = cms.untracked.string(options.outputFile.split('.root')[0]+'_zmutauskim.root'),
+)
+process.MINIAODoutputZMUTAUSKIM_step = cms.EndPath(process.MINIAODoutputZMUTAUSKIM)
+process.schedule.append(process.MINIAODoutputZMUTAUSKIM_step)
 
