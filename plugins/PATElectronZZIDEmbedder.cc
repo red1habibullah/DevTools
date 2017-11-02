@@ -204,7 +204,7 @@ bool PATElectronZZIDEmbedder::passBDT(const edm::Ptr<pat::Electron>& elec) const
 
 bool PATElectronZZIDEmbedder::passMissingHits(const edm::Ptr<pat::Electron>& elec) const
 {
-  return (elec->gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS) <= missingHitsCut);
+  return (elec->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS) <= missingHitsCut);
 }
 
 

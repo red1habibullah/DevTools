@@ -32,7 +32,7 @@ void ElectronMissingHitsEmbedder::produce(edm::Event& evt, const edm::EventSetup
   for (size_t i = 0; i < input->size(); ++i) {
     pat::Electron electron = input->at(i);
 
-    int missingHits = electron.gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS);
+    int missingHits = electron.gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS);
 
     electron.addUserInt("missingHits", missingHits);
     output->push_back(electron);
