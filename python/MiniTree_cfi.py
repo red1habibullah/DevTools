@@ -6,6 +6,8 @@ from DevTools.Ntuplizer.branchTemplates import *
 miniTree = cms.EDAnalyzer("MiniTree",
     isData = cms.bool(True),
     genEventInfo = cms.InputTag("generator"),
+    nevents = cms.InputTag('lumiSummary','numberOfEvents'),
+    summedWeights = cms.InputTag('lumiSummary','sumOfWeightedEvents'),
     lheEventProduct = cms.InputTag("externalLHEProducer"),
     rho = cms.InputTag("fixedGridRhoFastjetAll"),
     pileupSummaryInfo = cms.InputTag("slimmedAddPileupInfo"),

@@ -63,8 +63,13 @@ def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
     process.egmPhotonIDs.physicsObjectSrc = cms.InputTag(pSrc)
     process.egmPhotonIsolation.srcToIsolate = cms.InputTag(pSrc)
     process.photonIDValueMapProducer.srcMiniAOD = cms.InputTag(pSrc)
+    process.photonIDValueMapProducer.src = cms.InputTag("") # disable AOD in case we are running with secondaryInputFiles
+    process.photonIDValueMapProducer.pfCandidates = cms.InputTag("") # disable AOD in case we are running with secondaryInputFiles
+    process.photonIDValueMapProducer.vertices = cms.InputTag("") # disable AOD in case we are running with secondaryInputFiles
     process.photonMVAValueMapProducer.srcMiniAOD = cms.InputTag(pSrc)
+    process.photonMVAValueMapProducer.src = cms.InputTag("") # disable AOD in case we are running with secondaryInputFiles
     process.photonRegressionValueMapProducer.srcMiniAOD = cms.InputTag(pSrc)
+    process.photonRegressionValueMapProducer.src = cms.InputTag("") # disable AOD in case we are running with secondaryInputFiles
 
     idDecisionLabels = [
         'cutBasedPhotonID-Spring16-25ns-V2p2-loose',
