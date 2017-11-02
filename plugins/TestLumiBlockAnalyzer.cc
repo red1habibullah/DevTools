@@ -29,6 +29,9 @@
 #include "FWCore/Framework/interface/MakerMacros.h"
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
+
+#include "FWCore/Framework/interface/LuminosityBlock.h"
+
 //
 // class declaration
 //
