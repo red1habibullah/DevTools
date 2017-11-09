@@ -169,7 +169,7 @@ selections = {
 # requirements to store events
 minCounts = {
     'electrons' : 0,
-    'muons'     : 2,
+    'muons'     : 1,
     'taus'      : 0,
     'photons'   : 0,
     'jets'      : 0,
