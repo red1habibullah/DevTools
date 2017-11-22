@@ -6,7 +6,7 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 
 options.outputFile = 'mmtt_miniTree.root'
-options.inputFiles = '/store/user/dntaylor/2017-10-27_Skim_MuMuTauTau_80X_v1/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-15_TuneCUETP8M1_13TeV_madgraph_pythia8/2017-10-27_Skim_MuMuTauTau_80X_v1/171027_210955/0000/mumutautau_1.root'
+options.inputFiles = '/store/user/dntaylor/2017-11-03_Skim_MuMuTauTau_v4/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-15_TuneCUETP8M1_13TeV_madgraph_pythia8/2017-11-03_Skim_MuMuTauTau_v4/171105_175447/0000/mumutautau_1.root'
 #options.inputFiles = '/store/user/dntaylor/2017-10-27_Skim_MuMuTauTau_80X_v1/SingleMuon/2017-10-27_Skim_MuMuTauTau_80X_v1/171027_203658/0000/mumutautau_1.root'
 options.maxEvents = -1
 options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
