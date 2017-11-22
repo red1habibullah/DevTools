@@ -426,6 +426,7 @@ tauBranches = commonJetCandidates.clone(
     photonPtSumOutsideSignalCone                     = cms.vstring('tauID("photonPtSumOutsideSignalCone")','F'),
     photonPtSumOutsideSignalConedR03                 = cms.vstring('tauID("photonPtSumOutsideSignalConedR03")','F'),
 
+    decayMode                                        = cms.vstring('decayMode','I'),
     decayModeFinding                                 = cms.vstring('tauID("decayModeFinding")','I'),
     decayModeFindingNewDMs                           = cms.vstring('tauID("decayModeFindingNewDMs")','I'),
     # pv
