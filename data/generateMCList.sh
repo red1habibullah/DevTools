@@ -17,4 +17,4 @@ betterDAS.py dataset --primaryDatasets\
  "tZq_ll_4f_13TeV-amcatnlo-pythia8"\
  "ttW*" "ttZ*"\
  "TTW*" "TTZ*"\
- --dataTiers "MINIAODSIM" --acquisitionEras "RunIISummer16*" --processNames "*PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6*" > datasetList_MC_new.txt
+ --dataTiers "MINIAODSIM" --acquisitionEras "RunIIFall17MiniAOD*" --processNames "*94X_mc2017_realistic_v10*" > datasetList_MC_new.txt
