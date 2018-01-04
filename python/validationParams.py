@@ -5,7 +5,7 @@ params = {
     'data': {
         'type': 'data',
         'kwargs': {
-            'inputFiles': '/store/data/Run2017A/DoubleMuon/MINIAOD/PromptReco-v2/000/296/174/00000/320C645C-6C4C-E711-B097-02163E01A59A.root',
+            'inputFiles': '/store/data/Run2017F/DoubleMuon/MINIAOD/17Nov2017-v1/50000/009DC3A2-A7DE-E711-99F7-02163E013717.root',
             'isMC': 0,
         },
     },
@@ -13,7 +13,7 @@ params = {
     'mc': {
         'type': 'mc',
         'kwargs': {
-            'inputFiles': '/store/relval/CMSSW_9_2_0/RelValZMM_13/MINIAODSIM/91X_upgrade2017_realistic_v5-v1/10000/AA51A5A2-1E3C-E711-950B-0CC47A78A440.root',
+            'inputFiles': '/store/mc/RunIIFall17MiniAOD/WZ_TuneCP5_13TeV-pythia8/MINIAODSIM/94X_mc2017_realistic_v10-v1/60000/1C7C7FB8-14E6-E711-90A9-0025905A60FE.root',
             'isMC': 1,
         },
     },
@@ -21,14 +21,14 @@ params = {
     #'signal': {
     #    'type': 'mc',
     #    'kwargs': {
-    #        'inputFiles': '/store/mc/RunIISummer16MiniAODv2/HPlusPlusHMinusHTo3L_M-500_13TeV-calchep-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/08ECD723-E4CA-E611-8C93-0CC47A1E0DC2.root',
+    #        'inputFiles': '',
     #        'isMC': 1,
     #    },
     #},
     #'private': {
     #    'type': 'mc',
     #    'kwargs': {
-    #        'inputFiles': '/store/user/dntaylor/HPlusPlusHMinusMinusHTo4L_M-500_TuneCUETP8M1_13TeV_pythia8/RunIISummer16MiniAODv2_MINIAODSIM_v1/170217_204448/0000/dblh_1_1.root',
+    #        'inputFiles': '',
     #        'isMC': 1,
     #    },
     #},
