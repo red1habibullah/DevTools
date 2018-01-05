@@ -31,20 +31,21 @@ def customizeJets(process,coll,srcLabel='jets',postfix='',**kwargs):
     ######################
     ### recorrect jets ###
     ######################
-    from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
+    # TODO: reenable when we have a new recipe
+    #from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
 
-    jetCorr = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None')
-    if isMC:
-        jetCorr = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None')
-    updateJetCollection(
-        process,
-        jetSource = cms.InputTag(jSrc),
-        jetCorrections = jetCorr,
-        postfix=postfix,
-    )
-    modName = 'updatedPatJets{0}'.format(postfix)
+    #jetCorr = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None')
+    #if isMC:
+    #    jetCorr = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None')
+    #updateJetCollection(
+    #    process,
+    #    jetSource = cms.InputTag(jSrc),
+    #    jetCorrections = jetCorr,
+    #    postfix=postfix,
+    #)
+    #modName = 'updatedPatJets{0}'.format(postfix)
     #getattr(process,modName).userData.userFloats.src += ['pileupJetIdUpdated{0}:fullDiscriminant'.format(postfix)]
-    jSrc = modName
+    #jSrc = modName
 
     #################
     ### embed ids ###

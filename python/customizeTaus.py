@@ -59,7 +59,7 @@ def customizeTaus(process,coll,srcLabel='taus',postfix='',**kwargs):
         src = cms.InputTag(tSrc),
         #triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
         triggerResults = cms.InputTag('TriggerResults', '', 'HLT2') if reHLT else cms.InputTag('TriggerResults', '', 'HLT'),
-        triggerObjects = cms.InputTag("selectedPatTrigger"),
+        triggerObjects = cms.InputTag("slimmedPatTrigger"),
         deltaR = cms.double(0.5),
         labels = cms.vstring(*labels),
         paths = cms.vstring(*paths),

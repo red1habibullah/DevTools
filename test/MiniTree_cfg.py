@@ -153,7 +153,6 @@ collections = {
     'vertices'     : 'offlineSlimmedPrimaryVertices',
     'packed'       : 'packedPFCandidates',
 }
-if not options.isMC: collections['pfmet'] = 'slimmedMETsMuEGClean'
 
 # the selections for each object (to be included in ntuple)
 # will always be the last thing done to the collection, so can use embedded things from previous steps
@@ -296,8 +295,8 @@ for coll in selections:
 process.load("DevTools.Ntuplizer.MiniTree_cfi")
 
 process.miniTree.isData = not options.isMC
-#process.miniTree.filterResults = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
-process.miniTree.filterResults = cms.InputTag('TriggerResults', '', 'PAT')
+process.miniTree.filterResults = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
+#process.miniTree.filterResults = cms.InputTag('TriggerResults', '', 'PAT')
 process.miniTree.vertexCollections.vertices.collection = collections['vertices']
 if options.isMC:
     from DevTools.Ntuplizer.branchTemplates import genParticleBranches 

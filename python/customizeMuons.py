@@ -18,34 +18,36 @@ def customizeMuons(process,coll,srcLabel='muons',postfix='',**kwargs):
     #########################
     ### embed nearest jet ###
     #########################
-    module = cms.EDProducer(
-        "MuonJetEmbedder",
-        src = cms.InputTag(mSrc),
-        jetSrc = cms.InputTag(jSrc),
-        dRmax = cms.double(0.4),
-        L1Corrector = cms.InputTag("ak4PFCHSL1FastjetCorrector"),
-        L1L2L3ResCorrector= cms.InputTag("ak4PFCHSL1FastL2L3Corrector"),
-    )
-    modName = 'mJet{0}'.format(postfix)
-    setattr(process,modName,module)
-    mSrc = modName
+    # TODO: reenable
+    #module = cms.EDProducer(
+    #    "MuonJetEmbedder",
+    #    src = cms.InputTag(mSrc),
+    #    jetSrc = cms.InputTag(jSrc),
+    #    dRmax = cms.double(0.4),
+    #    L1Corrector = cms.InputTag("ak4PFCHSL1FastjetCorrector"),
+    #    L1L2L3ResCorrector= cms.InputTag("ak4PFCHSL1FastL2L3Corrector"),
+    #)
+    #modName = 'mJet{0}'.format(postfix)
+    #setattr(process,modName,module)
+    #mSrc = modName
 
-    path *= getattr(process,modName)
+    #path *= getattr(process,modName)
 
     ###################################
     ### embed rochester corrections ###
     ###################################
-    module = cms.EDProducer(
-        "RochesterCorrectionEmbedder",
-        src = cms.InputTag(mSrc),
-        isData = cms.bool(not isMC),
-        directory = cms.FileInPath("DevTools/Ntuplizer/data/rcdata.2016.v3/config.txt"),
-    )
-    modName = 'mRoch{0}'.format(postfix)
-    setattr(process,modName,module)
-    mSrc = modName
+    # TODO: reenable with 2017
+    #module = cms.EDProducer(
+    #    "RochesterCorrectionEmbedder",
+    #    src = cms.InputTag(mSrc),
+    #    isData = cms.bool(not isMC),
+    #    directory = cms.FileInPath("DevTools/Ntuplizer/data/rcdata.2016.v3/config.txt"),
+    #)
+    #modName = 'mRoch{0}'.format(postfix)
+    #setattr(process,modName,module)
+    #mSrc = modName
 
-    path *= getattr(process,modName)
+    #path *= getattr(process,modName)
 
     #####################
     ### embed muon id ###
@@ -106,7 +108,7 @@ def customizeMuons(process,coll,srcLabel='muons',postfix='',**kwargs):
         src = cms.InputTag(mSrc),
         #triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
         triggerResults = cms.InputTag('TriggerResults', '', 'HLT2') if reHLT else cms.InputTag('TriggerResults', '', 'HLT'),
-        triggerObjects = cms.InputTag("selectedPatTrigger"),
+        triggerObjects = cms.InputTag("slimmedPatTrigger"),
         deltaR = cms.double(0.5),
         labels = cms.vstring(*labels),
         paths = cms.vstring(*paths),
@@ -117,50 +119,51 @@ def customizeMuons(process,coll,srcLabel='muons',postfix='',**kwargs):
 
     path *= getattr(process,modName)
 
-    #####################
-    ### embed HZZ IDs ###
-    #####################
-    # https://github.com/nwoods/UWVV/blob/ichep/AnalysisTools/python/templates/ZZID.py
-    # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016
-    module = cms.EDProducer(
-        "PATMuonZZIDEmbedder",
-        src = cms.InputTag(mSrc),
-        vtxSrc = cms.InputTag(pvSrc),
-        ptCut = cms.double(5.),
-    )
-    modName = 'mHZZEmbedder{0}'.format(postfix)
-    setattr(process,modName,module)
-    mSrc = modName
-
-    path *= getattr(process,modName)
-
+    # TODO: update if needed
     ######################
-    ### embed SUSY IDs ###
+    #### embed HZZ IDs ###
     ######################
-    # https://twiki.cern.ch/twiki/bin/view/CMS/LeptonMVA
-    module = cms.EDProducer(
-        "MuonMiniIsolationEmbedder",
-        src = cms.InputTag(mSrc),
-        packedSrc = cms.InputTag(pfSrc),
-    )
-    modName = 'mMiniIsoEmbedder{0}'.format(postfix)
-    setattr(process,modName,module)
-    mSrc = modName
+    ## https://github.com/nwoods/UWVV/blob/ichep/AnalysisTools/python/templates/ZZID.py
+    ## https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016
+    #module = cms.EDProducer(
+    #    "PATMuonZZIDEmbedder",
+    #    src = cms.InputTag(mSrc),
+    #    vtxSrc = cms.InputTag(pvSrc),
+    #    ptCut = cms.double(5.),
+    #)
+    #modName = 'mHZZEmbedder{0}'.format(postfix)
+    #setattr(process,modName,module)
+    #mSrc = modName
 
-    path *= getattr(process,modName)
+    #path *= getattr(process,modName)
 
-    module = cms.EDProducer(
-        "MuonSUSYMVAEmbedder",
-        src = cms.InputTag(mSrc),
-        vertexSrc = cms.InputTag(pvSrc),
-        rhoSrc = cms.InputTag('fixedGridRhoFastjetCentralNeutral'),
-        weights = cms.FileInPath('DevTools/Ntuplizer/data/susy_mu_BDTG.weights.xml'), # https://github.com/CERN-PH-CMG/cmgtools-lite/blob/80X/TTHAnalysis/data/leptonMVA/tth
-    )
-    modName = 'mSUSYEmbedder{0}'.format(postfix)
-    setattr(process,modName,module)
-    mSrc = modName
+    #######################
+    #### embed SUSY IDs ###
+    #######################
+    ## https://twiki.cern.ch/twiki/bin/view/CMS/LeptonMVA
+    #module = cms.EDProducer(
+    #    "MuonMiniIsolationEmbedder",
+    #    src = cms.InputTag(mSrc),
+    #    packedSrc = cms.InputTag(pfSrc),
+    #)
+    #modName = 'mMiniIsoEmbedder{0}'.format(postfix)
+    #setattr(process,modName,module)
+    #mSrc = modName
 
-    path *= getattr(process,modName)
+    #path *= getattr(process,modName)
+
+    #module = cms.EDProducer(
+    #    "MuonSUSYMVAEmbedder",
+    #    src = cms.InputTag(mSrc),
+    #    vertexSrc = cms.InputTag(pvSrc),
+    #    rhoSrc = cms.InputTag('fixedGridRhoFastjetCentralNeutral'),
+    #    weights = cms.FileInPath('DevTools/Ntuplizer/data/susy_mu_BDTG.weights.xml'), # https://github.com/CERN-PH-CMG/cmgtools-lite/blob/80X/TTHAnalysis/data/leptonMVA/tth
+    #)
+    #modName = 'mSUSYEmbedder{0}'.format(postfix)
+    #setattr(process,modName,module)
+    #mSrc = modName
+
+    #path *= getattr(process,modName)
 
     # add to schedule
     process.schedule.append(path)

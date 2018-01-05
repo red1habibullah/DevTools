@@ -20,7 +20,7 @@ def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
         "ShiftedPhotonEmbedder",
         src=cms.InputTag(pSrc),
         label=cms.string('uncorrected'),
-        shiftedSrc=cms.InputTag('slimmedPhotons::PAT'),
+        shiftedSrc=cms.InputTag('slimmedPhotons::{0}'.format('PAT' if isMC else 'RECO')),
     )
     modName = 'uncorPho{0}'.format(postfix)
     setattr(process,modName,module)
@@ -225,7 +225,7 @@ def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
         src = cms.InputTag(pSrc),
         #triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
         triggerResults = cms.InputTag('TriggerResults', '', 'HLT2') if reHLT else cms.InputTag('TriggerResults', '', 'HLT'),
-        triggerObjects = cms.InputTag("selectedPatTrigger"),
+        triggerObjects = cms.InputTag("slimmedPatTrigger"),
         deltaR = cms.double(0.5),
         labels = cms.vstring(*labels),
         paths = cms.vstring(*paths),

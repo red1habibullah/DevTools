@@ -33,7 +33,7 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
         "ShiftedElectronEmbedder",
         src=cms.InputTag(eSrc),
         label=cms.string('uncorrected'),
-        shiftedSrc=cms.InputTag('slimmedElectrons::PAT'),
+        shiftedSrc=cms.InputTag('slimmedElectrons::{0}'.format('PAT' if isMC else 'RECO')),
     )
     modName = 'uncorElec{0}'.format(postfix)
     setattr(process,modName,module)
@@ -174,19 +174,20 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
     #########################
     ### embed nearest jet ###
     #########################
-    module = cms.EDProducer(
-        "ElectronJetEmbedder",
-        src = cms.InputTag(eSrc),
-        jetSrc = cms.InputTag(jSrc),
-        dRmax = cms.double(0.4),
-        L1Corrector = cms.InputTag("ak4PFCHSL1FastjetCorrector"),
-        L1L2L3ResCorrector= cms.InputTag("ak4PFCHSL1FastL2L3Corrector"),
-    )
-    modName = 'eJet{0}'.format(postfix)
-    setattr(process,modName,module)
-    eSrc = modName
+    # TODO reenable
+    #module = cms.EDProducer(
+    #    "ElectronJetEmbedder",
+    #    src = cms.InputTag(eSrc),
+    #    jetSrc = cms.InputTag(jSrc),
+    #    dRmax = cms.double(0.4),
+    #    L1Corrector = cms.InputTag("ak4PFCHSL1FastjetCorrector"),
+    #    L1L2L3ResCorrector= cms.InputTag("ak4PFCHSL1FastL2L3Corrector"),
+    #)
+    #modName = 'eJet{0}'.format(postfix)
+    #setattr(process,modName,module)
+    #eSrc = modName
 
-    path *= getattr(process,modName)
+    #path *= getattr(process,modName)
 
     ##########################
     ### embed missing hits ###
@@ -204,16 +205,17 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
     ###################
     ### embed ww id ###
     ###################
-    module = cms.EDProducer(
-        "ElectronWWIdEmbedder",
-        src = cms.InputTag(eSrc),
-        vertexSrc = cms.InputTag(pvSrc),
-    )
-    modName = 'eWW{0}'.format(postfix)
-    setattr(process,modName,module)
-    eSrc = modName
+    # TODO: enable if needed
+    #module = cms.EDProducer(
+    #    "ElectronWWIdEmbedder",
+    #    src = cms.InputTag(eSrc),
+    #    vertexSrc = cms.InputTag(pvSrc),
+    #)
+    #modName = 'eWW{0}'.format(postfix)
+    #setattr(process,modName,module)
+    #eSrc = modName
 
-    path *= getattr(process,modName)
+    #path *= getattr(process,modName)
 
     #############################
     ### embed effective areas ###
@@ -276,7 +278,7 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
         src = cms.InputTag(eSrc),
         #triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
         triggerResults = cms.InputTag('TriggerResults', '', 'HLT2') if reHLT else cms.InputTag('TriggerResults', '', 'HLT'),
-        triggerObjects = cms.InputTag("selectedPatTrigger"),
+        triggerObjects = cms.InputTag("slimmedPatTrigger"),
         deltaR = cms.double(0.5),
         labels = cms.vstring(*labels),
         paths = cms.vstring(*paths),
@@ -287,59 +289,60 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
 
     path *= getattr(process,modName)
 
-    #####################
-    ### embed HZZ IDs ###
-    #####################
-    # https://github.com/nwoods/UWVV/blob/ichep/AnalysisTools/python/templates/ZZID.py
-    # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016
-    module = cms.EDProducer(
-        "PATElectronZZIDEmbedder",
-        src = cms.InputTag(eSrc),
-        vtxSrc = cms.InputTag(pvSrc),
-        bdtLabel = cms.string('ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values'),
-        idCutLowPtLowEta = cms.double(-.211),
-        idCutLowPtMedEta = cms.double(-.396),
-        idCutLowPtHighEta = cms.double(-.215),
-        idCutHighPtLowEta = cms.double(-.870),
-        idCutHighPtMedEta = cms.double(-.838),
-        idCutHighPtHighEta = cms.double(-.763),
-        missingHitsCut = cms.int32(999),
-        ptCut = cms.double(7.), 
-    )
-    modName = 'eHZZEmbedder{0}'.format(postfix)
-    setattr(process,modName,module)
-    eSrc = modName
-
-    path *= getattr(process,modName)
-
+    # TODO: update if needed
     ######################
-    ### embed SUSY IDs ###
+    #### embed HZZ IDs ###
     ######################
-    # https://twiki.cern.ch/twiki/bin/view/CMS/LeptonMVA
-    module = cms.EDProducer(
-        "ElectronMiniIsolationEmbedder",
-        src = cms.InputTag(eSrc),
-        packedSrc = cms.InputTag(pfSrc),
-    )
-    modName = 'eMiniIsoEmbedder{0}'.format(postfix)
-    setattr(process,modName,module)
-    eSrc = modName
+    ## https://github.com/nwoods/UWVV/blob/ichep/AnalysisTools/python/templates/ZZID.py
+    ## https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsZZ4l2016
+    #module = cms.EDProducer(
+    #    "PATElectronZZIDEmbedder",
+    #    src = cms.InputTag(eSrc),
+    #    vtxSrc = cms.InputTag(pvSrc),
+    #    bdtLabel = cms.string('ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values'),
+    #    idCutLowPtLowEta = cms.double(-.211),
+    #    idCutLowPtMedEta = cms.double(-.396),
+    #    idCutLowPtHighEta = cms.double(-.215),
+    #    idCutHighPtLowEta = cms.double(-.870),
+    #    idCutHighPtMedEta = cms.double(-.838),
+    #    idCutHighPtHighEta = cms.double(-.763),
+    #    missingHitsCut = cms.int32(999),
+    #    ptCut = cms.double(7.), 
+    #)
+    #modName = 'eHZZEmbedder{0}'.format(postfix)
+    #setattr(process,modName,module)
+    #eSrc = modName
 
-    path *= getattr(process,modName)
+    #path *= getattr(process,modName)
 
-    module = cms.EDProducer(
-        "ElectronSUSYMVAEmbedder",
-        src = cms.InputTag(eSrc),
-        vertexSrc = cms.InputTag(pvSrc),
-        rhoSrc = cms.InputTag('fixedGridRhoFastjetCentralNeutral'),
-        mva = cms.string('ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Values'),
-        weights = cms.FileInPath('DevTools/Ntuplizer/data/susy_el_BDTG.weights.xml'), # https://github.com/CERN-PH-CMG/cmgtools-lite/blob/80X/TTHAnalysis/data/leptonMVA/tth
-    )
-    modName = 'eSUSYEmbedder{0}'.format(postfix)
-    setattr(process,modName,module)
-    eSrc = modName
+    #######################
+    #### embed SUSY IDs ###
+    #######################
+    ## https://twiki.cern.ch/twiki/bin/view/CMS/LeptonMVA
+    #module = cms.EDProducer(
+    #    "ElectronMiniIsolationEmbedder",
+    #    src = cms.InputTag(eSrc),
+    #    packedSrc = cms.InputTag(pfSrc),
+    #)
+    #modName = 'eMiniIsoEmbedder{0}'.format(postfix)
+    #setattr(process,modName,module)
+    #eSrc = modName
 
-    path *= getattr(process,modName)
+    #path *= getattr(process,modName)
+
+    #module = cms.EDProducer(
+    #    "ElectronSUSYMVAEmbedder",
+    #    src = cms.InputTag(eSrc),
+    #    vertexSrc = cms.InputTag(pvSrc),
+    #    rhoSrc = cms.InputTag('fixedGridRhoFastjetCentralNeutral'),
+    #    mva = cms.string('ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Values'),
+    #    weights = cms.FileInPath('DevTools/Ntuplizer/data/susy_el_BDTG.weights.xml'), # https://github.com/CERN-PH-CMG/cmgtools-lite/blob/80X/TTHAnalysis/data/leptonMVA/tth
+    #)
+    #modName = 'eSUSYEmbedder{0}'.format(postfix)
+    #setattr(process,modName,module)
+    #eSrc = modName
+
+    #path *= getattr(process,modName)
 
     # add to schedule
     process.schedule.append(path)
