@@ -32,41 +32,6 @@ def customizeMets(process,coll,**kwargs):
                                #jetFlav="AK4PFchs",
                                postfix=postfix)
 
-    # This is for feb reminiaod only
-    # https://twiki.cern.ch/twiki/bin/view/CMSPublic/ReMiniAOD03Feb2017Notes#MET_Recipes
-    if not isMC:
-        process.load('RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff')
-        process.badGlobalMuonTaggerMAOD.taggingMode = cms.bool(True)
-        process.cloneGlobalMuonTaggerMAOD.taggingMode = cms.bool(True)
-
-        from PhysicsTools.PatUtils.tools.muonRecoMitigation import muonRecoMitigation
-
-        muonRecoMitigation(
-                           process = process,
-                           pfCandCollection = pfSrc,
-                           runOnMiniAOD = True,
-                           selection="",
-                           muonCollection="",
-                           cleanCollName="cleanMuonsPFCandidates",
-                           cleaningScheme="computeAllApplyClone",
-                           postfix=""
-                           )
-
-        pfSrc = "cleanMuonsPFCandidates"
-
-        postfix='MuClean'
-        runMetCorAndUncFromMiniAOD(process,
-                               jetCollUnskimmed="slimmedJets",
-                               photonColl=pSrc,
-                               electronColl=eSrc,
-                               muonColl=mSrc,
-                               tauColl=tSrc,
-                               pfCandColl=pfSrc,
-                               isData=not isMC,
-                               recoMetFromPFCs=True,
-                               postfix=postfix
-                               )
-
     # this works now, but leave in case they break it again
     ## correct things to make it work
     #del getattr(process,'slimmedMETs{0}'.format(postfix)).caloMET

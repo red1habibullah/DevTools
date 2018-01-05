@@ -43,7 +43,7 @@ def customizeJets(process,coll,srcLabel='jets',postfix='',**kwargs):
         postfix=postfix,
     )
     modName = 'updatedPatJets{0}'.format(postfix)
-    getattr(process,modName).userData.userFloats.src += ['pileupJetIdUpdated{0}:fullDiscriminant'.format(postfix)]
+    #getattr(process,modName).userData.userFloats.src += ['pileupJetIdUpdated{0}:fullDiscriminant'.format(postfix)]
     jSrc = modName
 
     #################

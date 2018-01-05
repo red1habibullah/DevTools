@@ -4,7 +4,7 @@
 pushd $CMSSW_BASE/src
 
 # IDs
-# TODO: update to 92X
+# TODO: update to 94X
 # https://twiki.cern.ch/twiki/bin/view/CMS/HEEPElectronIdentificationRun2
 #git cms-merge-topic Sam-Harper:HEEPV70VID_8010_ReducedCheckout
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedElectronIdentificationRun2
@@ -19,7 +19,7 @@ pushd $CMSSW_BASE/src
 
 
 # Consistent EGMRegression and EGMSmearer
-# TODO: update to 92X
+# TODO: update to 94X
 # https://twiki.cern.ch/twiki/bin/view/CMS/EGMRegression
 # https://twiki.cern.ch/twiki/bin/view/CMS/EGMSmearer
 #git cms-merge-topic cms-egamma:EGM_gain_v1
@@ -28,11 +28,9 @@ pushd $CMSSW_BASE/src
 #popd
 
 # MET
-# TODO: update to 92X
+# Not needed in 94X
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2
-#git cms-merge-topic -u cms-met:fromCMSSW_8_0_20_postICHEPfilter
 # https://twiki.cern.ch/twiki/bin/view/CMS/MissingETUncertaintyPrescription
-#git cms-merge-topic cms-met:METRecipe_8020
 
 popd
 
