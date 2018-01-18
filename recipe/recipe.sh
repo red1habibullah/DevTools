@@ -4,18 +4,28 @@
 pushd $CMSSW_BASE/src
 
 # IDs
-# TODO: update to 94X
 # https://twiki.cern.ch/twiki/bin/view/CMS/HEEPElectronIdentificationRun2
-#git cms-merge-topic Sam-Harper:HEEPV70VID_8010_ReducedCheckout
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedElectronIdentificationRun2
-# integrated in 8_0_26
 # https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedPhotonIdentificationRun2
-#git cms-merge-topic ikrav:egm_id_80X_v3_photons
-
-# MVA
 # https://twiki.cern.ch/twiki/bin/view/CMS/MultivariateElectronIdentificationRun2
 # https://twiki.cern.ch/twiki/bin/view/CMS/MultivariatePhotonIdentificationRun2
-# integrated in 8_0_25
+git cms-merge-topic lsoffi:CMSSW_9_4_0_pre3_TnP
+git cms-merge-topic guitargeek:ElectronID_MVA2017_940pre3
+
+# needed for MVA
+pushd $CMSSW_BASE/external/$SCRAM_ARCH
+
+git clone https://github.com/lsoffi/RecoEgamma-PhotonIdentification.git data/RecoEgamma/PhotonIdentification/data
+pushd data/RecoEgamma/PhotonIdentification/data
+git checkout CMSSW_9_4_0_pre3_TnP
+popd
+
+git clone https://github.com/lsoffi/RecoEgamma-ElectronIdentification.git data/RecoEgamma/ElectronIdentification/data
+pushd data/RecoEgamma/ElectronIdentification/data
+git checkout CMSSW_9_4_0_pre3_TnP
+popd
+
+popd
 
 
 # Consistent EGMRegression and EGMSmearer

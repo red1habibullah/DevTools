@@ -73,11 +73,10 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
     
     # define which IDs we want to produce
     my_id_modules = [
-        'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Summer16_80X_V1_cff',
-        'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronHLTPreselecition_Summer16_V1_cff',
+        'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V1_Preliminary_cff',
+        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_noIso_V1_cff',
+        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V1_cff',
         #'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV70_cff',
-        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_GeneralPurpose_V1_cff',
-        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_HZZ_V1_cff',
     ]
     
     # add them to the VID producer
@@ -92,38 +91,42 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
     process.electronRegressionValueMapProducer.src = cms.InputTag("") # disable AOD in case we are running with secondaryInputFiles
 
     idDecisionLabels = [
-        'cutBasedElectronID-Summer16-80X-V1-veto',
-        'cutBasedElectronID-Summer16-80X-V1-loose',
-        'cutBasedElectronID-Summer16-80X-V1-medium',
-        'cutBasedElectronID-Summer16-80X-V1-tight',
-        'cutBasedElectronHLTPreselection-Summer16-V1',
+        'cutBasedElectronID-Fall17-94X-V1-Preliminary-veto',
+        'cutBasedElectronID-Fall17-94X-V1-Preliminary-loose',
+        'cutBasedElectronID-Fall17-94X-V1-Preliminary-medium',
+        'cutBasedElectronID-Fall17-94X-V1-Preliminary-tight',
+        'mvaEleID-Fall17-noIso-V1-wp90',
+        'mvaEleID-Fall17-noIso-V1-wp80',
+        'mvaEleID-Fall17-noIso-V1-wpLoose',
+        'mvaEleID-Fall17-iso-V1-wp90',
+        'mvaEleID-Fall17-iso-V1-wp80',
+        'mvaEleID-Fall17-iso-V1-wpLoose',
         #'heepElectronID-HEEPV70',
-        'mvaEleID-Spring16-GeneralPurpose-V1-wp90',
-        'mvaEleID-Spring16-GeneralPurpose-V1-wp80',
-        'mvaEleID-Spring16-HZZ-V1-wpLoose',
     ]
     idDecisionTags = [
-        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-veto'),
-        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-loose'),
-        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-medium'),
-        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-tight'),
-        cms.InputTag('egmGsfElectronIDs:cutBasedElectronHLTPreselection-Summer16-V1'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V1-Preliminary-veto'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V1-Preliminary-loose'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V1-Preliminary-medium'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V1-Preliminary-tight'),
+        cms.InputTag('egmGsfElectronIDs:mvaEleID-Fall17-noIso-V1-wp90'),
+        cms.InputTag('egmGsfElectronIDs:mvaEleID-Fall17-noIso-V1-wp80'),
+        cms.InputTag('egmGsfElectronIDs:mvaEleID-Fall17-noIso-V1-wpLoose'),
+        cms.InputTag('egmGsfElectronIDs:mvaEleID-Fall17-iso-V1-wp90'),
+        cms.InputTag('egmGsfElectronIDs:mvaEleID-Fall17-iso-V1-wp80'),
+        cms.InputTag('egmGsfElectronIDs:mvaEleID-Fall17-iso-V1-wpLoose'),
         #cms.InputTag('egmGsfElectronIDs:heepElectronID-HEEPV70'),
-        cms.InputTag('egmGsfElectronIDs:mvaEleID-Spring16-GeneralPurpose-V1-wp90'),
-        cms.InputTag('egmGsfElectronIDs:mvaEleID-Spring16-GeneralPurpose-V1-wp80'),
-        cms.InputTag('egmGsfElectronIDs:mvaEleID-Spring16-HZZ-V1-wpLoose'),
     ]
     fullIDDecisionLabels = [
-        'cutBasedElectronID-Summer16-80X-V1-veto',
-        'cutBasedElectronID-Summer16-80X-V1-loose',
-        'cutBasedElectronID-Summer16-80X-V1-medium',
-        'cutBasedElectronID-Summer16-80X-V1-tight',
+        'cutBasedElectronID-Fall17-94X-V1-Preliminary-veto',
+        'cutBasedElectronID-Fall17-94X-V1-Preliminary-loose',
+        'cutBasedElectronID-Fall17-94X-V1-Preliminary-medium',
+        'cutBasedElectronID-Fall17-94X-V1-Preliminary-tight',
     ]
     fullIDDecisionTags = [
-        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-veto'),
-        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-loose'),
-        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-medium'),
-        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-tight'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V1-Preliminary-veto'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V1-Preliminary-loose'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V1-Preliminary-medium'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V1-Preliminary-tight'),
     ]
     nMinusOneIDNames = [
         'GsfEleEffAreaPFIsoCut_0',
@@ -132,20 +135,20 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
         'NoIso',
     ]
     mvaValueLabels = [
-        'ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Values',
-        'ElectronMVAEstimatorRun2Spring16HZZV1Values',
+        'ElectronMVAEstimatorRun2Fall17IsoV1Values',
+        'ElectronMVAEstimatorRun2Fall17NoIsoV1Values',
     ]
     mvaValueTags = [
-        cms.InputTag('electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Values'),
-        cms.InputTag('electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring16HZZV1Values'),
+        cms.InputTag('electronMVAValueMapProducer:ElectronMVAEstimatorRun2Fall17IsoV1Values'),
+        cms.InputTag('electronMVAValueMapProducer:ElectronMVAEstimatorRun2Fall17NoIsoV1Values'),
     ]
     mvaCategoryLabels = [
-        'ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Categories',
-        'ElectronMVAEstimatorRun2Spring16HZZV1Categories',
+        'ElectronMVAEstimatorRun2Fall17IsoV1Categories',
+        'ElectronMVAEstimatorRun2Fall17NoIsoV1Categories',
     ]
     mvaCategoryTags = [
-        cms.InputTag('electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Categories'),
-        cms.InputTag('electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring16HZZV1Categories'),
+        cms.InputTag('electronMVAValueMapProducer:ElectronMVAEstimatorRun2Fall17IsoV1Categories'),
+        cms.InputTag('electronMVAValueMapProducer:ElectronMVAEstimatorRun2Fall17NoIsoV1Categories'),
     ]
 
     module = cms.EDProducer(
