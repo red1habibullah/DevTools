@@ -11,9 +11,9 @@ Usage
 Use the configuration file [MiniTree_cfg.py](test/MiniTree_cfg.py).
 This configuration supports the following files:
  * MC
-   * RunIISpring16MiniAODv2 (and reHLT)
+   * RunIIFall17MiniAOD
  * Data
-   * PromptReco (2016)
+   * EOY ReReco 2017
 
 Options:
  * `inputFiles`: Standard cmsRun inputFiles argument for PoolSource.
