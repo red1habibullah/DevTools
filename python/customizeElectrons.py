@@ -57,13 +57,12 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
 
     path *= getattr(process,modName)
 
-    # TODO: reenable when new recipe released
     # TODO: Note, postfix doesn't work on electrons yet
-    #process.load('EgammaAnalysis.ElectronTools.calibratedPatElectronsRun2_cfi')
-    #process.calibratedPatElectrons.electrons = eSrc
-    #process.calibratedPatElectrons.isMC = isMC
-    #process.electronCustomization *= process.calibratedPatElectrons
-    #eSrc = 'calibratedPatElectrons'
+    process.load('EgammaAnalysis.ElectronTools.calibratedPatElectronsRun2_cfi')
+    process.calibratedPatElectrons.electrons = eSrc
+    process.calibratedPatElectrons.isMC = isMC
+    process.electronCustomization *= process.calibratedPatElectrons
+    eSrc = 'calibratedPatElectrons'
 
     #################
     ### embed VID ###

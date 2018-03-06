@@ -9,10 +9,12 @@ pushd $CMSSW_BASE/src
 # https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedPhotonIdentificationRun2
 # https://twiki.cern.ch/twiki/bin/view/CMS/MultivariateElectronIdentificationRun2
 # https://twiki.cern.ch/twiki/bin/view/CMS/MultivariatePhotonIdentificationRun2
+# https://twiki.cern.ch/twiki/bin/view/CMS/Egamma2017DataRecommendations
 git cms-merge-topic lsoffi:CMSSW_9_4_0_pre3_TnP
 git cms-merge-topic guitargeek:ElectronID_MVA2017_940pre3
+git cms-merge-topic cms-egamma:MiniAOD2017V2_940
 
-# needed for MVA
+# needed for MVA and smearing
 pushd $CMSSW_BASE/external/$SCRAM_ARCH
 
 git clone https://github.com/lsoffi/RecoEgamma-PhotonIdentification.git data/RecoEgamma/PhotonIdentification/data
@@ -23,6 +25,11 @@ popd
 git clone https://github.com/lsoffi/RecoEgamma-ElectronIdentification.git data/RecoEgamma/ElectronIdentification/data
 pushd data/RecoEgamma/ElectronIdentification/data
 git checkout CMSSW_9_4_0_pre3_TnP
+popd
+
+git clone git@github.com:Sam-Harper/EgammaAnalysis-ElectronTools.git data/EgammaAnalysis/ElectronTools/data
+pushd data/EgammaAnalysis/ElectronTools/data
+git checkout ReReco17NovScaleAndSmearing
 popd
 
 popd

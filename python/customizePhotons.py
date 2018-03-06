@@ -28,13 +28,12 @@ def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
 
     path *= getattr(process,modName)
 
-    # TODO: reenable when new recipe released
     # TODO: postfix doesnt work for photons
-    #process.load('EgammaAnalysis.ElectronTools.calibratedPatPhotonsRun2_cfi')
-    #process.calibratedPatPhotons.photons = pSrc
-    #process.calibratedPatPhotons.isMC = isMC
-    #path *= process.calibratedPatPhotons
-    #pSrc = 'calibratedPatPhotons'
+    process.load('EgammaAnalysis.ElectronTools.calibratedPatPhotonsRun2_cfi')
+    process.calibratedPatPhotons.photons = pSrc
+    process.calibratedPatPhotons.isMC = isMC
+    path *= process.calibratedPatPhotons
+    pSrc = 'calibratedPatPhotons'
 
     #######################
     ### embed Isolation ###
