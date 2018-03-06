@@ -51,7 +51,7 @@ def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
     # define which IDs we want to produce
     my_id_modules = [
         'RecoEgamma.PhotonIdentification.Identification.cutBasedPhotonID_Fall17_94X_V1_cff',
-        'RecoEgamma.PhotonIdentification.Identification.mvaPhotonID_RunIIFall17_v1_cff',
+        'RecoEgamma.PhotonIdentification.Identification.mvaPhotonID_Fall17_94X_V1p1_cff',
     ]
     
     # add them to the VID producer
@@ -74,15 +74,15 @@ def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
         'cutBasedPhotonID-Fall17-94X-V1-loose',
         'cutBasedPhotonID-Fall17-94X-V1-medium',
         'cutBasedPhotonID-Fall17-94X-V1-tight',
-        #'mvaPhoID-RunIIFall17-v1-wp80', # EGM recommends not to use
-        'mvaPhoID-RunIIFall17-v1-wp90',
+        'mvaPhoID-RunIIFall17-v1p1-wp80', # EGM recommends not to use
+        'mvaPhoID-RunIIFall17-v1p1-wp90',
     ]
     idDecisionTags = [
         cms.InputTag('egmPhotonIDs:cutBasedPhotonID-Fall17-94X-V1-loose'),
         cms.InputTag('egmPhotonIDs:cutBasedPhotonID-Fall17-94X-V1-medium'),
         cms.InputTag('egmPhotonIDs:cutBasedPhotonID-Fall17-94X-V1-tight'),
-        #cms.InputTag('egmPhotonIDs:mvaPhoID-RunIIFall17-v1-wp80'), # EGM recommends not to use
-        cms.InputTag('egmPhotonIDs:mvaPhoID-RunIIFall17-v1-wp90'),
+        cms.InputTag('egmPhotonIDs:mvaPhoID-RunIIFall17-v1p1-wp80'), # EGM recommends not to use
+        cms.InputTag('egmPhotonIDs:mvaPhoID-RunIIFall17-v1p1-wp90'),
     ]
     fullIDDecisionLabels = [
     ]
@@ -93,7 +93,7 @@ def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
     nMinusOneIDLabels = [
     ]
     mvaValueLabels = [
-        'PhotonMVAEstimatorRunIIFall17v1Values',
+        'PhotonMVAEstimatorRunIIFall17v1p1Values',
         'gammaDR030',
         "phoWorstChargedIsolationWithConeVeto",
         "phoESEffSigmaRR",
@@ -108,7 +108,7 @@ def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
         "phoPhotonIsolation",
     ]
     mvaValueTags = [
-        cms.InputTag('photonMVAValueMapProducer:PhotonMVAEstimatorRunIIFall17v1Values'),
+        cms.InputTag('photonMVAValueMapProducer:PhotonMVAEstimatorRunIIFall17v1p1Values'),
         cms.InputTag("egmPhotonIsolation","gamma-DR030-"),
         cms.InputTag("photonIDValueMapProducer","phoWorstChargedIsolationWithConeVeto"),
         cms.InputTag("photonIDValueMapProducer","phoESEffSigmaRR"),
@@ -123,10 +123,10 @@ def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
         cms.InputTag("photonIDValueMapProducer","phoPhotonIsolation"),
     ]
     mvaCategoryLabels = [
-        'PhotonMVAEstimatorRunIIFall17v1Categories',
+        'PhotonMVAEstimatorRunIIFall17v1p1Categories',
     ]
     mvaCategoryTags = [
-        cms.InputTag('photonMVAValueMapProducer:PhotonMVAEstimatorRunIIFall17v1Categories'),
+        cms.InputTag('photonMVAValueMapProducer:PhotonMVAEstimatorRunIIFall17v1p1Categories'),
     ]
 
     module = cms.EDProducer(

@@ -4,7 +4,7 @@ params = {
     'data': {
         'type': 'data',
         'kwargs': {
-            'inputFiles': '/store/data/Run2017F/DoubleMuon/MINIAOD/17Nov2017-v1/50000/009DC3A2-A7DE-E711-99F7-02163E013717.root',
+            'inputFiles': '/store/data/Run2017F/SingleMuon/MINIAOD/17Nov2017-v1/010000/183BE17C-A5EC-E711-8F69-0025905A607E.root',
             'isMC': 0,
         },
     },

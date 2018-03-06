@@ -485,9 +485,10 @@ photonBranches = commonPatCandidates.clone(
     cutBasedLoose                  = cms.vstring('userInt("cutBasedPhotonID-Fall17-94X-V1-loose")','I'),
     cutBasedMedium                 = cms.vstring('userInt("cutBasedPhotonID-Fall17-94X-V1-medium")','I'),
     cutBasedTight                  = cms.vstring('userInt("cutBasedPhotonID-Fall17-94X-V1-tight")','I'),
-    mvaWP90                        = cms.vstring('userInt("mvaPhoID-RunIIFall17-v1-wp90")','I'),
-    mvaValues                      = cms.vstring('userFloat("PhotonMVAEstimatorRunIIFall17v1Values")','F'),
-    mvaCategories                  = cms.vstring('userInt("PhotonMVAEstimatorRunIIFall17v1Categories")','I'),
+    mvaWP80                        = cms.vstring('userInt("mvaPhoID-RunIIFall17-v1p1-wp80")','I'),
+    mvaWP90                        = cms.vstring('userInt("mvaPhoID-RunIIFall17-v1p1-wp90")','I'),
+    mvaValues                      = cms.vstring('userFloat("PhotonMVAEstimatorRunIIFall17v1p1Values")','F'),
+    mvaCategories                  = cms.vstring('userInt("PhotonMVAEstimatorRunIIFall17v1p1Categories")','I'),
     # ID variables
     hadronicOverEM                 = cms.vstring('hadronicOverEm','F'),
     hadronicDepth1OverEm           = cms.vstring('hadronicDepth1OverEm','F'),
