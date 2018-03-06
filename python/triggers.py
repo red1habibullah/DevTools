@@ -74,6 +74,12 @@ triggerMap = {
     'DoublePhoton60'                                       : {'path' : 'HLT_DoublePhoton60_v\\[0-9]+',                                    'objects' : ['photon'], },
     'DoublePhoton85'                                       : {'path' : 'HLT_DoublePhoton85_v\\[0-9]+',                                    'objects' : ['photon'], },
     'Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90'   : {'path' : 'HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90_v\\[0-9]+','objects' : ['photon'], },
+    # triple photon
+    'TriplePhoton_20_20_20'                                : {'path' : 'HLT_TriplePhoton_20_20_20_CaloIdLV2_v\\[0-9]+',                   'objects' : ['photon'], },
+    'TriplePhoton_20_20_20_R9'                             : {'path' : 'HLT_TriplePhoton_20_20_20_CaloIdLV2_R9IdVL_v\\[0-9]+',            'objects' : ['photon'], },
+    'TriplePhoton_30_30_10'                                : {'path' : 'HLT_TriplePhoton_30_30_10_CaloIdLV2_v\\[0-9]+',                   'objects' : ['photon'], },
+    'TriplePhoton_30_30_10_R9'                             : {'path' : 'HLT_TriplePhoton_30_30_10_CaloIdLV2_R9IdVL_v\\[0-9]+',            'objects' : ['photon'], },
+    'TriplePhoton_35_35_5_R9'                              : {'path' : 'HLT_TriplePhoton_35_35_5_CaloIdLV2_R9IdVL_v\\[0-9]+',             'objects' : ['photon'], },
     # muon tau
     #'IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1'              : {'path' : 'HLT_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1_v\\[0-9]+',           'objects' : ['muon','tau'], }, # prescaled/removed
     'IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1'              : {'path' : 'HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v\\[0-9]+',           'objects' : ['muon','tau'], },
@@ -92,5 +98,17 @@ triggerMap = {
     'Mu8_DiEle12_CaloIdL_TrackIdL'                         : {'path' : 'HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\[0-9]+',                      'objects' : ['electron','muon'], },
     'DiMu9_Ele9_CaloIdL_TrackIdL'                          : {'path' : 'HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\[0-9]+',                       'objects' : ['electron','muon'], },
     'TripleMu_12_10_5'                                     : {'path' : 'HLT_TripleMu_12_10_5_v\\[0-9]+',                                  'objects' : ['muon'], },
+    # jets
+    'PFJet40'                                              : {'path' : 'HLT_PFJet40_v\\[0-9]+',                                           'objects': ['jet'], }, 
+    'PFJet60'                                              : {'path' : 'HLT_PFJet60_v\\[0-9]+',                                           'objects': ['jet'], }, 
+    'PFJet80'                                              : {'path' : 'HLT_PFJet80_v\\[0-9]+',                                           'objects': ['jet'], }, 
+    'PFJet140'                                             : {'path' : 'HLT_PFJet140_v\\[0-9]+',                                          'objects': ['jet'], }, 
+    'PFJet200'                                             : {'path' : 'HLT_PFJet200_v\\[0-9]+',                                          'objects': ['jet'], }, 
+    'PFJet260'                                             : {'path' : 'HLT_PFJet260_v\\[0-9]+',                                          'objects': ['jet'], }, 
+    'PFJet320'                                             : {'path' : 'HLT_PFJet320_v\\[0-9]+',                                          'objects': ['jet'], }, 
+    'PFJet400'                                             : {'path' : 'HLT_PFJet400_v\\[0-9]+',                                          'objects': ['jet'], }, 
+    'PFJet450'                                             : {'path' : 'HLT_PFJet450_v\\[0-9]+',                                          'objects': ['jet'], }, 
+    'PFJet500'                                             : {'path' : 'HLT_PFJet500_v\\[0-9]+',                                          'objects': ['jet'], }, 
+    'PFJet550'                                             : {'path' : 'HLT_PFJet550_v\\[0-9]+',                                          'objects': ['jet'], }, 
 
 }

@@ -191,10 +191,10 @@ electronBranches = commonPatCandidates.clone(
     isGsfScPixChargeConsistent     = cms.vstring('isGsfScPixChargeConsistent','I'),
     isGsfCtfChargeConsistent       = cms.vstring('isGsfCtfChargeConsistent','I'),
     # ID
-    cutBasedVeto                   = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-Preliminary-veto")','I'),
-    cutBasedLoose                  = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-Preliminary-loose")','I'),
-    cutBasedMedium                 = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-Preliminary-medium")','I'),
-    cutBasedTight                  = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-Preliminary-tight")','I'),
+    cutBasedVeto                   = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-veto")','I'),
+    cutBasedLoose                  = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-loose")','I'),
+    cutBasedMedium                 = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-medium")','I'),
+    cutBasedTight                  = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-tight")','I'),
     #cutBasedHLTPreselection        = cms.vstring('userInt("cutBasedElectronHLTPreselection-Summer16-V1")','I'),
     #heepV70                        = cms.vstring('userInt("heepElectronID-HEEPV70")','I'),
     mvaWP90                        = cms.vstring('userInt("mvaEleID-Fall17-iso-V1-wp90")','I'),
@@ -203,10 +203,10 @@ electronBranches = commonPatCandidates.clone(
     mvaWP90NoIso                   = cms.vstring('userInt("mvaEleID-Fall17-noIso-V1-wp90")','I'),
     mvaWP80NoIso                   = cms.vstring('userInt("mvaEleID-Fall17-noIso-V1-wp80")','I'),
     mvaWPLooseNoIso                = cms.vstring('userInt("mvaEleID-Fall17-noIso-V1-wpLoose")','I'),
-    cutBasedVetoNoIso              = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-Preliminary-vetoNoIso")','I'),
-    cutBasedLooseNoIso             = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-Preliminary-looseNoIso")','I'),
-    cutBasedMediumNoIso            = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-Preliminary-mediumNoIso")','I'),
-    cutBasedTightNoIso             = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-Preliminary-tightNoIso")','I'),
+    cutBasedVetoNoIso              = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-vetoNoIso")','I'),
+    cutBasedLooseNoIso             = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-looseNoIso")','I'),
+    cutBasedMediumNoIso            = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-mediumNoIso")','I'),
+    cutBasedTightNoIso             = cms.vstring('userInt("cutBasedElectronID-Fall17-94X-V1-tightNoIso")','I'),
     #wwLoose                        = cms.vstring('userInt("WWLoose")','I'),
     mvaValues                      = cms.vstring('userFloat("ElectronMVAEstimatorRun2Fall17IsoV1Values")','F'),
     mvaValuesNoIso                 = cms.vstring('userFloat("ElectronMVAEstimatorRun2Fall17NoIsoV1Values")','F'),
@@ -482,9 +482,9 @@ photonBranches = commonPatCandidates.clone(
     isPFlowPhoton                  = cms.vstring('isPFlowPhoton','I'),
     isStandardPhoton               = cms.vstring('isStandardPhoton','I'),
     # ID
-    cutBasedLoose                  = cms.vstring('userInt("cutBasedPhotonID-Fall17-94X-V1-Preliminary-loose")','I'),
-    cutBasedMedium                 = cms.vstring('userInt("cutBasedPhotonID-Fall17-94X-V1-Preliminary-medium")','I'),
-    cutBasedTight                  = cms.vstring('userInt("cutBasedPhotonID-Fall17-94X-V1-Preliminary-tight")','I'),
+    cutBasedLoose                  = cms.vstring('userInt("cutBasedPhotonID-Fall17-94X-V1-loose")','I'),
+    cutBasedMedium                 = cms.vstring('userInt("cutBasedPhotonID-Fall17-94X-V1-medium")','I'),
+    cutBasedTight                  = cms.vstring('userInt("cutBasedPhotonID-Fall17-94X-V1-tight")','I'),
     mvaWP90                        = cms.vstring('userInt("mvaPhoID-RunIIFall17-v1-wp90")','I'),
     mvaValues                      = cms.vstring('userFloat("PhotonMVAEstimatorRunIIFall17v1Values")','F'),
     mvaCategories                  = cms.vstring('userInt("PhotonMVAEstimatorRunIIFall17v1Categories")','I'),
@@ -597,3 +597,4 @@ for trigger in triggerMap:
     if 'muon' in triggerMap[trigger]['objects']:     setattr(muonBranches,    'matches_{0}'.format(trigger),cms.vstring('userInt("matches_{0}")'.format(trigger),'I'))
     if 'tau' in triggerMap[trigger]['objects']:      setattr(tauBranches,     'matches_{0}'.format(trigger),cms.vstring('userInt("matches_{0}")'.format(trigger),'I'))
     if 'photon' in triggerMap[trigger]['objects']:   setattr(photonBranches,  'matches_{0}'.format(trigger),cms.vstring('userInt("matches_{0}")'.format(trigger),'I'))
+    if 'jet' in triggerMap[trigger]['objects']:      setattr(jetBranches,     'matches_{0}'.format(trigger),cms.vstring('userInt("matches_{0}")'.format(trigger),'I'))

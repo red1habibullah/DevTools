@@ -51,7 +51,7 @@ def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
     
     # define which IDs we want to produce
     my_id_modules = [
-        'RecoEgamma.PhotonIdentification.Identification.cutBasedPhotonID_Fall17_94X_V1_Preliminary_cff',
+        'RecoEgamma.PhotonIdentification.Identification.cutBasedPhotonID_Fall17_94X_V1_cff',
         'RecoEgamma.PhotonIdentification.Identification.mvaPhotonID_RunIIFall17_v1_cff',
     ]
     
@@ -72,16 +72,16 @@ def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
     process.photonRegressionValueMapProducer.src = cms.InputTag("") # disable AOD in case we are running with secondaryInputFiles
 
     idDecisionLabels = [
-        'cutBasedPhotonID-Fall17-94X-V1-Preliminary-loose',
-        'cutBasedPhotonID-Fall17-94X-V1-Preliminary-medium',
-        'cutBasedPhotonID-Fall17-94X-V1-Preliminary-tight',
+        'cutBasedPhotonID-Fall17-94X-V1-loose',
+        'cutBasedPhotonID-Fall17-94X-V1-medium',
+        'cutBasedPhotonID-Fall17-94X-V1-tight',
         #'mvaPhoID-RunIIFall17-v1-wp80', # EGM recommends not to use
         'mvaPhoID-RunIIFall17-v1-wp90',
     ]
     idDecisionTags = [
-        cms.InputTag('egmPhotonIDs:cutBasedPhotonID-Fall17-94X-V1-Preliminary-loose'),
-        cms.InputTag('egmPhotonIDs:cutBasedPhotonID-Fall17-94X-V1-Preliminary-medium'),
-        cms.InputTag('egmPhotonIDs:cutBasedPhotonID-Fall17-94X-V1-Preliminary-tight'),
+        cms.InputTag('egmPhotonIDs:cutBasedPhotonID-Fall17-94X-V1-loose'),
+        cms.InputTag('egmPhotonIDs:cutBasedPhotonID-Fall17-94X-V1-medium'),
+        cms.InputTag('egmPhotonIDs:cutBasedPhotonID-Fall17-94X-V1-tight'),
         #cms.InputTag('egmPhotonIDs:mvaPhoID-RunIIFall17-v1-wp80'), # EGM recommends not to use
         cms.InputTag('egmPhotonIDs:mvaPhoID-RunIIFall17-v1-wp90'),
     ]

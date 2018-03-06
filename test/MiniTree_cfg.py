@@ -172,7 +172,7 @@ minCounts = {
     'muons'     : 1,
     'taus'      : 1,
     'photons'   : 1,
-    'jets'      : 0,
+    'jets'      : 1,
 }
 
 # maximum candidates to store

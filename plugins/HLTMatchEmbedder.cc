@@ -155,12 +155,15 @@ void HLTMatchEmbedder<T>::fillDescriptions(edm::ConfigurationDescriptions& descr
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "DataFormats/PatCandidates/interface/Photon.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
 typedef HLTMatchEmbedder<pat::Electron> ElectronHLTMatchEmbedder;
 typedef HLTMatchEmbedder<pat::Muon> MuonHLTMatchEmbedder;
 typedef HLTMatchEmbedder<pat::Tau> TauHLTMatchEmbedder;
 typedef HLTMatchEmbedder<pat::Photon> PhotonHLTMatchEmbedder;
+typedef HLTMatchEmbedder<pat::Jet> JetHLTMatchEmbedder;
 
 DEFINE_FWK_MODULE(ElectronHLTMatchEmbedder);
 DEFINE_FWK_MODULE(MuonHLTMatchEmbedder);
 DEFINE_FWK_MODULE(TauHLTMatchEmbedder);
 DEFINE_FWK_MODULE(PhotonHLTMatchEmbedder);
+DEFINE_FWK_MODULE(JetHLTMatchEmbedder);

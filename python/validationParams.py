@@ -1,7 +1,6 @@
 # Setup parameters to validate ntuplizer
 
 params = {
-    # TODO: update to later sample when available
     'data': {
         'type': 'data',
         'kwargs': {
@@ -9,7 +8,6 @@ params = {
             'isMC': 0,
         },
     },
-    # TODO: update when campaign begins
     'mc': {
         'type': 'mc',
         'kwargs': {
