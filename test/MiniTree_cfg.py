@@ -170,9 +170,9 @@ if options.isMC:
 minCounts = {
     'electrons' : 1,
     'muons'     : 1,
-    'taus'      : 1,
+    #'taus'      : 1,
     'photons'   : 1,
-    'jets'      : 1,
+    #'jets'      : 1,
 }
 
 # maximum candidates to store
