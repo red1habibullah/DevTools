@@ -49,6 +49,10 @@ triggerMap = {
     #'Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'                       : {'path' : 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v\\[0-9]+',                    'objects' : ['muon'], }, # prescaled
     'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'                      : {'path' : 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\[0-9]+',                   'objects' : ['muon'], },
     'Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ'                    : {'path' : 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\[0-9]+',                 'objects' : ['muon'], },
+    'Mu17_Mu8_SameSign'                                    : {'path' : 'HLT_Mu17_Mu8_SameSign_v\\[0-9]+',                                 'objects' : ['muon'], },
+    'Mu20_Mu10_SameSign'                                   : {'path' : 'HLT_Mu20_Mu10_SameSign_v\\[0-9]+',                                'objects' : ['muon'], },
+    'Mu17_Mu8_SameSign_DZ'                                 : {'path' : 'HLT_Mu17_Mu8_SameSign_DZ_v\\[0-9]+',                              'objects' : ['muon'], },
+    'Mu20_Mu10_SameSign_DZ'                                : {'path' : 'HLT_Mu20_Mu10_SameSign_DZ_v\\[0-9]+',                             'objects' : ['muon'], },
     # double electron
     #'Ele17_Ele12_CaloIdL_TrackIdL_IsoVL'                   : {'path' : 'HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',                'objects' : ['electron'], }, # prescaled
     #'Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'                   : {'path' : 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',                'objects' : ['electron'], }, # prescaled
