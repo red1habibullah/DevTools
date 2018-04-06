@@ -56,8 +56,8 @@ LumiSummaryProducer::LumiSummaryProducer(const edm::ParameterSet& iConfig):
 {
 
   //register your products
-  produces<int,   edm::InLumi>("numberOfEvents");
-  produces<float, edm::InLumi>("sumOfWeightedEvents");
+  produces<int,   edm::Transition::EndLuminosityBlock>("numberOfEvents");
+  produces<float, edm::Transition::EndLuminosityBlock>("sumOfWeightedEvents");
 
 }
 
