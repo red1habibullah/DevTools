@@ -131,6 +131,35 @@ customFilterBranches = cms.PSet(
 # vertices
 vertexBranches = commonVertex.clone()
 
+# vertexComposite
+
+vertexCompositeBranches = commonCandidates.clone(
+    x                      = cms.vstring('position().x','F'),
+    y                      = cms.vstring('position().y','F'),
+    z                      = cms.vstring('position().z','F'),
+    chi2                   = cms.vstring('vertexChi2','F'),
+    ndof                   = cms.vstring('vertexNdof','F'),
+    normalizedChi2         = cms.vstring('vertexNormalizedChi2','F'),
+    numberOfDaughters      = cms.vstring('numberOfDaughters()','I'),
+    daughter1_pdgId        = cms.vstring('? numberOfDaughters()>0 ? daughter(0).pdgId() : 0','I'),
+    daughter1_pt           = cms.vstring('? numberOfDaughters()>0 ? daughter(0).pt() : 0','F'),
+    daughter1_eta          = cms.vstring('? numberOfDaughters()>0 ? daughter(0).eta() : 0','F'),
+    daughter1_phi          = cms.vstring('? numberOfDaughters()>0 ? daughter(0).phi() : 0','F'),
+    daughter1_mass         = cms.vstring('? numberOfDaughters()>0 ? daughter(0).mass() : 0','F'),
+    daughter1_energy       = cms.vstring('? numberOfDaughters()>0 ? daughter(0).energy() : 0','F'),
+    daughter1_charge       = cms.vstring('? numberOfDaughters()>0 ? daughter(0).charge() : 0','F'),
+    daughter2_pdgId        = cms.vstring('? numberOfDaughters()>1 ? daughter(1).pdgId() : 0','I'),
+    daughter2_pt           = cms.vstring('? numberOfDaughters()>1 ? daughter(1).pt() : 0','F'),
+    daughter2_eta          = cms.vstring('? numberOfDaughters()>1 ? daughter(1).eta() : 0','F'),
+    daughter2_phi          = cms.vstring('? numberOfDaughters()>1 ? daughter(1).phi() : 0','F'),
+    daughter2_mass         = cms.vstring('? numberOfDaughters()>1 ? daughter(1).mass() : 0','F'),
+    daughter2_energy       = cms.vstring('? numberOfDaughters()>1 ? daughter(1).energy() : 0','F'),
+    daughter2_charge       = cms.vstring('? numberOfDaughters()>1 ? daughter(1).charge() : 0','F'),
+)
+
+# packed
+packedBranches = commonCandidates.clone()
+
 # genParticles
 genParticleBranches = commonGenCandidates.clone()
 genJetBranches = commonGenJetCandidates.clone()

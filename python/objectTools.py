@@ -4,8 +4,10 @@ def getCapitalizedSingular(name):
     if name=='mets': return 'MET'
     return name.rstrip('s').capitalize()
 
-def objectSelector(process,obj,objSrc,selection,postfix=''):
+def objectSelector(process,obj,objSrc,selection,postfix='',patType=None):
     '''Filter an object collection based on a cut string'''
+
+    if not patType: patType = getCapitalizedSingular(obj)
 
     if obj=='genParticles':
         module = cms.EDFilter("GenParticleSelector",
@@ -15,14 +17,14 @@ def objectSelector(process,obj,objSrc,selection,postfix=''):
         )
     else:
         module = cms.EDFilter(
-            "PAT{0}Selector".format(getCapitalizedSingular(obj)),
+            "PAT{0}Selector".format(patType),
             src = cms.InputTag(objSrc),
             cut = cms.string(selection),
         )
     modName = '{0}Selected{1}'.format(obj,postfix)
     setattr(process,modName,module)
 
-    pathName = '{0}SlectionPath{1}'.format(obj,postfix)
+    pathName = '{0}SelectionPath{1}'.format(obj,postfix)
     path = cms.Path(getattr(process,modName))
     setattr(process,pathName,path)
 
@@ -41,8 +43,10 @@ def objectCountFilter(process,path,obj,objSrc,count,postfix=''):
     path *= getattr(process,modName)
 
 
-def objectCleaner(process,obj,objSrc,collections,cleaning,postfix=''):
+def objectCleaner(process,obj,objSrc,collections,cleaning,postfix='',patType=None):
     '''Clean an object collection'''
+
+    if not patType: patType = getCapitalizedSingular(obj)
 
     cleanParams = cms.PSet()
     for cleanObj in cleaning:
@@ -63,7 +67,7 @@ def objectCleaner(process,obj,objSrc,collections,cleaning,postfix=''):
         setattr(cleanParams,cleanObj,particleParams)
 
     module = cms.EDProducer(
-        "PAT{0}Cleaner".format(getCapitalizedSingular(obj)),
+        "PAT{0}Cleaner".format(patType),
         src = cms.InputTag(objSrc),
         preselection = cms.string(''),
         checkOverlaps = cleanParams,

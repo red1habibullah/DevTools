@@ -17,7 +17,7 @@ def add_job(jobname,args,name,params):
     if not args.full: kwargs['maxEvents'] = 1000
     kwargs['outputFile'] = '{0}_miniTree.root'.format(name)
     if args.save: kwargs['outputFile'] = '{0}/miniTree.root'.format(outdir)
-    config = 'DevTools/Ntuplizer/test/MiniTree_cfg.py'
+    config = args.cfg
     command = 'cmsRun {0} {1}'.format(config,' '.join(['{0}={1}'.format(a,b) for a,b in kwargs.iteritems()]))
     logging.info('Running command: {0}'.format(command))
     if args.save:
@@ -47,6 +47,7 @@ def parse_command_line(argv):
     parser.add_argument('--bg', action='store_true', help='Run in the background')
     parser.add_argument('--save', action='store_true', help='Save output into directory')
     parser.add_argument('jobs', nargs='*', help='Job strings to run, default to run all')
+    parser.add_argument('--cfg', default='DevTools/Ntuplizer/test/MiniTree_cfg.py', help='Config to validate')
 
     return parser.parse_args(argv)
 
