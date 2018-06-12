@@ -10,10 +10,9 @@ pushd $CMSSW_BASE/src
 # https://twiki.cern.ch/twiki/bin/view/CMS/MultivariateElectronIdentificationRun2
 # https://twiki.cern.ch/twiki/bin/view/CMS/MultivariatePhotonIdentificationRun2
 # https://twiki.cern.ch/twiki/bin/view/CMS/Egamma2017DataRecommendations
-git cms-merge-topic lsoffi:CMSSW_9_4_0_pre3_TnP
-git cms-merge-topic guitargeek:ElectronID_MVA2017_940pre3
-#git cms-merge-topic cms-egamma:MiniAOD2017V2_940 # not needed in 946+?
-git cms-merge-topic cms-egamma:EgammaPostRecoTools_94 # needed in 949_cand1
+#git cms-merge-topic lsoffi:CMSSW_9_4_0_pre3_TnP # already in 949
+#git cms-merge-topic guitargeek:ElectronID_MVA2017_940pre3 # already in 949
+#git cms-merge-topic cms-egamma:MiniAOD2017V2_940 # this is broken in 949 but still needed?
 
 # needed for MVA and smearing
 pushd $CMSSW_BASE/external/$SCRAM_ARCH
@@ -37,6 +36,8 @@ popd
 
 
 # Consistent EGMRegression and EGMSmearer
+# https://twiki.cern.ch/twiki/bin/view/CMS/Egamma2017DataRecommendations
+git cms-merge-topic cms-egamma:EgammaPostRecoTools_940 # needed in 949_cand1
 # TODO: update to 94X
 # https://twiki.cern.ch/twiki/bin/view/CMS/EGMRegression
 # https://twiki.cern.ch/twiki/bin/view/CMS/EGMSmearer
