@@ -20,12 +20,13 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
     #######################
     ### ECAL Regression ###
     #######################
-    from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
-    setupEgammaPostRecoSeq(process,applyEnergyCorrections=False,
-                           applyVIDOnCorrectedEgamma=False,
-                           isMiniAOD=True,
-                           era='2017-Nov17ReReco') # eras: 2017-Nov17ReReco, 2016-Legacy, 2016-Feb17ReMiniAOD. Will need to add option to configure
-    path *= process.egammaPostRecoSeq
+    # when using reminiaod, dont need: data 31Mar2018, MC: 12Apr2018
+    #from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
+    #setupEgammaPostRecoSeq(process,applyEnergyCorrections=False,
+    #                       applyVIDOnCorrectedEgamma=False,
+    #                       isMiniAOD=True,
+    #                       era='2017-Nov17ReReco') # eras: 2017-Nov17ReReco, 2016-Legacy, 2016-Feb17ReMiniAOD. Will need to add option to configure
+    #path *= process.egammaPostRecoSeq
 
     # Previous recipe
     # TODO: verify no longer needed
