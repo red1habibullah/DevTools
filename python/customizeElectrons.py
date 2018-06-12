@@ -42,7 +42,8 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
         "ShiftedElectronEmbedder",
         src=cms.InputTag(eSrc),
         label=cms.string('uncorrected'),
-        shiftedSrc=cms.InputTag('slimmedElectrons::{0}'.format('PAT' if isMC else 'RECO')),
+        #shiftedSrc=cms.InputTag('slimmedElectrons::{0}'.format('PAT' if isMC else 'RECO')),
+        shiftedSrc=cms.InputTag('slimmedElectrons::PAT'),
     )
     modName = 'uncorElec{0}'.format(postfix)
     setattr(process,modName,module)
