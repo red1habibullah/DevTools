@@ -24,7 +24,7 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
     setupEgammaPostRecoSeq(process,applyEnergyCorrections=False,
                            applyVIDOnCorrectedEgamma=False,
                            isMiniAOD=True,
-                           era='2017-Nov17ReReco')
+                           era='2017-Nov17ReReco') # eras: 2017-Nov17ReReco, 2016-Legacy, 2016-Feb17ReMiniAOD. Will need to add option to configure
     process.schedule.append(process.egammaPostRecoSeq)
 
     # Previous recipe
