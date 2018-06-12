@@ -20,7 +20,15 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
     #######################
     ### ECAL Regression ###
     #######################
-    # TODO reenable when new recipe released
+    from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
+    setupEgammaPostRecoSeq(process,applyEnergyCorrections=False,
+                           applyVIDOnCorrectedEgamma=False,
+                           isMiniAOD=True,
+                           era='2017-Nov17ReReco')
+    process.schedule.append(process.egammaPostRecoSeq)
+
+    # Previous recipe
+    # TODO: verify no longer needed
     #from EgammaAnalysis.ElectronTools.regressionWeights_cfi import regressionWeights
     #process = regressionWeights(process)
 

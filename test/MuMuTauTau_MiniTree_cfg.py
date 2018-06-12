@@ -27,6 +27,7 @@ process.load('Configuration.Geometry.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 process.load('Configuration.StandardSequences.Services_cff')
+process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi") # Needed by EGamma energy correction
 
 process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True),

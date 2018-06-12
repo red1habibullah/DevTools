@@ -12,7 +12,8 @@ pushd $CMSSW_BASE/src
 # https://twiki.cern.ch/twiki/bin/view/CMS/Egamma2017DataRecommendations
 git cms-merge-topic lsoffi:CMSSW_9_4_0_pre3_TnP
 git cms-merge-topic guitargeek:ElectronID_MVA2017_940pre3
-git cms-merge-topic cms-egamma:MiniAOD2017V2_940
+#git cms-merge-topic cms-egamma:MiniAOD2017V2_940 # not needed in 946+?
+git cms-merge-topic cms-egamma:EgammaPostRecoTools_94 # needed in 949_cand1
 
 # needed for MVA and smearing
 pushd $CMSSW_BASE/external/$SCRAM_ARCH
