@@ -18,7 +18,7 @@ params = {
     'JetHT': {
         'type': 'data',
         'kwargs': {
-            'inputFiles': '/store/data/Run2017F/JetHT/MINIAOD/17Nov2017-v1/50000/801B2658-4FDF-E711-8A33-FA163E6013D7.root',
+            'inputFiles': '/store/data/Run2017F/JetHT/MINIAOD/31Mar2018-v1/00000/08EAF6E4-2437-E811-8424-001E67E6F86E.root',
             'isMC': 0,
         },
     },
@@ -32,7 +32,7 @@ params = {
     'QCD': {
         'type': 'mc',
         'kwargs': {
-            'inputFiles': '/store/mc/RunIIFall17MiniAODv2/QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/00000/068CC22F-FF41-E811-8073-0025901FB188.root',
+            'inputFiles': 'store/mc/RunIIFall17MiniAODv2/QCD_Pt-15to7000_TuneCP5_Flat2017_13TeV_pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/00000/00A8A0A7-3243-E811-B01E-0025905B8576.root',
             'isMC': 1,
         },
     },

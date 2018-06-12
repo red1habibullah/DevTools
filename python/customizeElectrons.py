@@ -54,24 +54,25 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
     ### scale and smear corrections ###
     ###################################
 
+    # Not needed after reminiaod
     # first need to add a manual protection for the corrections
-    module = cms.EDFilter(
-        "PATElectronSelector",
-        src = cms.InputTag(eSrc),
-        cut = cms.string("pt > 5 && abs(eta)<2.5")
-    )
-    modName = 'selectedElectrons{0}'.format(postfix)
-    setattr(process,modName,module)
-    eSrc = modName
+    #module = cms.EDFilter(
+    #    "PATElectronSelector",
+    #    src = cms.InputTag(eSrc),
+    #    cut = cms.string("pt > 5 && abs(eta)<2.5")
+    #)
+    #modName = 'selectedElectrons{0}'.format(postfix)
+    #setattr(process,modName,module)
+    #eSrc = modName
 
-    path *= getattr(process,modName)
+    #path *= getattr(process,modName)
 
-    # TODO: Note, postfix doesn't work on electrons yet
-    process.load('EgammaAnalysis.ElectronTools.calibratedPatElectronsRun2_cfi')
-    process.calibratedPatElectrons.electrons = eSrc
-    process.calibratedPatElectrons.isMC = isMC
-    process.electronCustomization *= process.calibratedPatElectrons
-    eSrc = 'calibratedPatElectrons'
+    ## TODO: Note, postfix doesn't work on electrons yet
+    #process.load('EgammaAnalysis.ElectronTools.calibratedPatElectronsRun2_cfi')
+    #process.calibratedPatElectrons.electrons = eSrc
+    #process.calibratedPatElectrons.isMC = isMC
+    #process.electronCustomization *= process.calibratedPatElectrons
+    #eSrc = 'calibratedPatElectrons'
 
     #################
     ### embed VID ###
