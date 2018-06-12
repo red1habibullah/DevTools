@@ -12,6 +12,7 @@ options.maxEvents = -1
 options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
 options.register('reportEvery', 100, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Report every")
 options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
+options.register('isREMINIAOD', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is ReMiniAOD")
 options.register('reHLT', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is reHLT")
 options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
 options.register('crab', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Make changes needed for crab")
@@ -245,6 +246,7 @@ collections = customizeJets(
     process,
     collections,
     isMC=bool(options.isMC),
+    isREMINIAOD=bool(options.isREMINIAOD),
     reHLT=bool(options.reHLT),
 )
 
@@ -254,6 +256,7 @@ collections = customizeElectrons(
     process,
     collections,
     isMC=bool(options.isMC),
+    isREMINIAOD=bool(options.isREMINIAOD),
     reHLT=bool(options.reHLT),
 )
 
@@ -263,6 +266,7 @@ collections = customizeMuons(
     process,
     collections,
     isMC=bool(options.isMC),
+    isREMINIAOD=bool(options.isREMINIAOD),
     reHLT=bool(options.reHLT),
 )
 
@@ -272,6 +276,7 @@ collections = customizeTaus(
     process,
     collections,
     isMC=bool(options.isMC),
+    isREMINIAOD=bool(options.isREMINIAOD),
     reHLT=bool(options.reHLT),
 )
 
@@ -281,6 +286,7 @@ collections = customizePhotons(
     process,
     collections,
     isMC=bool(options.isMC),
+    isREMINIAOD=bool(options.isREMINIAOD),
     reHLT=bool(options.reHLT),
 )
 
@@ -290,6 +296,7 @@ collections = customizeMets(
     process,
     collections,
     isMC=bool(options.isMC),
+    isREMINIAOD=bool(options.isREMINIAOD),
     reHLT=bool(options.reHLT),
 )
 

@@ -3,6 +3,7 @@ import FWCore.ParameterSet.Config as cms
 def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
     '''Customize photons'''
     reHLT = kwargs.pop('reHLT',False)
+    isREMINIAOD = kwargs.pop('isREMINIAOD',False)
     isMC = kwargs.pop('isMC',False)
     pSrc = coll[srcLabel]
     rhoSrc = coll['rho']
@@ -20,8 +21,7 @@ def customizePhotons(process,coll,srcLabel='photons',postfix='',**kwargs):
         "ShiftedPhotonEmbedder",
         src=cms.InputTag(pSrc),
         label=cms.string('uncorrected'),
-        #shiftedSrc=cms.InputTag('slimmedPhotons::{0}'.format('PAT' if isMC else 'RECO')),
-        shiftedSrc=cms.InputTag('slimmedPhotons::PAT'),
+        shiftedSrc=cms.InputTag('slimmedPhotons::{0}'.format('PAT' if isMC or isREMINIAOD else 'RECO')),
     )
     modName = 'uncorPho{0}'.format(postfix)
     setattr(process,modName,module)

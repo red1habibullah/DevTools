@@ -3,6 +3,7 @@ import FWCore.ParameterSet.Config as cms
 def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
     '''Customize electrons'''
     reHLT = kwargs.pop('reHLT',False)
+    isREMINIAOD = kwargs.pop('isREMINIAOD',False)
     isMC = kwargs.pop('isMC',False)
     eSrc = coll[srcLabel]
     pSrc = coll['photons']
@@ -42,8 +43,7 @@ def customizeElectrons(process,coll,srcLabel='electrons',postfix='',**kwargs):
         "ShiftedElectronEmbedder",
         src=cms.InputTag(eSrc),
         label=cms.string('uncorrected'),
-        #shiftedSrc=cms.InputTag('slimmedElectrons::{0}'.format('PAT' if isMC else 'RECO')),
-        shiftedSrc=cms.InputTag('slimmedElectrons::PAT'),
+        shiftedSrc=cms.InputTag('slimmedElectrons::{0}'.format('PAT' if isMC or isREMINIAOD else 'RECO')),
     )
     modName = 'uncorElec{0}'.format(postfix)
     setattr(process,modName,module)
