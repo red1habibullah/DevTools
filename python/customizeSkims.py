@@ -1,6 +1,8 @@
 import FWCore.ParameterSet.Config as cms
 
-def addMuMuTauTau(process,options):
+def addMuMuTauTau(process,options,**kwargs):
+    doMM = kwargs.pop('doMM',False)
+    doMT = kwargs.pop('doMT',False)
 
     #########################
     ### Muon Cleaned Taus ###
@@ -385,20 +387,22 @@ def addMuMuTauTau(process,options):
     )
     
     # additional skims
-    process.MINIAODoutputZSKIM = process.MINIAODoutput.clone(
-        SelectEvents = cms.untracked.PSet(
-            SelectEvents = cms.vstring('z_path'),
-        ),
-        fileName = cms.untracked.string(options.outputFile.split('.root')[0]+'_zskim.root'),
-    )
-    process.MINIAODoutputZSKIM_step = cms.EndPath(process.MINIAODoutputZSKIM)
-    process.schedule.append(process.MINIAODoutputZSKIM_step)
+    if doMM:
+        process.MINIAODoutputZSKIM = process.MINIAODoutput.clone(
+            SelectEvents = cms.untracked.PSet(
+                SelectEvents = cms.vstring('z_path'),
+            ),
+            fileName = cms.untracked.string(options.outputFile.split('.root')[0]+'_zskim.root'),
+        )
+        process.MINIAODoutputZSKIM_step = cms.EndPath(process.MINIAODoutputZSKIM)
+        process.schedule.append(process.MINIAODoutputZSKIM_step)
     
-    process.MINIAODoutputZMUTAUSKIM = process.MINIAODoutput.clone(
-        SelectEvents = cms.untracked.PSet(
-            SelectEvents = cms.vstring('z_tau_eff_path','z_tau_eff_muclean_path'),
-        ),
-        fileName = cms.untracked.string(options.outputFile.split('.root')[0]+'_zmutauskim.root'),
-    )
-    process.MINIAODoutputZMUTAUSKIM_step = cms.EndPath(process.MINIAODoutputZMUTAUSKIM)
-    process.schedule.append(process.MINIAODoutputZMUTAUSKIM_step)
+    if doMT:
+        process.MINIAODoutputZMUTAUSKIM = process.MINIAODoutput.clone(
+            SelectEvents = cms.untracked.PSet(
+                SelectEvents = cms.vstring('z_tau_eff_path','z_tau_eff_muclean_path'),
+            ),
+            fileName = cms.untracked.string(options.outputFile.split('.root')[0]+'_zmutauskim.root'),
+        )
+        process.MINIAODoutputZMUTAUSKIM_step = cms.EndPath(process.MINIAODoutputZMUTAUSKIM)
+        process.schedule.append(process.MINIAODoutputZMUTAUSKIM_step)

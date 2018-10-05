@@ -6,13 +6,15 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 
 options.outputFile = 'miniTree.root'
-#options.inputFiles= '/store/mc/RunIIFall17MiniAOD/WZ_TuneCP5_13TeV-pythia8/MINIAODSIM/94X_mc2017_realistic_v10-v1/60000/1C7C7FB8-14E6-E711-90A9-0025905A60FE.root' # WZ
-options.inputFiles = '/store/data/Run2017F/SingleMuon/MINIAOD/17Nov2017-v1/010000/183BE17C-A5EC-E711-8F69-0025905A607E.root' # ReReco
+#options.inputFiles= '/store/mc/RunIISummer16MiniAODv2/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/2E1C211C-05C2-E611-90D3-02163E01306F.root' # WZ
+#options.inputFiles = '/store/mc/RunIISummer16MiniAODv2/HPlusPlusHMinusHTo3L_M-500_13TeV-calchep-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/08ECD723-E4CA-E611-8C93-0CC47A1E0DC2.root' # Hpp3l
+#options.inputFiles = '/store/data/Run2016G/DoubleMuon/MINIAOD/23Sep2016-v1/100000/0A30F7A9-ED8F-E611-91F1-008CFA1C6564.root' # ReReco
+#options.inputFiles = '/store/data/Run2016H/DoubleMuon/MINIAOD/PromptReco-v3/000/284/036/00000/64591DD7-A79F-E611-954C-FA163E5A1368.root' # PromptReco
+options.inputFiles = '/store/mc/RunIISummer16MiniAODv2/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-5_TuneCUETP8M1_13TeV_madgraph_pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/100000/0CC58E76-78DC-E611-A6E6-0CC47AA98D60.root'
 options.maxEvents = -1
 options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
 options.register('reportEvery', 100, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Report every")
 options.register('isMC', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
-options.register('isREMINIAOD', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is ReMiniAOD")
 options.register('reHLT', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is reHLT")
 options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
 options.register('crab', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Make changes needed for crab")
@@ -23,13 +25,12 @@ options.parseArguments()
 ### setup process ###
 #####################
 
-process = cms.Process("MiniNtuple")
+process = cms.Process("DeepNtuple")
 
 process.load('Configuration.Geometry.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 process.load('Configuration.StandardSequences.Services_cff')
-process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi") # Needed by EGamma energy correction
 
 process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True),
@@ -59,7 +60,7 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 #GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMiniAOD
 # https://twiki.cern.ch/twiki/bin/view/CMS/JECDataMC
-GT = {'mcgt': '94X_mc2017_realistic_v10', 'datagt': '94X_dataRun2_ReReco_EOY17_v2'}
+GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7'}
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 ##################
@@ -150,31 +151,31 @@ collections = {
     'taus'         : 'slimmedTaus',
     'photons'      : 'slimmedPhotons',
     'jets'         : 'slimmedJets',
+    'fatjets'      : 'slimmedJetsAK8',
     'pfmet'        : 'slimmedMETs',
     'rho'          : 'fixedGridRhoFastjetAll',
     'vertices'     : 'offlineSlimmedPrimaryVertices',
     'packed'       : 'packedPFCandidates',
 }
+if not options.isMC: collections['pfmet'] = 'slimmedMETsMuEGClean'
 
 # the selections for each object (to be included in ntuple)
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
-    'electrons'   : 'pt>7 && abs(eta)<2.5',
-    'muons'       : 'pt>4 && abs(eta)<2.4',
-    'taus'        : 'pt>17 && abs(eta)<2.3',
+    'electrons'   : 'pt>10 && abs(eta)<2.5',
+    'muons'       : 'pt>10 && abs(eta)<2.4',
+    'taus'        : 'pt>20 && abs(eta)<2.3',
     'photons'     : 'pt>10 && abs(eta)<3.0',
     'jets'        : 'pt>15 && abs(eta)<4.7',
+    'fatjets'     : 'pt>15 && abs(eta)<4.7',
 }
 if options.isMC:
     selections['genParticles'] = 'pt>4'
 
 # requirements to store events
 minCounts = {
-    'electrons' : 1,
-    'muons'     : 1,
-    #'taus'      : 1,
-    'photons'   : 0,
-    #'jets'      : 1,
+    'jets'      : 1,
+    'fatjets'   : 1,
 }
 
 # maximum candidates to store
@@ -188,20 +189,6 @@ maxCounts = {
 # selection for cleaning (objects should match final selection)
 # just do at analysis level
 cleaning = {
-    #'jets' : {
-    #    'electrons' : {
-    #        'cut' : 'pt>10 && abs(eta)<2.5 && userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-medium")>0.5 && userInt("WWLoose")>0.5',
-    #        'dr'  : 0.3,
-    #    },
-    #    'muons' : {
-    #        'cut' : 'pt>10 && abs(eta)<2.4 && isMediumMuon>0.5 && trackIso/pt<0.4 && userFloat("dxy")<0.02 && userFloat("dz")<0.1 && (pfIsolationR04().sumChargedHadronPt+max(0.,pfIsolationR04().sumNeutralHadronEt+pfIsolationR04().sumPhotonEt-0.5*pfIsolationR04().sumPUPt))/pt<0.15',
-    #        'dr'  : 0.3,
-    #    },
-    #    'taus' : {
-    #        'cut' : 'pt>20 && abs(eta)<2.3 && tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits")>0.5 && tauID("decayModeFinding")>0.5',
-    #        'dr'  : 0.3,
-    #    },
-    #},
 }
 
 # filters
@@ -236,8 +223,18 @@ collections = customizeJets(
     process,
     collections,
     isMC=bool(options.isMC),
-    isREMINIAOD=bool(options.isREMINIAOD),
     reHLT=bool(options.reHLT),
+)
+
+print 'Customizing fatjets'
+from DevTools.Ntuplizer.customizeJets import customizeJets
+collections = customizeJets(
+    process,
+    collections,
+    srcLabel='fatjets',
+    isMC=bool(options.isMC),
+    reHLT=bool(options.reHLT),
+    postfix='AK8',
 )
 
 print 'Customizing electrons'
@@ -246,7 +243,6 @@ collections = customizeElectrons(
     process,
     collections,
     isMC=bool(options.isMC),
-    isREMINIAOD=bool(options.isREMINIAOD),
     reHLT=bool(options.reHLT),
 )
 
@@ -256,7 +252,6 @@ collections = customizeMuons(
     process,
     collections,
     isMC=bool(options.isMC),
-    isREMINIAOD=bool(options.isREMINIAOD),
     reHLT=bool(options.reHLT),
 )
 
@@ -266,7 +261,6 @@ collections = customizeTaus(
     process,
     collections,
     isMC=bool(options.isMC),
-    isREMINIAOD=bool(options.isREMINIAOD),
     reHLT=bool(options.reHLT),
 )
 
@@ -276,7 +270,6 @@ collections = customizePhotons(
     process,
     collections,
     isMC=bool(options.isMC),
-    isREMINIAOD=bool(options.isREMINIAOD),
     reHLT=bool(options.reHLT),
 )
 
@@ -286,7 +279,6 @@ collections = customizeMets(
     process,
     collections,
     isMC=bool(options.isMC),
-    isREMINIAOD=bool(options.isREMINIAOD),
     reHLT=bool(options.reHLT),
 )
 
@@ -295,29 +287,41 @@ print 'Selecting objects'
 from DevTools.Ntuplizer.objectTools import objectSelector, objectCleaner
 for coll in selections:
     collections[coll] = objectSelector(process,coll,collections[coll],selections[coll])
-# TODO: memory problem
-#for coll in cleaning:
-#    collections[coll] = objectCleaner(process,coll,collections[coll],collections,cleaning[coll])
 
 # add the analyzer
 process.load("DevTools.Ntuplizer.MiniTree_cfi")
 
+from DevTools.Ntuplizer.branchTemplates import *
+
 process.miniTree.isData = not options.isMC
-process.miniTree.filterResults = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
-#process.miniTree.filterResults = cms.InputTag('TriggerResults', '', 'PAT')
+process.miniTree.filterResults = cms.InputTag('TriggerResults', '', 'PAT')
 process.miniTree.vertexCollections.vertices.collection = collections['vertices']
+process.miniTree.collections = cms.PSet(
+    jets = cms.PSet(
+        collection = cms.InputTag(collections['jets'],
+        branches = jetBranches,
+        minCount = cms.int32(0),
+        maxCount = cms.int32(0),
+    ),
+    fatjets = cms.PSet(
+        collection = cms.InputTag(collections['fatjets'],
+        branches = fatjetBranches,
+        minCount = cms.int32(0),
+        maxCount = cms.int32(0),
+    ),
+    pfmet = cms.PSet(
+        collection = cms.InputTag(collections['pfmet']),
+        branches = metBranches,
+        minCount = cms.int32(0),
+        maxCount = cms.int32(0),
+    ),
+)
 if options.isMC:
     from DevTools.Ntuplizer.branchTemplates import genParticleBranches 
     process.miniTree.collections.genParticles = cms.PSet(
         collection = cms.InputTag(collections['genParticles']),
         branches = genParticleBranches,
     )
-process.miniTree.collections.electrons.collection = collections['electrons']
-process.miniTree.collections.muons.collection = collections['muons']
-process.miniTree.collections.taus.collection = collections['taus']
-process.miniTree.collections.photons.collection = collections['photons']
-process.miniTree.collections.jets.collection = collections['jets']
-process.miniTree.collections.pfmet.collection = collections['pfmet']
 process.miniTree.rho = collections['rho']
 for coll, count in minCounts.iteritems():
     if  process.miniTree.vertexCollections.hasParameter(coll):
