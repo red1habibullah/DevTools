@@ -2,7 +2,7 @@
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: step1 --fileout file:miniaodsim.root --mc --eventcontent MINIAODSIM --runUnscheduled --datatier MINIAODSIM --conditions 94X_mc2017_realistic_v10 --step PAT --nThreads 8 --era Run2_2017 --python_filename MINIAODSIM_94X_cfg.py --no_exec -n 4800
+# # with command line options: step1 --fileout file:miniaodsim.root --mc --eventcontent MINIAODSIM --runUnscheduled --datatier MINIAODSIM --conditions 94X_mc2017_realistic_v14 --step PAT --nThreads 8 --era Run2_2017,run2_miniAOD_94XFall17 --python_filename MINIAODSIM_94X_cfg.py --no_exec -n 4800
 import FWCore.ParameterSet.Config as cms
 
 
@@ -10,7 +10,7 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 
 options.outputFile = 'mumutautau.root'
-options.inputFiles = '/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-5_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v1/60000/72CB31E6-F830-E811-8570-001E67E6F7C4.root'
+options.inputFiles = '/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-14_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v3/50000/82E6529B-C2AB-E811-A417-0025905A60D0.root'
 options.maxEvents = -1
 options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
 options.register('reportEvery', 100, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Report every")
@@ -24,7 +24,7 @@ options.parseArguments()
 #########################
 from Configuration.StandardSequences.Eras import eras
 
-process = cms.Process('PAT',eras.Run2_2017)
+process = cms.Process('PAT',eras.Run2_2017,eras.run2_miniAOD_94XFall17)
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -141,7 +141,7 @@ if not options.isMC:
 # Other statements
 envvar = 'mcgt' if options.isMC else 'datagt'
 from Configuration.AlCa.GlobalTag import GlobalTag
-GT = {'mcgt': '94X_mc2017_realistic_v10', 'datagt': 'TODO',}
+GT = {'mcgt': '94X_mc2017_realistic_v14', 'datagt': '94X_dataRun2_v6',}
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 # Path and EndPath definitions
