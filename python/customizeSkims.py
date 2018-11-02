@@ -44,11 +44,6 @@ def addMuMuTauTau(process,options):
     process.recoTauAK4PFJets08RegionMuonCleaned.minJetPt = cms.double(8.0)
     process.selectedPatTausMuonCleaned.cut = cms.string("pt > 8. && tauID(\'decayModeFindingNewDMs\')> 0.5")
     
-    # lower pt for nonclean
-    process.combinatoricRecoTaus.minJetPt = cms.double(8.0)
-    process.recoTauAK4PFJets08Region.minJetPt = cms.double(8.0)
-    process.selectedPatTaus.cut = cms.string("pt > 8. && tauID(\'decayModeFindingNewDMs\')> 0.5")
-    
     if options.isMC:
         process.tauGenJetsMuonCleaned.GenParticles = "prunedGenParticles"
         process.patTausMuonCleaned.embedGenMatch = False
@@ -69,6 +64,22 @@ def addMuMuTauTau(process,options):
         for attr in attrsToDelete:
             if hasattr(process,attr): delattr(process,attr)
     
+    #############################
+    ### lower pt for nonclean ###
+    #############################
+    process.combinatoricRecoTaus.minJetPt = cms.double(8.0)
+    process.recoTauAK4PFJets08Region.minJetPt = cms.double(8.0)
+    process.selectedPatTaus.cut = cms.string("pt > 8. && tauID(\'decayModeFindingNewDMs\')> 0.5")
+    
+    ############################
+    ### lower pt for boosted ###
+    ############################
+    process.ca8PFJetsCHSprunedForBoostedTaus.jetPtMin = cms.double(20.0)
+    process.ca8PFJetsCHSprunedForBoostedTaus.subjetPtMin = cms.double(8.0)
+    process.combinatoricRecoTausBoosted.minJetPt = cms.double(8.0)
+    process.recoTauAK4PFJets08RegionBoosted.minJetPt = cms.double(8.0)
+    process.selectedPatTausBoosted.cut = cms.string("pt > 8. && tauID(\'decayModeFindingNewDMs\')> 0.5")
+
     #######################################
     ### Update btagging for cleaned jet ###
     #######################################
