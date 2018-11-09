@@ -244,8 +244,8 @@ def addMuMuTauTau(process,options,**kwargs):
     ############################
     process.mumu = cms.EDProducer("CandViewShallowCloneCombiner",
         decay = cms.string("{0}@+ {0}@-".format('slimmedMuons')),
-        #cut   = cms.string("deltaR(daughter(0).eta,daughter(0).phi,daughter(1).eta,daughter(1).phi)<1.5 && mass<30"),
-        cut   = cms.string("1<mass<35"),
+        #cut   = cms.string("deltaR(daughter(0).eta,daughter(0).phi,daughter(1).eta,daughter(1).phi)<1.5 && mass<60"),
+        cut   = cms.string("1<mass<65"),
     )
     process.mumuCount = cms.EDFilter("PATCandViewCountFilter",
          minNumber = cms.uint32(1),
