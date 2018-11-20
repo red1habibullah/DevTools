@@ -9,6 +9,7 @@
 #include "FWCore/Framework/interface/MakerMacros.h"
 
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
+#include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 
 //
 // class declaration
@@ -33,9 +34,12 @@ class LumiSummaryProducer : public edm::one::EDProducer<edm::EndLuminosityBlockP
       
       // ----------member data ---------------------------
       edm::EDGetTokenT<GenEventInfoProduct> genEventInfoToken_;
+      edm::EDGetTokenT<LHEEventProduct> lheEventProductToken_;
+      bool doGenWeights_;
 
       int nevents_;
       float summedWeights_;
+      std::vector<float> summedGenWeights_;
 
 };
 
@@ -52,12 +56,18 @@ class LumiSummaryProducer : public edm::one::EDProducer<edm::EndLuminosityBlockP
 // constructors and destructor
 //
 LumiSummaryProducer::LumiSummaryProducer(const edm::ParameterSet& iConfig):
-  genEventInfoToken_(consumes<GenEventInfoProduct>(iConfig.getParameter<edm::InputTag>("genEventInfo")))
+  genEventInfoToken_(consumes<GenEventInfoProduct>(iConfig.getParameter<edm::InputTag>("genEventInfo"))),
+  lheEventProductToken_(consumes<LHEEventProduct>(iConfig.getParameter<edm::InputTag>("lheEventProduct")))
 {
+
+  doGenWeights_ = iConfig.exists("doGenWeights") ? iConfig.getParameter<bool>("doGenWeights") : true;
 
   //register your products
   produces<int,   edm::Transition::EndLuminosityBlock>("numberOfEvents");
   produces<float, edm::Transition::EndLuminosityBlock>("sumOfWeightedEvents");
+  produces<int,   edm::InLumi>("numberOfEvents");
+  produces<float, edm::InLumi>("sumOfWeightedEvents");
+  produces<std::vector<float>, edm::InLumi>("sumOfGenWeightedEvents");
 
 }
 
@@ -82,6 +92,22 @@ LumiSummaryProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
   }
   summedWeights_ += genWeight;
 
+  if (doGenWeights_) {
+    edm::Handle<LHEEventProduct> lheInfo;
+    iEvent.getByToken(lheEventProductToken_, lheInfo);
+
+    if (lheInfo.isValid()) {
+      for (size_t i=0; i<lheInfo->weights().size(); ++i) {
+        if (summedGenWeights_.size()<i+1) {
+          summedGenWeights_.push_back(lheInfo->weights()[i].wgt);
+        }
+        else {
+          summedGenWeights_[i] += lheInfo->weights()[i].wgt;
+        }
+      }
+    }
+  }
+
 }
 
 void LumiSummaryProducer::beginJob() { }
@@ -91,6 +117,7 @@ void LumiSummaryProducer::endJob() { }
 void LumiSummaryProducer::beginLuminosityBlock(edm::LuminosityBlock const& Lumi, edm::EventSetup const& iSetup) {
     nevents_ = 0;
     summedWeights_ = 0;
+    summedGenWeights_.clear();
 }
 
 void LumiSummaryProducer::endLuminosityBlock(edm::LuminosityBlock const& Lumi, edm::EventSetup const& iSetup) { }
@@ -100,6 +127,8 @@ void LumiSummaryProducer::endLuminosityBlockProduce(edm::LuminosityBlock& Lumi, 
     Lumi.put(std::move(neventsProduct),       "numberOfEvents");
     std::unique_ptr<float> summedWeightsProduct(new float(summedWeights_));
     Lumi.put(std::move(summedWeightsProduct), "sumOfWeightedEvents");
+    std::unique_ptr<std::vector<float> > summedGenWeightsProduct(new std::vector<float>(summedGenWeights_));
+    Lumi.put(std::move(summedGenWeightsProduct), "sumOfGenWeightedEvents");
 }
 
 
