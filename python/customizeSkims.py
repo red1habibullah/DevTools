@@ -359,6 +359,7 @@ def addMuMuTauTau(process,options,**kwargs):
     
     process.lumiTree = cms.EDAnalyzer("LumiTree",
         genEventInfo = cms.InputTag("generator"),
+        lheEventProduct = cms.InputTag("externalLHEProducer"),
     )
     process.lumi_step = cms.Path(process.lumiTree)
     process.schedule.append(process.lumi_step)
