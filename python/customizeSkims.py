@@ -366,6 +366,7 @@ def addMuMuTauTau(process,options,**kwargs):
     
     process.lumiSummary = cms.EDProducer("LumiSummaryProducer",
         genEventInfo = cms.InputTag("generator"),
+        lheEventProduct = cms.InputTag("externalLHEProducer"),
     )
     process.lumiSummary_step = cms.Path(process.lumiSummary)
     process.schedule.append(process.lumiSummary_step)
