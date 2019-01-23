@@ -44,6 +44,8 @@ def addMuMuTauTau(process,options,**kwargs):
     
     process.combinatoricRecoTausMuonCleaned.minJetPt = cms.double(8.0)
     process.recoTauAK4PFJets08RegionMuonCleaned.minJetPt = cms.double(8.0)
+    process.ak4PFJetsLegacyHPSPiZerosMuonCleaned.minJetPt = cms.double(8.0)
+    process.ak4PFJetsRecoTauChargedHadronsMuonCleaned.minJetPt = cms.double(8.0)
     process.selectedPatTausMuonCleaned.cut = cms.string("pt > 8. && tauID(\'decayModeFindingNewDMs\')> 0.5")
     
     if options.isMC:
@@ -71,6 +73,8 @@ def addMuMuTauTau(process,options,**kwargs):
     #############################
     process.combinatoricRecoTaus.minJetPt = cms.double(8.0)
     process.recoTauAK4PFJets08Region.minJetPt = cms.double(8.0)
+    process.ak4PFJetsLegacyHPSPiZeros.minJetPt = cms.double(8.0)
+    process.ak4PFJetsRecoTauChargedHadrons.minJetPt = cms.double(8.0)
     process.selectedPatTaus.cut = cms.string("pt > 8. && tauID(\'decayModeFindingNewDMs\')> 0.5")
     
     ############################
