@@ -1,5 +1,9 @@
 import FWCore.ParameterSet.Config as cms
 
+import PhysicsTools.PatAlgos.tools.helpers as configtools
+from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet
+from PhysicsTools.PatAlgos.tools.helpers import massSearchReplaceAnyInputTag
+
 # lower the pt threshold
 def lowerTauPt(process,postfix='',tauPt=8, jetPt=5):
     from FWCore.ParameterSet.MassReplace import massSearchReplaceParam
@@ -10,6 +14,11 @@ def addMuMuTauTau(process,options,**kwargs):
     doMM = kwargs.pop('doMM',False)
     doMT = kwargs.pop('doMT',False)
 
+    process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
+    patAlgosToolsTask = configtools.getPatAlgosToolsTask(process)
+
+    process.PATTauSequence = cms.Sequence(process.PFTau+process.makePatTaus+process.selectedPatTaus)
+    
     #########################
     ### Muon Cleaned Taus ###
     #########################
@@ -29,19 +38,11 @@ def addMuMuTauTau(process,options,**kwargs):
         process.recoMuonsForJetCleaning,
         process.ak4PFJetsMuonCleaned
     )
-    
-    import PhysicsTools.PatAlgos.tools.helpers as configtools
-    from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet
-    from PhysicsTools.PatAlgos.tools.helpers import massSearchReplaceAnyInputTag
-    
-    process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
-    patAlgosToolsTask = configtools.getPatAlgosToolsTask(process)
     patAlgosToolsTask.add(process.muonCleanedHPSPFTausTask)
     
     jetSrc = 'ak4PFJetsMuonCleaned'
     pfCandSrc = cms.InputTag(jetSrc,'particleFlowMuonCleaned')
     
-    process.PATTauSequence = cms.Sequence(process.PFTau+process.makePatTaus+process.selectedPatTaus)
     process.PATTauSequenceMuonCleaned = cloneProcessingSnippet(process,process.PATTauSequence, 'MuonCleaned', addToTask = True)
     massSearchReplaceAnyInputTag(process.PATTauSequenceMuonCleaned,cms.InputTag('ak4PFJets'),cms.InputTag(jetSrc))
     massSearchReplaceAnyInputTag(process.PATTauSequenceMuonCleaned,cms.InputTag('particleFlow'),pfCandSrc)
@@ -88,6 +89,63 @@ def addMuMuTauTau(process,options,**kwargs):
         attrsToDelete += ['tauGenJetsSelectorAllHadronsMuonCleaned'+postfix]
         for attr in attrsToDelete:
             if hasattr(process,attr): delattr(process,attr)
+
+    #############################
+    ### Electron cleaned taus ###
+    #############################
+    process.recoElectronsForJetCleaning = cms.EDFilter('ElectronFilter',
+                                               vertex = cms.InputTag("offlinePrimaryVerticesWithBS"),
+                                               Rho = cms.InputTag("fixedGridRhoFastjetAll"),
+                                               electrons = cms.InputTag("gedGsfElectrons"),
+                                               conv = cms.InputTag("conversions"),
+                                               BM = cms.InputTag("offlineBeamSpot"),
+                                               Tracks = cms.InputTag("electronGsfTracks"),
+                                               Passcount =cms.uint32(1),
+                                               )
+    
+    process.ak4PFJetsElectronCleaned = cms.EDProducer(
+        'ElectronCleanedJetProducer',
+        jetSrc = cms.InputTag("ak4PFJets"),
+        electronSrc = cms.InputTag("recoElectronsForJetCleaning","LooseElectronRef"),
+        pfCandSrc = cms.InputTag("particleFlow"),
+        )
+
+    process.electronCleanedHPSPFTausTask = cms.Task(
+        process.recoElectronsForJetCleaning,
+        process.ak4PFJetsElectronCleaned
+    )
+    patAlgosToolsTask.add(process.electronCleanedHPSPFTausTask)
+    
+    jetSrc = 'ak4PFJetsElectronCleaned'
+    pfCandSrc = cms.InputTag(jetSrc,'particleFlowElectronCleaned')
+    
+    process.PATTauSequenceElectronCleaned = cloneProcessingSnippet(process,process.PATTauSequence, 'ElectronCleaned', addToTask = True)
+    massSearchReplaceAnyInputTag(process.PATTauSequenceElectronCleaned,cms.InputTag('ak4PFJets'),cms.InputTag(jetSrc))
+    massSearchReplaceAnyInputTag(process.PATTauSequenceElectronCleaned,cms.InputTag('particleFlow'),pfCandSrc)
+    # currently, the tau reco requires same pf coll for both the jets and the following:
+    process.combinatoricRecoTausElectronCleaned.builders[0].pfCandSrc = cms.InputTag('particleFlow')
+    lowerTauPt(process,'ElectronCleaned')
+    
+    if options.isMC:
+        process.tauGenJetsElectronCleaned.GenParticles = "prunedGenParticles"
+        process.patTausElectronCleaned.embedGenMatch = False
+    else:
+        from PhysicsTools.PatAlgos.tools.coreTools import _removeMCMatchingForPATObject
+        attrsToDelete = []
+        postfix = ''
+        print "removing MC dependencies for tausElectronCleaned"
+        _removeMCMatchingForPATObject(process, 'tauMatch', 'patTausElectronCleaned',postfix)
+        ## remove mc extra configs for taus
+        tauProducer = getattr(process,'patTausElectronCleaned'+postfix)
+        tauProducer.addGenJetMatch   = False
+        tauProducer.embedGenJetMatch = False
+        attrsToDelete += [tauProducer.genJetMatch.getModuleLabel()]
+        tauProducer.genJetMatch      = ''
+        attrsToDelete += ['tauGenJetsElectronCleaned'+postfix]
+        attrsToDelete += ['tauGenJetsSelectorAllHadronsElectronCleaned'+postfix]
+        for attr in attrsToDelete:
+            if hasattr(process,attr): delattr(process,attr)
+
     
     #############################
     ### lower pt for nonclean ###
@@ -329,9 +387,21 @@ def addMuMuTauTau(process,options,**kwargs):
          maxNumber = cms.uint32(999),
          src = cms.InputTag('analysisMuonsNoIso'),
     )
+    process.analysisTausElectronCleaned = cms.EDFilter('PATTauSelector',
+        #src = cms.InputTag('slimmedTausElectronCleaned'),
+        src = cms.InputTag('selectedPatTausElectronCleaned'),
+        cut = cms.string('pt > 8.0 && abs(eta)<2.3 && tauID(\'decayModeFinding\')> 0.5'),
+    )
+    process.analysisTausElectronCleanedCount = cms.EDFilter("PATCandViewCountFilter",
+         minNumber = cms.uint32(1),
+         maxNumber = cms.uint32(999),
+         src = cms.InputTag('analysisTaus'),
+    )
     process.main_path_mt *= process.analysisMuonsNoIsoMTCount
     process.main_path_mt *= process.analysisTausMuonCleaned
     process.main_path_mt *= process.analysisTausMuonCleanedCount
+    process.main_path_et *= process.analysisTausElectronCleaned
+    process.main_path_et *= process.analysisTausElectronCleanedCount
     process.z_tau_eff_path *= process.analysisTaus
     process.z_tau_eff_path *= process.analysisTausCount
     process.z_tau_eff_muclean_path *= process.analysisTausMuonCleaned
@@ -403,7 +473,9 @@ def addMuMuTauTau(process,options,**kwargs):
     # additional changes to standard MiniAOD content
     process.MINIAODoutput.outputCommands += [
         #'keep *_slimmedTausMuonCleaned_*_*',
+        #'keep *_slimmedTausElectronCleaned_*_*',
         'keep *_selectedPatTausMuonCleaned_*_*',
+        'keep *_selectedPatTausElectronCleaned_*_*',
         #'keep *_slimmedJetsMuonCleaned_*_*', # can't keep without warnings, can be recreated later anyway
         'keep *_lumiSummary_*_*',
     ]
