@@ -241,14 +241,15 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   // build a collection of PF candidates excluding muons
   // we will still tag the jet as signal-like by the presence of a muon IN the jet, but this 
   // ensures that such jets also cannot have the muon enter the isolation candidate collection
-  //for (reco::PFCandidateCollection::const_iterator iPFCand = pfCands->begin(); iPFCand != pfCands->end(); ++iPFCand) 
-  //{
-  //  reco::MuonRef removedMuRef = iPFCand->muonRef();
-  //  if ((removedMuRef.isNonnull() && (std::find(removedMuRefKeys.begin(), removedMuRefKeys.end(), removedMuRef.key()) == removedMuRefKeys.end())) || removedMuRef.isNull()) 
-  //  {
-  //    pfCandsExcludingMuons->push_back(*iPFCand);
-  //  }
-  //}
+  // TODO: Error: the input tag for the PF candidate collection provided to the RecoTauBuilder  does not match the one that was used to build the source jets. Please update the pfCandSrc paramters for the PFTau builders.
+  for (reco::PFCandidateCollection::const_iterator iPFCand = pfCands->begin(); iPFCand != pfCands->end(); ++iPFCand) 
+  {
+    reco::MuonRef removedMuRef = iPFCand->muonRef();
+    if ((removedMuRef.isNonnull() && (std::find(muonRefKeys.begin(), muonRefKeys.end(), removedMuRef.key()) == muonRefKeys.end())) || removedMuRef.isNull()) 
+    {
+      pfCandsExcludingMuons->push_back(*iPFCand);
+    }
+  }
 
   const edm::OrphanHandle<reco::PFJetCollection> cleanedJetsRefProd = iEvent.put(std::move(SetOfJets));
 

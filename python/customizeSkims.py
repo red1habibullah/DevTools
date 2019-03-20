@@ -1,5 +1,11 @@
 import FWCore.ParameterSet.Config as cms
 
+# lower the pt threshold
+def lowerTauPt(process,postfix='',tauPt=8, jetPt=5):
+    from FWCore.ParameterSet.MassReplace import massSearchReplaceParam
+    massSearchReplaceParam(getattr(process,'PATTauSequence'+postfix),'minJetPt',14,jetPt)
+    getattr(process,'selectedPatTaus'+postfix).cut = cms.string("pt > {} && tauID(\'decayModeFindingNewDMs\')> 0.5".format(tauPt))
+
 def addMuMuTauTau(process,options,**kwargs):
     doMM = kwargs.pop('doMM',False)
     doMT = kwargs.pop('doMT',False)
@@ -33,20 +39,35 @@ def addMuMuTauTau(process,options,**kwargs):
     patAlgosToolsTask.add(process.muonCleanedHPSPFTausTask)
     
     jetSrc = 'ak4PFJetsMuonCleaned'
+    pfCandSrc = cms.InputTag(jetSrc,'particleFlowMuonCleaned')
     
     process.PATTauSequence = cms.Sequence(process.PFTau+process.makePatTaus+process.selectedPatTaus)
     process.PATTauSequenceMuonCleaned = cloneProcessingSnippet(process,process.PATTauSequence, 'MuonCleaned', addToTask = True)
-    process.recoTauAK4PFJets08RegionMuonCleaned.pfCandSrc = cms.InputTag(jetSrc,'particleFlowMuonCleaned')
-    process.hpsPFTauChargedIsoPtSumMuonCleaned.particleFlowSrc = cms.InputTag(jetSrc,'particleFlowMuonCleaned')
     massSearchReplaceAnyInputTag(process.PATTauSequenceMuonCleaned,cms.InputTag('ak4PFJets'),cms.InputTag(jetSrc))
-    process.slimmedTausMuonCleaned = process.slimmedTaus.clone(src = cms.InputTag('selectedPatTausMuonCleaned'))
-    patAlgosToolsTask.add(process.slimmedTausMuonCleaned)
+    massSearchReplaceAnyInputTag(process.PATTauSequenceMuonCleaned,cms.InputTag('particleFlow'),pfCandSrc)
+    # currently, the tau reco requires same pf coll for both the jets and the following:
+    process.combinatoricRecoTausMuonCleaned.builders[0].pfCandSrc = cms.InputTag('particleFlow')
+    ## change the packedPFCandidates
+    #process.NewPackedTask = cms.Task(process.primaryVertexAssociation,process.packedPFCandidatesTask)
+    #process.PackedPFCandsSequence = cms.Sequence(process.NewPackedTask)
+    #process.PackedPFCandsSequenceMuonCleaned = cloneProcessingSnippet(process,process.PackedPFCandsSequence, 'MuonCleaned', addToTask = True)
+    #massSearchReplaceAnyInputTag(process.PackedPFCandsSequenceMuonCleaned,cms.InputTag('particleFlow'),pfCandSrc)
+    #process.primaryVertexAssociationMuonCleaned.jets = cms.InputTag(jetSrc)
+    #process.packedPFCandidatesMuonCleaned.vertexAssociator = cms.InputTag("primaryVertexAssociationMuonCleaned","original")
+    #process.packedPFCandidatesMuonCleaned.PuppiSrc = ""
+    #process.packedPFCandidatesMuonCleaned.PuppiNoLepSrc = ""
+    #process.slimmedTausMuonCleaned = process.slimmedTaus.clone(
+    #    src = cms.InputTag('selectedPatTausMuonCleaned'),
+    #    packedPFCandidates = cms.InputTag('packedPFCandidatesMuonCleaned'),
+    #)
+    #patAlgosToolsTask.add(process.slimmedTausMuonCleaned)
     
-    process.combinatoricRecoTausMuonCleaned.minJetPt = cms.double(8.0)
-    process.recoTauAK4PFJets08RegionMuonCleaned.minJetPt = cms.double(8.0)
-    process.ak4PFJetsLegacyHPSPiZerosMuonCleaned.minJetPt = cms.double(8.0)
-    process.ak4PFJetsRecoTauChargedHadronsMuonCleaned.minJetPt = cms.double(8.0)
-    process.selectedPatTausMuonCleaned.cut = cms.string("pt > 8. && tauID(\'decayModeFindingNewDMs\')> 0.5")
+    #process.combinatoricRecoTausMuonCleaned.minJetPt = cms.double(8.0)
+    #process.recoTauAK4PFJets08RegionMuonCleaned.minJetPt = cms.double(8.0)
+    #process.ak4PFJetsLegacyHPSPiZerosMuonCleaned.minJetPt = cms.double(8.0)
+    #process.ak4PFJetsRecoTauChargedHadronsMuonCleaned.minJetPt = cms.double(8.0)
+    #process.selectedPatTausMuonCleaned.cut = cms.string("pt > 8. && tauID(\'decayModeFindingNewDMs\')> 0.5")
+    lowerTauPt(process,'MuonCleaned')
     
     if options.isMC:
         process.tauGenJetsMuonCleaned.GenParticles = "prunedGenParticles"
@@ -71,20 +92,22 @@ def addMuMuTauTau(process,options,**kwargs):
     #############################
     ### lower pt for nonclean ###
     #############################
-    process.combinatoricRecoTaus.minJetPt = cms.double(8.0)
-    process.recoTauAK4PFJets08Region.minJetPt = cms.double(8.0)
-    process.ak4PFJetsLegacyHPSPiZeros.minJetPt = cms.double(8.0)
-    process.ak4PFJetsRecoTauChargedHadrons.minJetPt = cms.double(8.0)
-    process.selectedPatTaus.cut = cms.string("pt > 8. && tauID(\'decayModeFindingNewDMs\')> 0.5")
+    #process.combinatoricRecoTaus.minJetPt = cms.double(8.0)
+    #process.recoTauAK4PFJets08Region.minJetPt = cms.double(8.0)
+    #process.ak4PFJetsLegacyHPSPiZeros.minJetPt = cms.double(8.0)
+    #process.ak4PFJetsRecoTauChargedHadrons.minJetPt = cms.double(8.0)
+    #process.selectedPatTaus.cut = cms.string("pt > 8. && tauID(\'decayModeFindingNewDMs\')> 0.5")
+    lowerTauPt(process)
     
     ############################
     ### lower pt for boosted ###
     ############################
     process.ca8PFJetsCHSprunedForBoostedTaus.jetPtMin = cms.double(20.0)
     process.ca8PFJetsCHSprunedForBoostedTaus.subjetPtMin = cms.double(8.0)
-    process.combinatoricRecoTausBoosted.minJetPt = cms.double(8.0)
-    process.recoTauAK4PFJets08RegionBoosted.minJetPt = cms.double(8.0)
-    process.selectedPatTausBoosted.cut = cms.string("pt > 8. && tauID(\'decayModeFindingNewDMs\')> 0.5")
+    #process.combinatoricRecoTausBoosted.minJetPt = cms.double(8.0)
+    #process.recoTauAK4PFJets08RegionBoosted.minJetPt = cms.double(8.0)
+    #process.selectedPatTausBoosted.cut = cms.string("pt > 8. && tauID(\'decayModeFindingNewDMs\')> 0.5")
+    lowerTauPt(process,'Boosted')
 
     #######################################
     ### Update btagging for cleaned jet ###
@@ -292,7 +315,8 @@ def addMuMuTauTau(process,options,**kwargs):
          src = cms.InputTag('analysisTaus'),
     )
     process.analysisTausMuonCleaned = cms.EDFilter('PATTauSelector',
-        src = cms.InputTag('slimmedTausMuonCleaned'),
+        #src = cms.InputTag('slimmedTausMuonCleaned'),
+        src = cms.InputTag('selectedPatTausMuonCleaned'),
         cut = cms.string('pt > 8.0 && abs(eta)<2.3 && tauID(\'decayModeFinding\')> 0.5'),
     )
     process.analysisTausMuonCleanedCount = cms.EDFilter("PATCandViewCountFilter",
@@ -378,7 +402,8 @@ def addMuMuTauTau(process,options,**kwargs):
     
     # additional changes to standard MiniAOD content
     process.MINIAODoutput.outputCommands += [
-        'keep *_slimmedTausMuonCleaned_*_*',
+        #'keep *_slimmedTausMuonCleaned_*_*',
+        'keep *_selectedPatTausMuonCleaned_*_*',
         #'keep *_slimmedJetsMuonCleaned_*_*', # can't keep without warnings, can be recreated later anyway
         'keep *_lumiSummary_*_*',
     ]
