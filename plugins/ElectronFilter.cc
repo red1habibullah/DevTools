@@ -6,7 +6,8 @@
 /**\class ElectronFilter ElectronFilter.cc RecoJets/JetProducers/plugins/ElectronFilter.cc
 
  Description: [one line class summary]
-Creates a collection of electrons passing the Loose Electron ID.returns true if at least one electron passes 
+Creates a collection of electrons passing the Loose Electron ID.returns true if at least one electron passes
+The values have been updated for 2017 MC/Data 
  Implementation:
      [Notes on implementation]
 */
@@ -72,10 +73,10 @@ public:
   float dEtaInSeed(reco::GsfElectronCollection::const_iterator ele);
   float GsfEleEInverseMinusPInverse(reco::GsfElectronCollection::const_iterator ele);
   
-  double GsfEleMissingHitsCut(reco::GsfElectronCollection::const_iterator ele);
+  int GsfEleMissingHitsCut(reco::GsfElectronCollection::const_iterator ele);
   
   double GsfEleEffAreaPFIsoCut(reco::GsfElectronCollection::const_iterator ele,edm::Event& iEvent);
-  double GsfEleConversionVetoCut(reco::GsfElectronCollection::const_iterator ele,edm::Event& iEvent);
+  bool GsfEleConversionVetoCut(reco::GsfElectronCollection::const_iterator ele,edm::Event& iEvent);
   
   
 private:
@@ -163,7 +164,7 @@ float ElectronFilter::GsfEleEInverseMinusPInverse (reco::GsfElectronCollection::
   const float eSCoverP = ele->eSuperClusterOverP();
   return std::abs(1.0 - eSCoverP)*ecal_energy_inverse;
 }
-double ElectronFilter::GsfEleMissingHitsCut(reco::GsfElectronCollection::const_iterator ele)
+int ElectronFilter::GsfEleMissingHitsCut(reco::GsfElectronCollection::const_iterator ele)
 {
 
   constexpr reco::HitPattern::HitCategory missingHitType =
@@ -203,7 +204,7 @@ double ElectronFilter::GsfEleEffAreaPFIsoCut(reco::GsfElectronCollection::const_
   return iso;
 
 }
-double ElectronFilter::GsfEleConversionVetoCut(reco::GsfElectronCollection::const_iterator ele ,edm::Event& iEvent)
+bool ElectronFilter::GsfEleConversionVetoCut(reco::GsfElectronCollection::const_iterator ele ,edm::Event& iEvent)
 {
 
   edm::Handle<reco::ConversionCollection> convs;
@@ -257,15 +258,31 @@ iSetup.get<SetupRecord>().get(pSetup);
   Handle<reco::GsfTrackCollection> trk;
   iEvent.getByToken(trk_,trk);
   
+  edm::Handle<double>_rhoHandle;
+  iEvent.getByToken(rho_,_rhoHandle);
+
   for(reco::GsfElectronCollection::const_iterator iele = electrons->begin() ; iele !=electrons->end(); ++iele)
     { ++Tcount;
       reco::GsfElectronRef ERef(electrons,iele-electrons->begin()); 
 
       dEtaInSeedCut =abs(dEtaInSeed(iele));
       GsfEleEInverseMinusPInverseCut = GsfEleEInverseMinusPInverse(iele);
+      
+      
+      
+      
+      //-------------------The new H/E variables------------//
+      double HoE=iele->hadronicOverEm();
+      double E_c = iele->superCluster()->energy();
+      double rho = _rhoHandle.isValid() ? (*_rhoHandle) : 0; 
+      
+      
+      
+      
+      
+      
+  
       p1 = iele->trackPositionAtVtx();
-      
-      
       for(unsigned j= 0;j< Vertex->size();j++)
 	{
 	  p2=(Vertex->at(0)).position();
@@ -273,6 +290,9 @@ iSetup.get<SetupRecord>().get(pSetup);
 	  
 	  
 	}
+      
+      
+      
       dz = abs(p1.z()-p2.z());
       dxy = sqrt((p1.x()-p2.x())*(p1.x()-p2.x()) + (p1.y()-p2.y())*(p1.y()-p2.y()));
       // p2=Vertex->position();
@@ -281,7 +301,7 @@ iSetup.get<SetupRecord>().get(pSetup);
       if( iele->isEB())	{++EBcount;
 	  //cout << "EBloop" <<endl;
 	  
-	if( (iele->full5x5_sigmaIetaIeta()<0.011)  && (iele->hadronicOverEm()<0.289) && (abs(iele->deltaPhiSuperClusterTrackAtVtx()) <0.222) && (GsfEleEInverseMinusPInverseCut < 0.241) && (dEtaInSeedCut < 0.00477) && (GsfEleMissingHitsCut(iele) <= 1 ) && (GsfEleConversionVetoCut(iele,iEvent)) && (iele->pt()>7))
+	if( (iele->full5x5_sigmaIetaIeta()<0.0112)  && (HoE < (0.05 + 1.16/E_c + 0.0324*rho/E_c)) && (abs(iele->deltaPhiSuperClusterTrackAtVtx()) <0.0884) && (GsfEleEInverseMinusPInverseCut < 0.193) && (dEtaInSeedCut < 0.00377) && (GsfEleMissingHitsCut(iele) <= 1 ) && (GsfEleConversionVetoCut(iele,iEvent)) && (iele->pt()>7))
 	    {
 	      //passedelectrons->push_back(*iele);
 	      passedelectronRef->push_back(ERef);
@@ -295,7 +315,7 @@ iSetup.get<SetupRecord>().get(pSetup);
 	
 	{++EEcount;
 	  //cout<<" EEloop " << endl;
-	  if((iele->full5x5_sigmaIetaIeta()<0.03) && (iele->hadronicOverEm()<0.101) && (abs(iele->deltaPhiSuperClusterTrackAtVtx()) <0.213) && (GsfEleEInverseMinusPInverseCut < 0.14) &&(dEtaInSeedCut <0.00868) && (GsfEleMissingHitsCut(iele) <= 1 ) && (GsfEleConversionVetoCut(iele,iEvent)) && (iele->pt()>7) )
+	  if((iele->full5x5_sigmaIetaIeta()<0.0425) && (HoE < (0.0441 + 2.54/E_c + 0.183*rho/E_c)) && (abs(iele->deltaPhiSuperClusterTrackAtVtx()) <0.169) && (GsfEleEInverseMinusPInverseCut < 0.111) &&(dEtaInSeedCut <0.00674) && (GsfEleMissingHitsCut(iele) <= 1 ) && (GsfEleConversionVetoCut(iele,iEvent)) && (iele->pt()>7) )
 
 	    {
 

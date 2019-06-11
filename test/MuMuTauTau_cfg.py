@@ -11,7 +11,7 @@ options = VarParsing('analysis')
 
 options.outputFile = 'mumutautau.root'
 options.inputFiles = '/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-14_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v3/50000/82E6529B-C2AB-E811-A417-0025905A60D0.root'
-options.maxEvents = -1
+options.maxEvents = 10000 #-1
 options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
 options.register('reportEvery', 100, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Report every")
 options.register('isMC', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
@@ -141,7 +141,7 @@ if not options.isMC:
 # Other statements
 envvar = 'mcgt' if options.isMC else 'datagt'
 from Configuration.AlCa.GlobalTag import GlobalTag
-GT = {'mcgt': '94X_mc2017_realistic_v14', 'datagt': '94X_dataRun2_v6',}
+GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '94X_dataRun2_v11',}
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 # Path and EndPath definitions
