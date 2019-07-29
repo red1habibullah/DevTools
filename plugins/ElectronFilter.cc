@@ -275,7 +275,8 @@ iSetup.get<SetupRecord>().get(pSetup);
       double HoE=iele->hadronicOverEm();
       double E_c = iele->superCluster()->energy();
       double rho = _rhoHandle.isValid() ? (*_rhoHandle) : 0; 
-      
+      //cout<< "Missing intended to be int: " << GsfEleMissingHitsCut(iele) <<" _ElectronFilter.cc_ "<< endl;
+      //cout<<"Conversion veto cut intended to be bool:  "<< GsfEleConversionVetoCut(iele,iEvent) <<"  _ElectronFilter.cc_  "<<endl;
       
       
       

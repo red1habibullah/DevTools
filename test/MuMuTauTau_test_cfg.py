@@ -9,11 +9,11 @@ import FWCore.ParameterSet.Config as cms
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 
-options.outputFile = 'mumutautau_Selected.root'
-options.inputFiles = '/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-14_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v3/50000/82E6529B-C2AB-E811-A417-0025905A60D0.root'
-options.maxEvents = 10000
+options.outputFile = 'mumutautau_new_Slimmed.root'
+options.inputFiles ='/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-9_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v2/40000/02CF836E-AB60-E811-A5A7-1866DA85DC7F.root' #'/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-14_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v3/50000/82E6529B-C2AB-E811-A417-0025905A60D0.root'
+options.maxEvents = 50
 options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
-options.register('reportEvery', 100, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Report every")
+options.register('reportEvery', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Report every")
 options.register('isMC', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
 options.register('numThreads', 8, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Set number of threads")
 
@@ -84,7 +84,7 @@ process.MINIAODoutput = cms.OutputModule("PoolOutputModule",
     overrideBranchesSplitLevel = cms.untracked.VPSet(cms.untracked.PSet(
         branch = cms.untracked.string('patPackedCandidates_packedPFCandidates__*'),
         splitLevel = cms.untracked.int32(99)
-    ), 
+        ), 
         cms.untracked.PSet(
             branch = cms.untracked.string('recoGenParticles_prunedGenParticles__*'),
             splitLevel = cms.untracked.int32(99)
@@ -142,6 +142,7 @@ if not options.isMC:
 envvar = 'mcgt' if options.isMC else 'datagt'
 from Configuration.AlCa.GlobalTag import GlobalTag
 GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '94X_dataRun2_v11',}
+#GT = {'mcgt': '94X_mc2017_realistic_v14', 'datagt': '94X_dataRun2_v6',}
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 # Path and EndPath definitions
@@ -212,3 +213,6 @@ process = customiseEarlyDelete(process)
 # Add the skim part
 from DevTools.Ntuplizer.customizeSkims import addMuMuTauTau
 addMuMuTauTau(process,options)
+
+dump_file = open('dumps.py','w')
+dump_file.write(process.dumpPython())

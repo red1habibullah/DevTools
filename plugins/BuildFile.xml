@@ -14,4 +14,6 @@
 <use name="RecoEgamma/EgammaElectronAlgos"/>
 <use name="RecoEgamma/EgammaIsolationAlgos"/>
 <use name="DataFormats/EgammaCandidates"/>
+<use name="PhysicsTools/PatUtils"/>
+<use name="DataFormats/ParticleFlowCandidate"/>
 </library>
