@@ -46,7 +46,6 @@ def addMuMuTauTau(process,options,**kwargs):
     #print "Ho"
     #pfCandSrc = cms.InputTag(jetSrc,'particleFlowMuonCleaned')
     pfAssocMap = cms.InputTag('ak4PFJetsMuonCleaned','pfCandAssocMapForIsolation')
-
     process.PATTauSequenceMuonCleaned = cloneProcessingSnippet(process,process.PATTauSequence, 'MuonCleaned', addToTask = True)
     massSearchReplaceAnyInputTag(process.PATTauSequenceMuonCleaned,cms.InputTag('ak4PFJets'),cms.InputTag(jetSrc))
     #massSearchReplaceAnyInputTag(process.PATTauSequenceMuonCleaned,cms.InputTag('particleFlow'),pfCandSrc)
@@ -66,7 +65,7 @@ def addMuMuTauTau(process,options,**kwargs):
 
 
     process.recoTauAK4PFJets08RegionMuonCleaned.pfCandAssocMapSrc = pfAssocMap
-    
+    #process.recoTauAK4PFJets08RegionMuonCleaned.pfCandSrc = 
     process.slimmedTausMuonCleaned = process.slimmedTaus.clone(src = cms.InputTag('selectedPatTausMuonCleaned'))
     patAlgosToolsTask.add(process.slimmedTausMuonCleaned)
     
@@ -121,6 +120,7 @@ def addMuMuTauTau(process,options,**kwargs):
         jetSrc = cms.InputTag("ak4PFJets"),
         electronSrc = cms.InputTag("recoElectronsForJetCleaning","LooseElectronRef"),
         pfCandSrc = cms.InputTag("particleFlow"),
+        pfCandCollection=cms.InputTag("particleFlow"),
         #originalTracks = cms.InputTag("generalTracks"),
         #pfCandMapSrc = cms.InputTag("particleFlow"),                                                                                                                                                                                                                          
        # packedCandSrc = cms.InputTag("packedPFCandidates"),
@@ -136,6 +136,8 @@ def addMuMuTauTau(process,options,**kwargs):
     jetSrc = 'ak4PFJetsElectronCleaned'
     print "1"
     #pfCandSrc = cms.InputTag(jetSrc,'particleFlowElectronCleaned')
+    #pfCandSrcEle = cms.InputTag('particleFlowElectronCleaned')
+    
     pfAssocMaps = cms.InputTag('ak4PFJetsElectronCleaned','pfCandAssocMapForIsolation')
     process.PATTauSequenceElectronCleaned = cloneProcessingSnippet(process,process.PATTauSequence, 'ElectronCleaned', addToTask = True)
     print "2"
@@ -156,7 +158,11 @@ def addMuMuTauTau(process,options,**kwargs):
     
     
     print "check"
-    process.recoTauAK4PFJets08RegionElectronCleaned.pfCandAssocMapSrc = pfAssocMaps
+    #process.recoTauAK4PFJets08RegionElectronCleaned.pfCandAssocMapSrc = pfAssocMaps
+    #process.recoTauAK4PFJets08RegionElectronCleaned.pfCandSrc = pfCandSrcEle
+
+
+
     #process.recoTauAK4PFJets08RegionElectronCleaned.pfCandAssocMapSrc = pfAssocMaps
     print "out"
     #process.slimmedTausElectronCleaned = process.slimmedTausNoDeepIDs.clone(src = cms.InputTag('selectedPatTausElectronCleaned'))
@@ -518,6 +524,9 @@ def addMuMuTauTau(process,options,**kwargs):
     process.MINIAODoutput.outputCommands += [
         'keep *_slimmedTausMuonCleaned_*_*',
         'keep *_slimmedTausElectronCleaned_*_*',
+        #'keep *_ak4PFJetsElectronCleaned_*_*',
+        #'keep *_ak4PFJetsMuonCleaned_*_*',
+        #'keep *_ak4PFJets_*_*',
         #'keep *_selectedPatTausMuonCleaned_*_*',
         #'keep *_selectedPatTausElectronCleaned_*_*',
         #'keep *_slimmedJetsMuonCleaned_*_*', # can't keep without warnings, can be recreated later anyway

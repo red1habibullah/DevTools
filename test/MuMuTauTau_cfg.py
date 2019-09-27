@@ -9,7 +9,7 @@ import FWCore.ParameterSet.Config as cms
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 
-options.outputFile = 'mumutautau_Selected.root'
+options.outputFile = 'mumutautau_Slimmed.root'
 options.inputFiles = '/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-14_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v3/50000/82E6529B-C2AB-E811-A417-0025905A60D0.root'
 options.maxEvents = 10000
 options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
