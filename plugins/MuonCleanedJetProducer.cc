@@ -1,7 +1,7 @@
 // -*- C++ -*-
 //
 // Package:    MuonCleanedJetProducer
-// Class:      MuonCleanedJetProducer
+//Class:      MuonCleanedJetProducer
 // 
 /**\class MuonCleanedJetProducer MuonCleanedJetProducer.cc
 
@@ -39,6 +39,7 @@
 #include "TMath.h"
 #include "DataFormats/Math/interface/deltaR.h"
 
+const double dR2Min =0.001*0.001;
 //
 // class declaration
 //
@@ -63,16 +64,17 @@ class MuonCleanedJetProducer : public edm::stream::EDProducer<>
       // ----------member data ---------------------------
 
       // source of the jets to be cleaned of muons
-      edm::EDGetTokenT<reco::PFJetCollection> jetSrc_;
+  edm::EDGetTokenT<reco::PFJetCollection> jetSrc_;
+  
+  // source of muons that, if found within jet, should be removed
+  //edm::EDGetTokenT<reco::MuonCollection> muonSrc_;
+  edm::EDGetTokenT<reco::MuonRefVector> muonSrc_;
+  
+  // source of PF candidates
+  edm::EDGetTokenT<reco::PFCandidateCollection> pfCandSrc_;
+  edm::EDGetTokenT<edm::View<reco::PFCandidate> > pfCandToken_;
 
-      // source of muons that, if found within jet, should be removed
-      //edm::EDGetTokenT<reco::MuonCollection> muonSrc_;
-      edm::EDGetTokenT<reco::MuonRefVector> muonSrc_;
-
-      // source of PF candidates
-      edm::EDGetTokenT<reco::PFCandidateCollection> pfCandSrc_;
-
-      edm::ParameterSet* cfg_;
+  edm::ParameterSet* cfg_;
 
 };
 
@@ -92,7 +94,9 @@ MuonCleanedJetProducer::MuonCleanedJetProducer(const edm::ParameterSet& iConfig)
   jetSrc_(consumes<reco::PFJetCollection>(iConfig.getParameter<edm::InputTag>("jetSrc"))),
   //muonSrc_(consumes<reco::MuonCollection>(iConfig.getParameter<edm::InputTag>("muonSrc"))),
   muonSrc_(consumes<reco::MuonRefVector>(iConfig.getParameter<edm::InputTag>("muonSrc"))),
-  pfCandSrc_(consumes<reco::PFCandidateCollection>(iConfig.getParameter<edm::InputTag>("pfCandSrc")))
+  pfCandSrc_(consumes<reco::PFCandidateCollection>(iConfig.getParameter<edm::InputTag>("pfCandSrc"))),
+  pfCandToken_(consumes<edm::View<reco::PFCandidate> >( iConfig.getParameter<edm::InputTag>("pfCandCollection")))
+
 {
   cfg_ = const_cast<edm::ParameterSet*>(&iConfig);
 
@@ -145,8 +149,17 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   iEvent.getByToken(pfCandSrc_, pfCands);
   std::unique_ptr<reco::PFCandidateCollection> pfCandsExcludingMuons(new reco::PFCandidateCollection);
 
+  
+  edm::Handle< edm::View<reco::PFCandidate> > pfCandHandle;
+  iEvent.getByToken( pfCandToken_, pfCandHandle );
+
+
   //fill an STL container with muon ref keys
   std::vector<unsigned int> muonRefKeys;
+  std::vector<unsigned int> MatchedRefKeys;
+  double JetPFCount=0;
+  double MatchCount=0;
+  double UnMatchCount=0;
   //std::vector<unsigned int>
   if (muons.isValid()) 
   {
@@ -164,6 +177,52 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   //std::vector<unsigned int> removedMuRefKeys;
   //map between new jet and ref to original jet
   //std::vector<reco::PFJetRef> oldJets;
+
+  //Identify Non-Jet PFCandidates??
+
+
+      for (reco::PFJetCollection::const_iterator iJet = pfJets->begin(); iJet != pfJets->end(); ++iJet)
+	{
+	  
+	  std::vector<reco::PFCandidatePtr> jetPFCands = iJet->getPFConstituents();
+	  for (std::vector<edm::Ptr<reco::PFCandidate> >::iterator i = jetPFCands.begin(); i != jetPFCands.end(); ++i)
+	    {
+	      edm::Ptr<reco::PFCandidate> pfCandidatePtr = pfCandHandle->ptrAt(i->key());
+	      double dR2 = deltaR2((*i)->p4(),pfCandidatePtr->p4());
+	      if(dR2 < dR2Min)
+		{
+		  ++MatchCount;
+		  MatchedRefKeys.push_back(pfCandidatePtr.key());
+		  
+		  
+		}
+	      //std::cout << "PutPut" <<std::endl;	     
+	      
+	    
+	    }
+	  
+
+	}
+      
+      for (size_t i = 0; i < pfCands->size(); ++i) 
+	{    
+	  reco::PFCandidateRef pfCandRef(pfCands,i);
+
+      //check for UnMatched
+      std::vector<unsigned int>::const_iterator iPF = std::find(MatchedRefKeys.begin(), MatchedRefKeys.end(), pfCandRef.key());
+      if(iPF == MatchedRefKeys.end())
+        {
+          ++UnMatchCount;
+        }
+      
+	}
+      
+
+
+
+
+
+
 
   // Do cleaning
   for (reco::PFJetCollection::const_iterator iJet = pfJets->begin(); iJet != pfJets->end(); ++iJet)
@@ -191,7 +250,7 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
       }
 
     */
-
+    JetPFCount= JetPFCount + (double)(jetPFCands.size());
     for (std::vector<edm::Ptr<reco::PFCandidate> >::iterator i = jetPFCands.begin(); i != jetPFCands.end(); ++i)
     {
       reco::PFCandidate pfCand = *i;
@@ -228,8 +287,9 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
           // muons of the soft muon
           //removedMuons.push_back(muons->at(iMuon - muonRefKeys.begin())->masterRef());
 
-          //std::cout << "Found a muon to remove: "<< pfCand.muonRef().key() << " " << pfCand.pt() << " " << pfCand.eta() << " " << pfCand.phi() << std::endl;
-        }
+	  //std::cout << "Found a muon to remove: "<< pfCand.muonRef().key() << " " << pfCand.pt() << " " << pfCand.eta() << " " << pfCand.phi() << std::endl;
+	  //std::cout << "********************************************************************************************************** "<<std::endl; 
+	    }
         else
         {
           pfmomentum += pfCand.p4(); // total p4()
@@ -247,7 +307,6 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     reco::PFJet muonfreePFJet(pfmomentum, specs, jetConstituents);
     SetOfJets->push_back( muonfreePFJet );
     cleanedJets->push_back( muonfreePFJet );
-
     //if at least 1 muon was tagged for removal, save a positive muon tag decision for this jet
     muonTagDecisions.push_back(taggedMuonForRemoval);
 
@@ -261,9 +320,18 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     //double dR2=0;
     for (size_t i = 0; i < pfCands->size(); ++i) {
       //std::cout<<" jetPt: "<< (*jetRef).pt() << "   jetEta: " << (*jetRef).eta()<<std::endl;
-      //reco::PFCandidateRef pfCandRef(pfCands,i);
+      bool NotInJet=false;
+      reco::PFCandidateRef pfCandRef(pfCands,i);
+      std::vector<unsigned int>::const_iterator iPF = std::find(MatchedRefKeys.begin(), MatchedRefKeys.end(), pfCandRef.key());
+      if(iPF == MatchedRefKeys.end())
+	{
+	  //++UnMatchCount;
+	  NotInJet=true;
+	}
+      
       //std::cout << " Product ID: " << (*pfCands)[i]->id() <<std::endl;
       //dR2=reco::deltaR2((*pfCands)[i],*iJet);
+      bool MuonFlag=false;
       if ((*pfCands)[i].particleId() == 3 /*&& (dR2 >0.16)*/) 
 	{
 	reco::MuonRef theRecoMuon = (*pfCands)[i].muonRef();
@@ -271,18 +339,24 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 	//std::vector <unsigned int>::iterator iStore = std::find(StoreRefKey.begin(),StoreRefKey.end(),theRecoMuon.key());
 	if (iMuon != muonRefKeys.end() /*&& (iStore == StoreRefKey.end())*/) 
 	  {
-	  reco::PFCandidateRef pfCandRef(pfCands,i);
+	    //reco::PFCandidateRef pfCandRef(pfCands,i);
           //StoreRefKey.push_back(theRecoMuon.key());
-	  selectedJetPFCandidateAssociationForIsolation->insert(jetRef, pfCandRef);
+	  //selectedJetPFCandidateAssociationForIsolation->insert(jetRef, pfCandRef);
 	  
 	  //std::cout << "Electron in Loose Collection: " << iElectron->key() <<  " " << (*iElectron)->pt() <<  " "  << (*iElectron)->eta() <<  " "  << (*iElectron)->phi() <<std::endl;   
-	  std::cout << " pdgId: " << (*pfCandRef).pdgId() << " Muon Pt: "  << (*pfCandRef).pt() <<" Muon Eta: "<< (*pfCandRef).eta() <<" Muon phi: "<< (*pfCandRef).phi() <<std::endl;
+	  //std::cout << " Found a Muon to add to Map: " << (*pfCandRef).muonRef().key() << " Muon Pt: "  << (*pfCandRef).pt() <<" Muon Eta: "<< (*pfCandRef).eta() <<" Muon phi: "<< (*pfCandRef).phi() <<std::endl;
+	  //std::cout<< " +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ "<< std::endl;
+	    MuonFlag=true;
 	  }
 	}
       
+      
+      
+      
+      
       /* else
 	{
-	  std::vector<unsigned int>::const_iterator iJetPF = std::find(JetPFRefKeys.begin(), JetPFRefKeys.end(), pfCandRef.key());
+	std::vector<unsigned int>::const_iterator iJetPF = std::find(JetPFRefKeys.begin(), JetPFRefKeys.end(), pfCandRef.key());
 
 	  if(iJetPF != JetPFRefKeys.end())
 	    {
@@ -294,13 +368,17 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 	      std::cout<<"Unmatched Jet and PF Candidate -> Muon Case"<<std::endl;
 	      
             }
-	  
+	    
 
-	 
+	    
 	}
       */
+      //std::cout << " Muon Flag flip?: " <<  MuonFlag << std::endl;
+      if(!(MuonFlag==true) && (NotInJet))
 
-
+	{
+	  selectedJetPFCandidateAssociationForIsolation->insert(jetRef, pfCandRef);     
+	}
 
     }
 
@@ -333,6 +411,11 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
     }
   }
   */
+  
+  //std::cout<< " JetPfCand Content : " << JetPFCount <<std::endl;
+  //std::cout<< " PfCand Content : " << pfCands->size() <<std::endl;  
+  std::cout<< " Matched Content : " << JetPFCount <<std::endl;
+  std::cout<< " UnMatched PfCand Content : " << UnMatchCount <<std::endl;
   const edm::OrphanHandle<reco::PFJetCollection> cleanedJetsRefProd = iEvent.put(std::move(cleanedJets));
 
   //fill the value map of muon tag decision for each cleaned jet

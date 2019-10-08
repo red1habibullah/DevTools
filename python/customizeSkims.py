@@ -32,7 +32,8 @@ def addMuMuTauTau(process,options,**kwargs):
         jetSrc = cms.InputTag("ak4PFJets"),
         muonSrc = cms.InputTag("recoMuonsForJetCleaning"),
         pfCandSrc = cms.InputTag("particleFlow"),
-        
+        pfCandCollection=cms.InputTag("particleFlow"),
+
         
         )
     
@@ -158,7 +159,7 @@ def addMuMuTauTau(process,options,**kwargs):
     
     
     print "check"
-    #process.recoTauAK4PFJets08RegionElectronCleaned.pfCandAssocMapSrc = pfAssocMaps
+    process.recoTauAK4PFJets08RegionElectronCleaned.pfCandAssocMapSrc = pfAssocMaps
     #process.recoTauAK4PFJets08RegionElectronCleaned.pfCandSrc = pfCandSrcEle
 
 
@@ -524,9 +525,9 @@ def addMuMuTauTau(process,options,**kwargs):
     process.MINIAODoutput.outputCommands += [
         'keep *_slimmedTausMuonCleaned_*_*',
         'keep *_slimmedTausElectronCleaned_*_*',
-        #'keep *_ak4PFJetsElectronCleaned_*_*',
-        #'keep *_ak4PFJetsMuonCleaned_*_*',
-        #'keep *_ak4PFJets_*_*',
+        'keep *_ak4PFJetsElectronCleaned_*_*',
+        'keep *_ak4PFJetsMuonCleaned_*_*',
+        'keep *_ak4PFJets_*_*',
         #'keep *_selectedPatTausMuonCleaned_*_*',
         #'keep *_selectedPatTausElectronCleaned_*_*',
         #'keep *_slimmedJetsMuonCleaned_*_*', # can't keep without warnings, can be recreated later anyway

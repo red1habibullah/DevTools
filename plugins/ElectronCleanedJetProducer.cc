@@ -210,7 +210,7 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
   {
       for (reco::GsfElectronRefVector::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron)
 	{
-	  std::cout << " Electron Loop " << std::endl;
+	  //std::cout << " Electron Loop " << std::endl;
 	  electronRefKeys.push_back(iElectron->key());
 	  //std::cout << "Electron in Loose Collection: " << iElectron->key() <<  " " << (*iElectron)->pt() <<  " "  << (*iElectron)->eta() <<  " "  << (*iElectron)->phi() <<std::endl;
 	  ++E_count;
@@ -254,7 +254,7 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
       
       ////std::vector<unsigned int> JetPFRefKeys; 
       
-     
+      //std::cout<< " Jet Particle Content : "<< jetPFCands.size() << std::endl;
       /*for (std::vector<reco::PFCandidatePtr>::const_iterator i = jetPFCands.begin(); i != jetPFCands.end(); ++i)
 	{
 	  
@@ -264,8 +264,8 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
           //edm::Ref<reco::PFCandidateCollection> JetCollRef( PfCandRefProd, JetPFCand->size() - 1);                                                                                                                                                                           
           //JetPFRefKeys.push_back(JetCollRef.key());
 	}
-      */
       
+      */
       for (std::vector<edm::Ptr<reco::PFCandidate> >::iterator i = jetPFCands.begin(); i != jetPFCands.end(); ++i)
 	{
 	  reco::PFCandidate pfCand = *i;
@@ -305,7 +305,8 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
 		// muons of the soft muon
 		//removedMuons.push_back(muons->at(iMuon - muonRefKeys.begin())->masterRef());
 		
-		std::cout << "Found an Electron to remove: "<< pfCand.gsfElectronRef().key() << " " << pfCand.pt() << " " << pfCand.eta() << " " << pfCand.phi() << std::endl;
+		//std::cout << "Found an Electron to remove: "<< pfCand.gsfElectronRef().key() << " " << pfCand.pt() << " " << pfCand.eta() << " " << pfCand.phi() << std::endl;
+		//std::cout <<" ********************************************************************************************************************************** " << std::endl;
 		//++Rem_count;
 		Count.push_back(pfCand.gsfElectronRef().key());
 	      }
@@ -348,16 +349,30 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
 	reco::PFCandidateRef pfCandRef(pfCands,i);
 	//cout<< " pfCandRef ptr: "<< pfCandRef->sourceCandidatePtr(0) << endl;
 	//reco::
+	bool ElectronFlag=false;
 	if ((*pfCands)[i].particleId() == 2) {
 	  reco::GsfElectronRef removedElRef = (*pfCands)[i].gsfElectronRef(); 
 	  
 	  std::vector<unsigned int>::const_iterator iElectron = std::find(electronRefKeys.begin(), electronRefKeys.end(), removedElRef.key());
 	  if(iElectron != electronRefKeys.end())
 	  {
-	    selectedJetPFCandidateAssociationForIsolation->insert(jetRef, pfCandRef);
+	    //selectedJetPFCandidateAssociationForIsolation->insert(jetRef, pfCandRef);
+	    ElectronFlag=true;
 	  }
 	  
 	}
+	
+
+	/*
+	
+	  for (std::vector<reco::PFCandidatePtr>::const_iterator i = jetPFCands.begin(); i != jetPFCands.end(); ++i)                                                                                                                                                               
+      {                                                                                                                                                                                                                                                                        
+        //JetPFCand->push_back(**i);                                                                                                                                                                                                                                             
+        //edm::Ref<reco::PFCandidateCollection> JetCollRef( PfCandRefProd, JetPFCand->size() - 1);                                                                                                                                                                               
+        //JetPFRefKeys.push_back(JetCollRef.key());                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                                               
+	}                                                                                                                                                                                                                                                                        */
+                                                                                                                                                                                                                                                                               
 	
 	
 	/*
@@ -378,7 +393,10 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
 	  }
 	*/
 	
-	
+	if(!(ElectronFlag==true))
+	  {
+	    selectedJetPFCandidateAssociationForIsolation->insert(jetRef, pfCandRef);
+	  }
 	
       }
     
@@ -446,7 +464,7 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
     }
   */
 
-
+  //std::cout<< " PfCand Content : " << pfCands->size() <<std::endl;
 
 
 
@@ -508,7 +526,7 @@ const edm::OrphanHandle<reco::PFJetCollection> cleanedJetsRefProd = iEvent.put(s
    
     }
   */
-  std::cout<<" No of Electrons Removed "<<Count.size()<<endl;
+  //std::cout<<" No of Electrons Removed "<<Count.size()<<endl;
 }
 
 // ------------ method called once each job just before starting event loop  ------------

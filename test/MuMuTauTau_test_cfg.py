@@ -9,9 +9,9 @@ import FWCore.ParameterSet.Config as cms
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 
-options.outputFile = 'mumutautau_MuonCleanIso_ID.root'
+options.outputFile = 'mumutautau_MuonCleanIso_pfCandTest_AddJets.root'
 options.inputFiles ='/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-9_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v2/40000/02CF836E-AB60-E811-A5A7-1866DA85DC7F.root' #'/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-14_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v3/50000/82E6529B-C2AB-E811-A417-0025905A60D0.root'
-options.maxEvents = 5000
+options.maxEvents =5000
 options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
 options.register('reportEvery', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Report every")
 options.register('isMC', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
@@ -214,5 +214,5 @@ process = customiseEarlyDelete(process)
 from DevTools.Ntuplizer.customizeSkims import addMuMuTauTau
 addMuMuTauTau(process,options)
 
-dump_file = open('dumps2.py','w')
+dump_file = open('dumps4.py','w')
 dump_file.write(process.dumpPython())
