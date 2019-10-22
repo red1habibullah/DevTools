@@ -212,3 +212,8 @@ process = customiseEarlyDelete(process)
 # Add the skim part
 from DevTools.Ntuplizer.customizeSkims import addMuMuTauTau
 addMuMuTauTau(process,options)
+
+dump_file = open('dump_config.py','w')
+dump_file.write(process.dumpPython())
+
+

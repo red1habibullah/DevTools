@@ -18,7 +18,33 @@ def addMuMuTauTau(process,options,**kwargs):
     patAlgosToolsTask = configtools.getPatAlgosToolsTask(process)
 
     process.PATTauSequence = cms.Sequence(process.PFTau+process.makePatTaus+process.selectedPatTaus)
+    #process.recoTauAK4PFJets08Region.pfCandAssocMapSrc = cms.InputTag("")
+
+    #from RecoTauTag.Configuration.HPSPFTaus_cff import *
     
+    #process.UnCleanedHPSPFTausTask=cms.Task(produceHPSPFTausTask)
+    #patAlgosToolsTask.add(process.UnCleanedHPSPFTausTask)
+
+     #########################
+     ### UnCleaned Taus ###
+     #########################
+    #from RecoJets.JetProducers.ak4PFJets_cfi import ak4PFJets 
+    
+    #process.ak4PFJetsUnCleaned=ak4PFJets.clone()
+    #patAlgosToolsTask.add(process.ak4PFJetsUnCleaned)
+    
+    #jetSrc='ak4PFJetsUnCleaned'
+    
+    #process.PATTauSequenceUnCleaned = cloneProcessingSnippet(process,process.PATTauSequence,'UnCleaned', addToTask = True)
+    #massSearchReplaceAnyInputTag(process.PATTauSequenceUnCleaned,cms.InputTag('ak4PFJets'),cms.InputTag(jetSrc))
+    #process.slimmedTausUnCleaned = process.slimmedTaus.clone(src = cms.InputTag('selectedPatTausUnCleaned'))
+    #patAlgosToolsTask.add(process.slimmedTausUnCleaned)
+    #lowerTauPt(process,'UnCleaned')
+    
+
+
+
+
     #########################
     ### Muon Cleaned Taus ###
     #########################
@@ -26,7 +52,7 @@ def addMuMuTauTau(process,options,**kwargs):
         src = cms.InputTag('muons'),
         cut = cms.string('pt > 3.0 && isPFMuon && (isGlobalMuon || isTrackerMuon)'),
     )
-    #print "Hey"
+
     process.ak4PFJetsMuonCleaned = cms.EDProducer(
         'MuonCleanedJetProducer',
         jetSrc = cms.InputTag("ak4PFJets"),
@@ -44,8 +70,8 @@ def addMuMuTauTau(process,options,**kwargs):
     patAlgosToolsTask.add(process.muonCleanedHPSPFTausTask)
     
     jetSrc = 'ak4PFJetsMuonCleaned'
-    #print "Ho"
-    #pfCandSrc = cms.InputTag(jetSrc,'particleFlowMuonCleaned')
+
+
     pfAssocMap = cms.InputTag('ak4PFJetsMuonCleaned','pfCandAssocMapForIsolation')
     process.PATTauSequenceMuonCleaned = cloneProcessingSnippet(process,process.PATTauSequence, 'MuonCleaned', addToTask = True)
     massSearchReplaceAnyInputTag(process.PATTauSequenceMuonCleaned,cms.InputTag('ak4PFJets'),cms.InputTag(jetSrc))
@@ -71,7 +97,7 @@ def addMuMuTauTau(process,options,**kwargs):
     patAlgosToolsTask.add(process.slimmedTausMuonCleaned)
     
 
-    #,
+
     #packedPFCandidates = cms.InputTag('packedPFCandidatesMuonCleaned'),
     #)
     #patAlgosToolsTask.add(process.slimmedTausMuonCleaned)
@@ -122,9 +148,6 @@ def addMuMuTauTau(process,options,**kwargs):
         electronSrc = cms.InputTag("recoElectronsForJetCleaning","LooseElectronRef"),
         pfCandSrc = cms.InputTag("particleFlow"),
         pfCandCollection=cms.InputTag("particleFlow"),
-        #originalTracks = cms.InputTag("generalTracks"),
-        #pfCandMapSrc = cms.InputTag("particleFlow"),                                                                                                                                                                                                                          
-       # packedCandSrc = cms.InputTag("packedPFCandidates"),
         )
 
     process.electronCleanedHPSPFTausTask = cms.Task(
@@ -135,13 +158,9 @@ def addMuMuTauTau(process,options,**kwargs):
     patAlgosToolsTask.add(process.electronCleanedHPSPFTausTask)
     
     jetSrc = 'ak4PFJetsElectronCleaned'
-    print "1"
-    #pfCandSrc = cms.InputTag(jetSrc,'particleFlowElectronCleaned')
-    #pfCandSrcEle = cms.InputTag('particleFlowElectronCleaned')
     
     pfAssocMaps = cms.InputTag('ak4PFJetsElectronCleaned','pfCandAssocMapForIsolation')
     process.PATTauSequenceElectronCleaned = cloneProcessingSnippet(process,process.PATTauSequence, 'ElectronCleaned', addToTask = True)
-    print "2"
     massSearchReplaceAnyInputTag(process.PATTauSequenceElectronCleaned,cms.InputTag('ak4PFJets'),cms.InputTag(jetSrc))
     #massSearchReplaceAnyInputTag(process.PATTauSequenceElectronCleaned,cms.InputTag('particleFlow'),pfCandSrc)
     # currently, the tau reco requires same pf coll for both the jets and the following:
@@ -158,17 +177,12 @@ def addMuMuTauTau(process,options,**kwargs):
     
     
     
-    print "check"
+    
+
+
+
     process.recoTauAK4PFJets08RegionElectronCleaned.pfCandAssocMapSrc = pfAssocMaps
-    #process.recoTauAK4PFJets08RegionElectronCleaned.pfCandSrc = pfCandSrcEle
-
-
-
-    #process.recoTauAK4PFJets08RegionElectronCleaned.pfCandAssocMapSrc = pfAssocMaps
-    print "out"
-    #process.slimmedTausElectronCleaned = process.slimmedTausNoDeepIDs.clone(src = cms.InputTag('selectedPatTausElectronCleaned'))
     process.slimmedTausElectronCleaned = process.slimmedTaus.clone(src = cms.InputTag('selectedPatTausElectronCleaned'))
-    #process.slimmedTausElectronCleaned.packedPFCandidates = cms.InputTag("ak4PFJetsElectronCleaned")
     patAlgosToolsTask.add(process.slimmedTausElectronCleaned)
     #,
     # packedPFCandidates = cms.InputTag('packedPFCandidatesElectronCleaned'),
@@ -252,6 +266,7 @@ def addMuMuTauTau(process,options,**kwargs):
     process.main_path_em = cms.Path()
     process.main_path_et = cms.Path()
     process.main_path_mt = cms.Path()
+    #process.main_path_ut=cms.Path()
     process.main_path_tt = cms.Path()
     process.z_path = cms.Path()
     process.z_tau_eff_path = cms.Path()
@@ -277,6 +292,7 @@ def addMuMuTauTau(process,options,**kwargs):
     process.main_path_em *= process.HLT
     process.main_path_et *= process.HLT
     process.main_path_mt *= process.HLT
+    #process.main_path_ut *= process.HLT
     process.main_path_tt *= process.HLT
     process.z_path *= process.HLT
     process.z_tau_eff_path *= process.HLT
@@ -334,6 +350,8 @@ def addMuMuTauTau(process,options,**kwargs):
     process.main_path_et *= process.analysisMuonsNoIsoCount
     process.main_path_mt *= process.analysisMuonsNoIso
     process.main_path_mt *= process.analysisMuonsNoIsoCount
+    #process.main_path_ut *= process.analysisMuonsNoIso
+    #process.main_path_ut *= process.analysisMuonsNoIsoCount
     process.main_path_tt *= process.analysisMuonsNoIso
     process.main_path_tt *= process.analysisMuonsNoIsoCount
     process.z_path *= process.analysisMuonsNoIso
@@ -366,6 +384,8 @@ def addMuMuTauTau(process,options,**kwargs):
     process.main_path_et *= process.triggerMuonCount
     process.main_path_mt *= process.triggerMuon
     process.main_path_mt *= process.triggerMuonCount
+    #process.main_path_ut *= process.triggerMuon
+    #process.main_path_ut *= process.triggerMuonCount
     process.main_path_tt *= process.triggerMuon
     process.main_path_tt *= process.triggerMuonCount
     process.z_path *= process.triggerMuon
@@ -396,6 +416,8 @@ def addMuMuTauTau(process,options,**kwargs):
     process.main_path_et *= process.mumuCount
     process.main_path_mt *= process.mumu
     process.main_path_mt *= process.mumuCount
+    #process.main_path_ut *= process.mumu
+    #process.main_path_ut *= process.mumuCount
     process.main_path_tt *= process.mumu
     process.main_path_tt *= process.mumuCount
     
@@ -423,6 +445,16 @@ def addMuMuTauTau(process,options,**kwargs):
          maxNumber = cms.uint32(999),
          src = cms.InputTag('analysisTaus'),
     )
+    # process.analysisTausUnCleaned = cms.EDFilter('PATTauSelector',
+    #     src = cms.InputTag('slimmedTausUnCleaned'),
+    #     cut = cms.string('pt > 8.0 && abs(eta)<2.3 && tauID(\'decayModeFinding\')> 0.5'),
+    #                                              )
+    # process.analysisTausUnCleanedCount = cms.EDFilter("PATCandViewCountFilter",
+    #      minNumber = cms.uint32(1),
+    #      maxNumber = cms.uint32(999),
+    #      src = cms.InputTag('analysisTaus'),
+    #)
+
     process.analysisTausMuonCleaned = cms.EDFilter('PATTauSelector',
         src = cms.InputTag('slimmedTausMuonCleaned'),
         #src = cms.InputTag('selectedPatTausMuonCleaned'),
@@ -451,6 +483,8 @@ def addMuMuTauTau(process,options,**kwargs):
     process.main_path_mt *= process.analysisMuonsNoIsoMTCount
     process.main_path_mt *= process.analysisTausMuonCleaned
     process.main_path_mt *= process.analysisTausMuonCleanedCount
+    #process.main_path_ut *= process.analysisTausUnCleaned
+    #process.main_path_ut *= process.analysisTausUnCleanedCount
     process.main_path_et *= process.analysisTausElectronCleaned
     process.main_path_et *= process.analysisTausElectronCleanedCount
     process.z_tau_eff_path *= process.analysisTaus
@@ -496,6 +530,7 @@ def addMuMuTauTau(process,options,**kwargs):
     process.schedule.append(process.main_path_em)
     process.schedule.append(process.main_path_et)
     process.schedule.append(process.main_path_mt)
+    #process.schedule.append(process.main_path_ut)
     process.schedule.append(process.main_path_tt)
     process.schedule.append(process.z_path)
     process.schedule.append(process.z_tau_eff_path)
@@ -525,6 +560,7 @@ def addMuMuTauTau(process,options,**kwargs):
     process.MINIAODoutput.outputCommands += [
         'keep *_slimmedTausMuonCleaned_*_*',
         'keep *_slimmedTausElectronCleaned_*_*',
+        #'keep *_slimmedTausUnCleaned_*_*',
         'keep *_ak4PFJetsElectronCleaned_*_*',
         'keep *_ak4PFJetsMuonCleaned_*_*',
         'keep *_ak4PFJets_*_*',
