@@ -1,4 +1,4 @@
-# Auto generated configuration file
+ # Auto generated configuration file
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
@@ -8,11 +8,11 @@ import FWCore.ParameterSet.Config as cms
 
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
-
-options.outputFile = 'mumutautau_MuonCleanIso_pfCandTest_AddJets.root'
-options.inputFiles ='/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-9_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v2/40000/02CF836E-AB60-E811-A5A7-1866DA85DC7F.root' #'/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-14_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v3/50000/82E6529B-C2AB-E811-A417-0025905A60D0.root'
-options.maxEvents =5000
-options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
+options.outputFile = 'mumutautau_MultipleID.root'
+options.inputFiles = '/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-9_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v2/40000/02CF836E-AB60-E811-A5A7-1866DA85DC7F.root' #'/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-14_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v3/50000/82E6529B-C2AB-E811-A417-0025905A60D0.root'
+#'/store/mc/RunIIFall17DRPremix/SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-125_M-20_TuneCUETP8M1_13TeV_madgraph_pythia8/AODSIM/PU2017_94X_mc2017_realistic_v11-v1/00000/20DCBC63-CD62-E811-95C7-00248C55CC3C.root'
+options.maxEvents =-1
+options.register('skipEvents',1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Events to skip")
 options.register('reportEvery', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Report every")
 options.register('isMC', 1, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Sample is MC")
 options.register('numThreads', 8, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Set number of threads")
@@ -175,7 +175,7 @@ process.Flag_muonBadTrackFilter = cms.Path(process.muonBadTrackFilter)
 process.Flag_CSCTightHalo2015Filter = cms.Path(process.CSCTightHalo2015Filter)
 process.endjob_step = cms.EndPath(process.endOfProcess)
 process.MINIAODoutput_step = cms.EndPath(process.MINIAODoutput)
-
+print "baam"
 # Schedule definition
 process.schedule = cms.Schedule(process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.endjob_step,process.MINIAODoutput_step)
 process.schedule.associate(process.patTask)
@@ -211,8 +211,10 @@ process = customiseEarlyDelete(process)
 # End adding early deletion
 
 # Add the skim part
-from DevTools.Ntuplizer.customizeSkims import addMuMuTauTau
+
+from DevTools.Ntuplizer.customizeSkimsNew import addMuMuTauTau
 addMuMuTauTau(process,options)
 
-dump_file = open('dumps4.py','w')
+
+dump_file = open('dump_config_All.py','w')
 dump_file.write(process.dumpPython())

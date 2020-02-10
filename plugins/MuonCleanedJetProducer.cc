@@ -60,7 +60,11 @@ class MuonCleanedJetProducer : public edm::stream::EDProducer<>
 
   typedef edm::AssociationMap<edm::OneToMany<std::vector<reco::PFJet>, std::vector<reco::PFCandidate>, unsigned int> >
   JetToPFCandidateAssociation;
-      
+
+  typedef edm::AssociationMap<edm::OneToMany<std::vector<reco::PFJet>, std::vector<reco::PFCandidate>, unsigned int> >
+  JetToMuonAssociation;
+
+
       // ----------member data ---------------------------
 
       // source of the jets to be cleaned of muons
@@ -76,6 +80,8 @@ class MuonCleanedJetProducer : public edm::stream::EDProducer<>
 
   edm::ParameterSet* cfg_;
 
+  //int Mu_count=0;
+  //int Jet_Rem_count=0;
 };
 
 //
@@ -105,7 +111,10 @@ MuonCleanedJetProducer::MuonCleanedJetProducer(const edm::ParameterSet& iConfig)
   produces<edm::ValueMap<bool> >( "jetCleanedValueMap" );
   produces<JetToPFCandidateAssociation>("pfCandAssocMapForIsolation");
   produces<reco::PFCandidateCollection > ("JetPfCandidates");
-
+  produces<JetToMuonAssociation>("pfCandAssocMapForMuon");
+  produces<std::vector<int> >("MuonsPassingID");
+  produces<std::vector<int> >("MuonsRemoved");
+  produces<std::vector<int> >("NumJetsMuonsCleaned");
 }
 
 
@@ -136,8 +145,13 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   auto selectedJetPFCandidateAssociationForIsolation =
     std::make_unique<JetToPFCandidateAssociation>(&iEvent.productGetter());
 
+  // auto selectedJetPFCandidateAssociationForIsolation =
+  //std::make_unique<JetToPFCandidateAssociation>(&iEvent.productGetter())
 
-//edm::Handle<reco::MuonCollection> muons;
+   auto selectedJetMuonAssociationForCount =
+    std::make_unique<JetToMuonAssociation>(&iEvent.productGetter());
+
+   //edm::Handle<reco::MuonCollection> muons;
   edm::Handle<reco::MuonRefVector> muons;
   iEvent.getByToken(muonSrc_, muons);
 
@@ -148,6 +162,11 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   
   edm::Handle< edm::View<reco::PFCandidate> > pfCandHandle;
   iEvent.getByToken( pfCandToken_, pfCandHandle );
+  
+  std::unique_ptr<std::vector<int> > MuonPID(new std::vector<int>);
+  std::unique_ptr<std::vector<int> > MuonRemoved(new std::vector<int>);
+  std::unique_ptr<std::vector<int> > JetMuonCleaned(new std::vector<int>);
+
 
 
   //fill an STL container with muon ref keys
@@ -156,15 +175,20 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   double JetPFCount=0;
   double MatchCount=0;
   double UnMatchCount=0;
+  int Mu_count=0;
+  int Jet_Rem=0;
+  std::vector<int> Count;
+  Count.clear();
   //std::vector<unsigned int>
   if (muons.isValid()) 
   {
     for (reco::MuonRefVector::const_iterator iMuon = muons->begin(); iMuon != muons->end(); ++iMuon)
     {
       muonRefKeys.push_back(iMuon->key());
+      ++Mu_count;
     }
   }
-
+  MuonPID->push_back(Mu_count);
   //vector of bools holding the signal muon tag decision for each jet
   std::vector<bool> muonTagDecisions;
 
@@ -255,7 +279,8 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
           specs.mChargedMultiplicity -= 1;
           //save tag decision for this muon
           taggedMuonForRemoval = true;
-
+	  Count.push_back(pfCand.muonRef().key());
+	  //++Jet_Rem_count;
           // add this muon ref to the vector of removed muons for this jet
           // iMuon - muonRefKeys.begin() is the index into muonRefKeys of the soft muon
           // since muonRefKeys was filled in order of muons, it is also the index into 
@@ -302,10 +327,13 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 	    
 	    MuonFlag=true;
 	  }
+	
+      if(MuonFlag==true)
+      {
+	selectedJetMuonAssociationForCount->insert(jetRef, pfCandRef);
+      }
+     
 	}
-      
-      
-      
       
       
       if(!(MuonFlag==true))
@@ -316,8 +344,13 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 
     }
 
+    if(taggedMuonForRemoval==true)
+      {
+	++Jet_Rem;
+      }
   }// loop over jets
-
+  MuonRemoved->push_back(Count.size());
+  JetMuonCleaned->push_back(Jet_Rem);
     //fill an STL container of keys of removed muons
   //std::vector<unsigned int> removedMuRefKeys;
   //for (std::vector<reco::MuonRefVector>::const_iterator iJet = removedMuonMap.begin(); iJet != removedMuonMap.end(); ++iJet)
@@ -374,11 +407,22 @@ MuonCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
   //iEvent.put(std::move(jetValMap), "uncleanedJetRefValueMap" );
 
   
-
+  //std::cout<< " Muons in ID Collection: " <<  Mu_count<<std::endl;
+  // std::cout<< " Jets With Muon Cleaned: " <<  Jet_Rem_count <<std::endl;
+  std::cout<< " Muons in ID Collection: " <<  Mu_count<<std::endl; 
+  std::cout<< "Muons removed:  " << int(Count.size()) <<std::endl;
+  std::cout<< "Jets with Muon Removed:  " <<Jet_Rem<<std::endl;
+  
   iEvent.put(std::move(SetOfJets));
   //iEvent.put(std::move(pfCandsExcludingMuons), "particleFlowMuonCleaned");
   iEvent.put(std::move(selectedJetPFCandidateAssociationForIsolation), "pfCandAssocMapForIsolation");
+  iEvent.put(std::move(selectedJetMuonAssociationForCount), "pfCandAssocMapForMuon");
+  iEvent.put(std::move(MuonPID),"MuonsPassingID");
+  iEvent.put(std::move(MuonRemoved),"MuonsRemoved");
+  iEvent.put(std::move(JetMuonCleaned),"NumJetsMuonsCleaned");
+
 }
+
 
 // ------------ method called once each job just before starting event loop  ------------
 void 

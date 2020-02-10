@@ -73,7 +73,10 @@ class ElectronCleanedJetProducer : public edm::stream::EDProducer<>
  
   typedef edm::AssociationMap<edm::OneToMany<std::vector<reco::PFJet>, std::vector<reco::PFCandidate>, unsigned int> >
   JetToPFCandidateAssociation;     
-      // ----------member data ---------------------------
+  typedef edm::AssociationMap<edm::OneToMany<std::vector<reco::PFJet>, std::vector<reco::PFCandidate>, unsigned int> >
+  JetToElectronAssociation;
+
+  // ----------member data ---------------------------
 
       // source of the jets to be cleaned of electrons
   edm::EDGetTokenT<reco::PFJetCollection> jetSrc_;
@@ -88,9 +91,8 @@ class ElectronCleanedJetProducer : public edm::stream::EDProducer<>
 
   edm::ParameterSet* cfg_;
 
-  int E_count=0;
-  int PF_count=0;
-  int Rem_count=0;
+  
+  //int Jet_Rem_count=0;
  
 };
 
@@ -123,7 +125,11 @@ ElectronCleanedJetProducer::ElectronCleanedJetProducer(const edm::ParameterSet& 
   produces<reco::PFJetCollection>();
   produces<edm::ValueMap<bool> >( "jetCleanedValueMap" );
   produces<JetToPFCandidateAssociation>("pfCandAssocMapForIsolation");
-  
+  produces<JetToElectronAssociation>("pfCandAssocMapForElectron");
+  produces<std::vector<int> >("ElectronsPassingID");
+  produces<std::vector<int> >("ElectronsRemoved");
+  produces<std::vector<int> >("NumJetsElectronsCleaned");
+  //produces<std::vector<int> >("ElectronNumber");
 }
 
 
@@ -156,9 +162,6 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
   edm::Handle<reco::PFCandidateCollection> pfCands;
   iEvent.getByToken(pfCandSrc_, pfCands);
   
-  //edm::Handle< edm::View<reco::PFCandidate> > pfCandHandle;
-  //iEvent.getByToken( pfCandToken_, pfCandHandle );
-  
   
   std::unique_ptr<reco::PFCandidateCollection> JetPFCand= std::make_unique<reco::PFCandidateCollection>();
   edm::RefProd<reco::PFJetCollection> selectedJetRefProd = iEvent.getRefBeforePut<reco::PFJetCollection>();
@@ -166,12 +169,20 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
 
     auto selectedJetPFCandidateAssociationForIsolation =
       std::make_unique<JetToPFCandidateAssociation>(&iEvent.productGetter());
+    
+    auto selectedJetElectronAssociationForCount =
+      std::make_unique<JetToElectronAssociation>(&iEvent.productGetter());
 
- 
-  //fill an STL container with muon ref keys
+
+  std::unique_ptr<std::vector<int> > ElectronPID(new std::vector<int>);
+  std::unique_ptr<std::vector<int> > ElectronRemoved(new std::vector<int>);
+  std::unique_ptr<std::vector<int> > JetElectronCleaned(new std::vector<int>);
+//fill an STL container with muon ref keys
   std::vector<unsigned int> electronRefKeys;
   std::vector<int> Count;
-  //Count.clear();
+  Count.clear();
+  int E_count=0;
+  int Jet_Rem_count=0;
   if (electrons.isValid()) 
   {
       for (reco::GsfElectronRefVector::const_iterator iElectron = electrons->begin(); iElectron != electrons->end(); ++iElectron)
@@ -182,21 +193,12 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
 	  ++E_count;
 	}
   }
-  
+  ElectronPID->push_back(E_count);
   //vector of bools holding the signal electron tag decision for each jet
   std::vector<bool> electronTagDecisions;
- 
-  //map between new jet and refs to muons in the original collection that were removed
-  //std::vector<reco::MuonRefVector> removedMuonMap;
-  
-  //map between new jet and ref to original jet
-  //std::vector<reco::PFJetRef> oldJets;
-  
-  // Do cleaning
-  //std::vector<unsigned int> JetPFRefKeys;
-  //int iPf = 0;
   for (reco::PFJetCollection::const_iterator iJet = pfJets->begin(); iJet != pfJets->end(); ++iJet)
     {
+  
       std::vector<reco::PFCandidatePtr> jetPFCands = iJet->getPFConstituents();
       reco::PFJet::Specific specs = iJet->getSpecific();
       math::XYZTLorentzVector pfmomentum;
@@ -215,7 +217,7 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
 	  if (pfCand.particleId() == 2) //Reference: https://cmssdt.cern.ch/SDT/doxygen/CMSSW_7_1_17/doc/html/d8/d17/PFCandidate_8h_source.html
 	    {
 	      //std::cout << "Found a electron to check: "<< pfCand.gsfElectronRef().key() << " " << pfCand.pt() << " " << pfCand.eta() << " " << pfCand.phi() << std::endl;
-	    ++PF_count;
+	      //++PF_count;
 	    reco::GsfElectronRef theRecoElectron = pfCand.gsfElectronRef();
 	    
 	    //does this muon pass the desired muon ID?
@@ -229,7 +231,7 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
 		specs.mChargedMultiplicity -= 1;
 		//save tag decision for this muon
 		taggedElectronForRemoval = true;
-	     
+		//++Jet_Rem_count;
 		// add this muon ref to the vector of removed muons for this jet
 		// iMuon - muonRefKeys.begin() is the index into muonRefKeys of the soft muon
 		// since muonRefKeys was filled in order of muons, it is also the index into 
@@ -280,9 +282,13 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
 	    ElectronFlag=true;
 	  }
 	  
-	}
 	
-
+	
+	if(ElectronFlag==true)
+	  {
+	    selectedJetElectronAssociationForCount->insert(jetRef,pfCandRef);
+	  }
+	}
 	//Put everything except the electron into the association map
 	if(!(ElectronFlag==true))
 	  {
@@ -291,8 +297,15 @@ ElectronCleanedJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
 	
       }
     
-    } // loop over jets
+    if(taggedElectronForRemoval==true)
+      {
+	++Jet_Rem_count;
+      }
+    
+       } // loop over jets
   
+  ElectronRemoved->push_back(Count.size());
+  JetElectronCleaned->push_back(Jet_Rem_count);
   //fill an STL container of keys of removed muons
   //std::vector<unsigned int> removedMuRefKeys;
 //for (std::vector<reco::MuonRefVector>::const_iterator iJet = removedMuonMap.begin(); iJet != removedMuonMap.end(); ++iJet)
@@ -320,6 +333,11 @@ const edm::OrphanHandle<reco::PFJetCollection> cleanedJetsRefProd = iEvent.put(s
   filler.fill();
   iEvent.put(std::move(valMap), "jetCleanedValueMap" );
   //std::cout<< " Electrons in Loose Collection: " <<  E_count  << " Electrons found among the PFCands in Jet:  " <<  PF_count  << " Electrons removed : " << Rem_count <<std::endl;  
+  std::cout<< " Electrons in ID Collection: " <<  E_count<<endl;
+  std::cout<< "Electrons removed " << int(Count.size())<<endl;
+  std::cout<<" Jet with Electron removed: " <<Jet_Rem_count<<endl;
+  //std::cout<< " Jets With Electron Cleaned: " <<  Jet_Rem_count <<endl;
+
   
   //fill the value map of removed muon refs for each cleaned jet
   //std::unique_ptr<edm::ValueMap<reco::MuonRefVector> > muonValMap(new edm::ValueMap<reco::MuonRefVector>());
@@ -334,12 +352,19 @@ const edm::OrphanHandle<reco::PFJetCollection> cleanedJetsRefProd = iEvent.put(s
   //jetFiller.insert(cleanedJetsRefProd, oldJets.begin(), oldJets.end());
   //jetFiller.fill();
   //iEvent.put(std::move(jetValMap), "uncleanedJetRefValueMap" );
+  //std::cout<< " Muons in ID Collection: " <<  Mu_count<<endl;
+  //std::cout<< " Jets With Muon Cleaned: " <<  Jet_Rem_count <<endl;
+
 
   //put the soft-muon-free PF cands into the event
   iEvent.put(std::move(SetOfJets));
   //iEvent.put(std::move(pfCandsExcludingElectrons), "particleFlowElectronCleaned");
   iEvent.put(std::move(selectedJetPFCandidateAssociationForIsolation), "pfCandAssocMapForIsolation");
-  
+  iEvent.put(std::move(selectedJetElectronAssociationForCount), "pfCandAssocMapForElectron");
+  iEvent.put(std::move(ElectronPID),"ElectronsPassingID");
+  iEvent.put(std::move(ElectronRemoved),"ElectronsRemoved");
+  iEvent.put(std::move(JetElectronCleaned),"NumJetsElectronsCleaned");
+
 }
 
 // ------------ method called once each job just before starting event loop  ------------
